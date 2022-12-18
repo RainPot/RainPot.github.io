@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Windows Terminal - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="WT" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/windows-terminal/" />
+    <meta property="og:title" content="Windows Terminal" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="WT" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="Windows Terminal" />
+    <meta name="twitter:description" content="WT" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/windows-terminal/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">Windows Terminal</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sun Jun 21 2020 00:00:00 UTC'>
+	    2020-06-21
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/windows-terminal/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <p>记录Windows Terminal配置过程</p>
+<h2 id="windows-terminal">Windows Terminal</h2>
+<p>Windows Terminal 作为一名新晋的Windows终端，当然要来试一下。 目前Windows Terminal已经趋于成熟，个人感觉已经可以让它成为主力终端， 它实现了社区用户热切期望的许多功能(如多标签、主题样式、可配置性、富文本等)，并保持了快速与高效，不会消耗大量内存与电量。下面简单记录一下配置过程。</p>
+<p><a href="https://github.com/microsoft/terminal">Windows Ternimal GitRep</a></p>
+<p><img src="/images/wt01.png" alt="具有丰富自定义功能的Windows Terminal"></p>
+<hr>
+<h2 id="windows-terminal-installation">Windows Terminal Installation</h2>
+<p>Windows Terminal已经在微软商店上架，如果可已登录microsoft store，直接在商店搜索安装即可。</p>
+<p>如果没有办法使用，可以在<a href="https://github.com/microsoft/terminal/tags">release</a> 下载Microsoft.WindowsTerminal_1.1.1671.0_8wekyb3d8bbwe.msixbundle直接安装即可。</p>
+<p>也可以用chocolatey安装：</p>
+<pre tabindex="0"><code>choco install microsoft-windows-terminal
+</code></pre><p>安装好后，WT的界面是有些丑的&hellip; 下面讲一下如何进一步配置WT。</p>
+<hr>
+<h2 id="windows-terminal-settings">Windows Terminal Settings</h2>
+<p>首先我们要进入Windows Terminal的配置文件，在下拉菜单中，选择设置/Settings，这一操作会使用系统默认文本编辑器打开Windows Terminal的配置文件。
+<img src="/images/wt02.png" alt="Settings"></p>
+<p>配置文件是一个JSON格式文件，我们可以在其中定义全部Windows Terminal的属性。 结构非常清晰，大致上，配置包含如下几个部分：</p>
+<ul>
+<li>全局属性：位于最外侧，包含设置亮暗主题、默认Profile等项目的配置。</li>
+<li>profiles：主要功能为定义从下拉菜单中唤起的各种环境(如PowerShell，WSL，cmd等)，以及各种环境的显示方案(主题、背景、字体等)。</li>
+<li>schemes：配色主题，可以去<a href="https://github.com/mbadolato/iTerm2-Color-Schemes">iTerm2-Color-Schemes</a>里找喜欢的</li>
+<li>keybindings：自定义快捷键的绑定。</li>
+</ul>
+<p><img src="/images/wt03.png" alt="settings.json格式"></p>
+<hr>
+<h3 id="appearance-configuration">Appearance Configuration</h3>
+<p><strong>调整背景</strong></p>
+<p>Windows Terminal的背景可以是一种纯色，也可以是一张高清壁纸，GIF动图等。纯色背景可以直接设为默认，也可以根据你的colorSchemes(我们的配色主题)改变，也可以在profiles的每个环境里面单独设置。同时我们让背景添加透明的亚克力着色，就可以使用下面三条指令：</p>
+<pre tabindex="0"><code>&#34;profiles&#34;:
+    {
+        &#34;defaults&#34;:
+        {
+            // Put settings here that you want to apply to all profiles.
+            &#34;background&#34;: &#34;#013456&#34;,
+            &#34;useAcrylic&#34;: true,
+            &#34;acrylicOpacity&#34;: 0.8
+        },
+</code></pre><p>当然我们也可以让一张图片作为背景，我们首先进入Windows Terminal安装目录<code>C:\Users\{用户名}\AppData\Local\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe</code>里面的<code>RoamingState</code>文件夹，将壁纸放入其中。之后在配置文件加入以下内容：</p>
+<pre tabindex="0"><code>{
+    &#34;backgroundImage&#34;: &#34;ms-appdata:///roaming/wallhaven-md5e58.png&#34;,
+    &#34;backgroundImageStretchMode&#34;: &#34;uniformToFill&#34;,
+    &#34;backgroundImageOpacity&#34;: 0.6
+}
+</code></pre><p><img src="/images/wt04.png" alt="background"></p>
+<p>这样我们的背景就添加进去啦！</p>
+<p><img src="/images/wt05.png" alt="Windows Terminal"></p>
+<hr>
+<p><strong>更换文本背景主题</strong></p>
+<p>这里推荐全网最丰富的终端配色方案：<a href="https://github.com/mbadolato/iTerm2-Color-Schemes">iTerm2-Color-Schemes</a>。找到喜欢的主题风格，记下名字，去windowsterminal中找到相应json文件，复制其中内容到<code>settings.json</code>的schemes中：
+<img src="/images/wt06.png" alt="color schemes"></p>
+<p>然后在相应环境里面添加<code>&quot;colorScheme&quot;: &quot;Seafoam Pastel&quot;,</code>就可以啦！
+<img src="/images/wt07.png" alt="color schemes"></p>
+<hr>
+<p><strong>配置所启动的环境</strong></p>
+<p>Windows Terminal唤起环境时，是用配置文件里面的<code>commandline</code>这一属性定义的命令来进入相应环境。所以我们可以自定义执行的命令。我们以SSH远程登录为例子来介绍：</p>
+<p>默认的环境就是cmd与powershell了：</p>
+<pre tabindex="0"><code>{
+    &#34;guid&#34;: &#34;{61c54bbd-c2c6-5271-96e7-009a87ff44bf}&#34;,
+    &#34;name&#34;: &#34;Windows PowerShell&#34;,
+    &#34;colorScheme&#34;: &#34;Seafoam Pastel&#34;,
+    &#34;commandline&#34;: &#34;powershell.exe&#34;,
+    &#34;hidden&#34;: false
+},
+</code></pre><p>我们可以在唤起时同时执行ssh命令，用一个不同的UUID(<a href="https://www.uuidgenerator.net/">在线UUID生成器</a>)来新建一个选项：</p>
+<pre tabindex="0"><code>{
+    &#34;guid&#34;: &#34;{a060905f-d089-43d9-9422-cd748e7f0230}&#34;,
+    &#34;name&#34;: &#34;SSH Lab&#34;,
+    &#34;colorScheme&#34;: &#34;Seafoam Pastel&#34;,
+    &#34;commandline&#34;: &#34;powershell.exe ssh root@10.0.0.1&#34;,
+    &#34;hidden&#34;: false
+},
+</code></pre><p>如果想要更加美观，还可以添加一个图标：
+{
+&ldquo;icon&rdquo;: &ldquo;ms-appdata:///roaming/icon.png&rdquo;
+}</p>
+<p>进入WSL同理可用这个自己定义一个。</p>
+<hr>
+<p><strong>绑定快捷键</strong></p>
+<p>在 Windows Terminal 的配置文件末尾，我们可以在 <code>&quot;keybindings&quot;: []</code> 里定义其快捷键绑定。默认的 Windows Terminal 快捷键实际上就非常好用，可以用来快速开启某个环境、实施分屏操作等。这里举几个比较典型的、无需设置即可使用的例子：</p>
+<ul>
+<li><code>Ctrl + Shift + T</code> 打开新标签页</li>
+<li><code>Ctrl + Shift + 1</code> 进入配置文件中定义的第一个环境（<code>Ctrl + Shift + 2</code> 进入第二个，以此类推）</li>
+<li><code>Alt + Shift + -</code> 横向分屏；<code>Alt + Shift + +</code> 纵向分屏</li>
+<li><code>Ctrl + +</code> 放大、<code>Ctrl + -</code> 缩小、<code>Ctrl + 0</code> 恢复默认缩放比例</li>
+</ul>
+<p>我们可以在按住 Alt 的时候，点击 Windows Terminal 下拉菜单的「设置」，进入 Windows Terminal 自动生成的默认配置文件（不要更改这一文件，更改也不会有用的！）。在文件的最后，有 Windows Terminal 默认快捷键绑定可以参考：</p>
+<p><img src="/images/wt08.png" alt="default.json"></p>
+
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

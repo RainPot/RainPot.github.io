@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 剑指offer61-67 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="剑指offer" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E5%89%91%E6%8C%87offer61-67/" />
+    <meta property="og:title" content="剑指offer61-67" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="剑指offer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="剑指offer61-67" />
+    <meta name="twitter:description" content="剑指offer" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E5%89%91%E6%8C%87offer61-67/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">剑指offer61-67</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Fri Apr 17 2020 00:00:00 UTC'>
+	    2020-04-17
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    5 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E5%89%91%E6%8C%87offer61-67/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/problems">
+		  #Problems
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h2 id="61题目描述">61题目描述</h2>
+<p>序列化二叉树<br>
+请实现两个函数，分别用来序列化和反序列化二叉树</p>
+<p>二叉树的序列化是指：把一棵二叉树按照某种遍历方式的结果以某种格式保存为字符串，从而使得内存中建立起来的二叉树可以持久保存。序列化可以基于先序、中序、后序、层序的二叉树遍历方式来进行修改，序列化的结果是一个字符串，序列化时通过 某种符号表示空节点（#），以 ！ 表示一个结点值的结束（value!）。</p>
+<p>二叉树的反序列化是指：根据某种遍历顺序得到的序列化字符串结果str，重构二叉树。</p>
+<h2 id="思路">思路</h2>
+<p>采用前序遍历，遇到空节点，存入一个特殊字符。运用递归。要熟练使用to_string() 及 stoi()，c_str() strcpy() substr() 的用法。</p>
+<h2 id="代码">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    void SerializeHelper(TreeNode *root, string &amp;str)
+    {
+        if(root == NULL)
+        {
+            str += &#34;N,&#34;;
+            return;
+        }
+        str += to_string(root -&gt; val);
+        str += &#34;,&#34;;
+        SerializeHelper(root -&gt; left, str);
+        SerializeHelper(root -&gt; right, str);
+    }
+    char* Serialize(TreeNode *root) 
+    {    
+        if(root == NULL) return NULL;
+        string s = &#34;&#34;;
+        SerializeHelper(root, s);
+        
+        char* ret = new char[s.length() + 1];
+        ret = strcpy(ret, s.c_str());
+        return ret;
+    }
+    TreeNode* DeserializeHelper(string&amp; s)
+    {
+        if(s.empty()) return NULL;
+        if(s[0] == &#39;N&#39;)
+        {
+            s = s.substr(2);
+            return NULL;
+        }
+        TreeNode* newNode = new TreeNode(stoi(s));
+        s = s.substr(s.find(&#39;,&#39;) + 1);
+        newNode -&gt; left = DeserializeHelper(s);
+        newNode -&gt; right = DeserializeHelper(s);
+        return newNode;
+    }
+    
+    TreeNode* Deserialize(char *str) 
+    {
+        if(str == NULL) return NULL;
+        string s(str);
+        return DeserializeHelper(s);
+    }
+};
+</code></pre><h2 id="62题目描述">62题目描述</h2>
+<p>二叉搜索树的第k个结点<br>
+给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。</p>
+<h2 id="思路-1">思路</h2>
+<p>采用递归。二叉搜索树的中序遍历的输出是从小到大。所以设置一个计数器，用递归中序遍历到第k个即结果就好。</p>
+<h2 id="代码-1">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    int count = 0;
+    TreeNode* KthNode(TreeNode* pRoot, int k)
+    {
+        if(pRoot != NULL)
+        {
+            TreeNode* node = KthNode(pRoot -&gt; left, k);
+            if(node != NULL) return node;
+            count++;
+            if(count == k) return pRoot;
+            node = KthNode(pRoot -&gt; right, k);
+            if(node != NULL) return node;
+        }
+        return NULL;
+    }
+
+    
+};
+</code></pre><h2 id="63题目描述">63题目描述</h2>
+<p>数据流中的中位数<br>
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。我们使用Insert()方法读取数据流，使用GetMedian()方法获取当前读取数据的中位数。</p>
+<h2 id="思路-2">思路</h2>
+<p>定义一个向量，用来保存数据流，用sort函数进行排序。</p>
+<h2 id="代码-2">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    vector&lt;int&gt; array;
+    void Insert(int num)
+    {
+        array.push_back(num);
+    }
+
+    double GetMedian()
+    { 
+        sort(array.begin(), array.end());
+        if(array.size() % 2 == 0) return (array[array.size() / 2] + array[array.size() / 2 - 1]) / 2.0;
+        if(array.size() % 2 != 0) return array[array.size() / 2];
+    }
+
+};
+</code></pre><h2 id="64题目描述">64题目描述</h2>
+<p>滑动窗口的最大值<br>
+给定一个数组和滑动窗口的大小，找出所有滑动窗口里数值的最大值。例如，如果输入数组{2,3,4,2,6,2,5,1}及滑动窗口的大小3，那么一共存在6个滑动窗口，他们的最大值分别为{4,4,6,6,6,5}； 针对数组{2,3,4,2,6,2,5,1}的滑动窗口有以下6个： {[2,3,4],2,6,2,5,1}， {2,[3,4,2],6,2,5,1}， {2,3,[4,2,6],2,5,1}， {2,3,4,[2,6,2],5,1}， {2,3,4,2,[6,2,5],1}， {2,3,4,2,6,[2,5,1]}。</p>
+<h2 id="思路-3">思路</h2>
+<p>设置两个指针，代表窗口上下限，在窗口内部暴力查找最大值。 /还有一个双端队列的思路</p>
+<h2 id="代码-3">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    vector&lt;int&gt; maxInWindows(const vector&lt;int&gt;&amp; num, unsigned int size)
+    {
+        vector&lt;int&gt; maxarray;
+        if(num.empty()) return maxarray;
+        int fast = size - 1, slow = 0;
+        int max = 0;
+        while(fast &lt; num.size())
+        {
+            max = num[slow];
+            for(int i = slow + 1; i &lt;= fast; i++)
+                if(num[i] &gt; max) max = num[i];
+            maxarray.push_back(max);
+            fast++;
+            slow++;
+        }
+        return maxarray;
+    }
+};
+</code></pre><h2 id="65题目描述">65题目描述</h2>
+<p>矩阵中的路径<br>
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一个格子开始，每一步可以在矩阵中向左，向右，向上，向下移动一个格子。如果一条路径经过了矩阵中的某一个格子，则该路径不能再进入该格子。</p>
+<h2 id="思路-4">思路</h2>
+<p>分析：回溯算法<br>
+这是一个可以用回朔法解决的典型题。首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第i个字符不是ch，那么这个格子不可能处在路径上的<br>
+第i个位置。如果路径上的第i个字符正好是ch，那么往相邻的格子寻找路径上的第i+1个字符。除在矩阵边界上的格子之外，其他格子都有4个相邻的格子。<br>
+重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。<br>
+　　由于回朔法的递归特性，路径可以被开成一个栈。当在矩阵中定位了路径中前n个字符的位置之后，在与第n个字符对应的格子的周围都没有找到第n+1个<br>
+字符，这个时候只要在路径上回到第n-1个字符，重新定位第n个字符。<br>
+　　由于路径不能重复进入矩阵的格子，还需要定义和字符矩阵大小一样的布尔值矩阵，用来标识路径是否已经进入每个格子。 当矩阵中坐标为（row,col）的<br>
+格子和路径字符串中相应的字符一样时，从4个相邻的格子(row,col-1),(row-1,col),(row,col+1)以及(row+1,col)中去定位路径字符串中下一个字符<br>
+如果4个相邻的格子都没有匹配字符串中下一个的字符，表明当前路径字符串中字符在矩阵中的定位不正确，我们需要回到前一个，然后重新定位。<br>
+　　一直重复这个过程，直到路径字符串上所有字符都在矩阵中找到合适的位置</p>
+<h2 id="代码-4">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    bool hasPath(char* matrix, int rows, int cols, char* str)
+    {
+        if(rows &lt;= 0 || cols &lt;= 0 || str == NULL) return false;
+        //bool* HasCount = new bool[rows * cols]();
+        bool* HasCount = new bool[rows * cols];
+        memset(HasCount,false,rows*cols);
+        for(int i = 0; i &lt; rows; i++)
+        {
+            for(int j = 0; j &lt; cols; j++)
+                if(HasPathHelper(matrix, rows, cols, str, HasCount, i, j)) return true;
+        }
+        return false;
+    }
+    
+    bool HasPathHelper(char* matrix, int rows, int cols, char* str, bool* HasCount, int x, int y)
+    {
+        if(*str == &#39;\0&#39;) return true;
+        if(x &lt; 0 || x &gt;= rows || y &lt; 0 || y &gt;= cols) return false;
+        if(HasCount[x * cols + y] || matrix[x * cols + y] != *str) return false;
+        HasCount[x * cols + y] = true;
+        bool temp = HasPathHelper(matrix, rows, cols, str+1, HasCount, x+1, y) 
+            || HasPathHelper(matrix, rows, cols, str+1, HasCount, x, y+1)
+            || HasPathHelper(matrix, rows, cols, str+1, HasCount, x-1, y)
+            || HasPathHelper(matrix, rows, cols, str+1, HasCount, x, y-1);
+        HasCount[x * cols + y] = false;
+        return temp;
+    }
+};
+</code></pre><h2 id="66题目描述">66题目描述</h2>
+<p>机器人的运动范围<br>
+地上有一个m行和n列的方格。一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。 例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？</p>
+<h2 id="思路-5">思路</h2>
+<p>回溯法，采用递归。这里要注意要遍历所有格子，而不是找一个能包含最多格子的路径，在路径上可以任意走动。所以在计算时直接加1即可，次数不需回溯。</p>
+<h2 id="代码-5">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    int movingCount(int threshold, int rows, int cols)
+    {
+        if(rows &lt;= 0 || cols &lt;= 0) return 0;
+        bool* Count = new bool[rows * cols];
+        memset(Count, false, rows * cols);
+        return movingCountHelper(threshold, rows, cols, 0, 0, Count);
+    }
+    
+    int movingCountHelper(int threshold, int rows, int cols, int x, int y, bool* Count)
+    {
+        if(x &lt; 0 || x &gt;= rows || y &lt; 0 || y &gt;= cols) return 0;
+        if(Count[x * cols + y] == 1) return 0;
+        int col_sum = 0, row_sum = 0;
+        int temp_x = x, temp_y = y;
+        if(x == 0) row_sum = 0;
+        if(y == 0) col_sum = 0;
+        while(temp_x &gt; 0)
+        {
+            row_sum += (temp_x % 10);
+            temp_x = temp_x / 10; 
+        }
+        while(temp_y &gt; 0)
+        {
+            col_sum += (temp_y % 10);
+            temp_y = temp_y / 10;
+        }
+        if((row_sum + col_sum) &lt;= threshold)
+        {
+            Count[x * cols + y] = 1;
+            return 1 + movingCountHelper(threshold, rows, cols, x + 1, y, Count) + movingCountHelper(threshold, rows, cols, x - 1, y, Count)
+                + movingCountHelper(threshold, rows, cols, x, y + 1, Count) + movingCountHelper(threshold, rows, cols, x, y - 1, Count);
+        }
+        
+        return 0;
+    }
+};
+</code></pre><h2 id="67题目描述">67题目描述</h2>
+<p>剪绳子<br>
+给你一根长度为n的绳子，请把绳子剪成整数长的m段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为k[0],k[1],&hellip;,k[m]。请问k[0]xk[1]x&hellip;xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<h2 id="思路1">思路1</h2>
+<p>动态规划<br>
+①求一个问题的最优解；<br>
+②整体的问题的最优解是依赖于各个子问题的最优解；<br>
+③小问题之间还有相互重叠的更小的子问题；<br>
+④从上往下分析问题，从下往上求解问题；</p>
+<h2 id="代码-6">代码</h2>
+<pre tabindex="0"><code>public class Solution 
+{
+    public int cutRope(int n) 
+    {
+       // n&lt;=3的情况，m&gt;1必须要分段，例如：3必须分成1、2；1、1、1 ，n=3最大分段乘积是2,
+        if(n==2)
+            return 1;
+        if(n==3)
+            return 2;
+        int[] dp = new int[n+1];
+        /*
+        下面3行是n&gt;=4的情况，跟n&lt;=3不同，4可以分很多段，比如分成1、3，
+        这里的3可以不需要再分了，因为3分段最大才2，不分就是3。记录最大的。
+         */
+        dp[1]=1;
+        dp[2]=2;
+        dp[3]=3;
+        int res=0;//记录最大的
+        for (int i = 4; i &lt;= n; i++) {
+            for (int j = 1; j &lt;=i/2 ; j++) {
+                res=Math.max(res,dp[j]*dp[i-j]);
+            }
+            dp[i]=res;
+        }
+        return dp[n];
+    }
+}
+</code></pre><h2 id="思路2">思路2</h2>
+<p>贪婪算法<br>
+贪婪解法： 当n大于等于5时，我们尽可能多的剪长度为3的绳子；当剩下的绳子长度为4时，把绳子剪成两段长度为2的绳子。 为什么选2，3为最小的子问题？因为2，3包含于各个问题中，如果再往下剪得话，乘积就会变小。 为什么选长度为3？因为当n≥5时，3(n−3)≥2(n−2)<br>
+<a href="https://www.nowcoder.com/questionTerminal/57d85990ba5b440ab888fc72b0751bf8?f=discussion">https://www.nowcoder.com/questionTerminal/57d85990ba5b440ab888fc72b0751bf8?f=discussion</a></p>
+<h2 id="代码-7">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    int cutRope(int number) 
+    {
+        if(number &lt; 2) return 0;
+        if(number == 3) return 2;
+        if(number == 2) return 1;
+        int threecount = number / 3;
+        if(number - (threecount * 3) == 1) threecount--;
+        int twocount = (number - (threecount * 3)) / 2;
+        return int(pow(3, threecount))*int(pow(2, twocount));
+    }
+};
+</code></pre>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

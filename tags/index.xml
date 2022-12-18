@@ -5,6 +5,61 @@
     <link>/tags/</link>
     <description>Recent content in Tags on RainPot Blog</description>
     
-    <language>en-us</language><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Fri, 17 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Problems</title>
+      <link>/tags/problems/</link>
+      <pubDate>Fri, 17 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/problems/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Video Object Segmentation</title>
+      <link>/tags/video-object-segmentation/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/video-object-segmentation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>基础知识</title>
+      <link>/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</link>
+      <pubDate>Tue, 21 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Object Detection</title>
+      <link>/tags/object-detection/</link>
+      <pubDate>Mon, 22 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/object-detection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tensorboard</title>
+      <link>/tags/tensorboard/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tensorboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Semantic Segmentation</title>
+      <link>/tags/semantic-segmentation/</link>
+      <pubDate>Mon, 21 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/semantic-segmentation/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

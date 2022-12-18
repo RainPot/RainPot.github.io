@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 剑指offer51-60 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="剑指offer" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E5%89%91%E6%8C%87offer51-60/" />
+    <meta property="og:title" content="剑指offer51-60" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="剑指offer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="剑指offer51-60" />
+    <meta name="twitter:description" content="剑指offer" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E5%89%91%E6%8C%87offer51-60/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">剑指offer51-60</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Thu Apr 16 2020 00:00:00 UTC'>
+	    2020-04-16
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    6 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E5%89%91%E6%8C%87offer51-60/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/problems">
+		  #Problems
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h2 id="51题目描述">51题目描述</h2>
+<p>构建乘积数组<br>
+给定一个数组A[0,1,&hellip;,n-1],请构建一个数组B[0,1,&hellip;,n-1],其中B中的元素B[i]=A[0]<em>A[1]</em>&hellip;*A[i-1]<em>A[i+1]</em>&hellip;*A[n-1]。不能使用除法。（注意：规定B[0] = A[1] * A[2] * &hellip; * A[n-1]，B[n-1] = A[0] * A[1] * &hellip; * A[n-2];）</p>
+<h2 id="思路1">思路1</h2>
+<p>直接暴力两个循环。。</p>
+<h2 id="代码">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    vector&lt;int&gt; multiply(const vector&lt;int&gt;&amp; A) 
+    {
+        vector&lt;int&gt; result;
+        int temp = 1;
+        if(A.size() == 0) return result;
+        for(int i = 0; i &lt; A.size(); i++)
+        {
+            temp = 1;
+            for(int j = 0; j &lt; A.size(); j++)
+            {
+                if(j == i) continue;
+                else
+                {
+                    temp *= A[j];
+                }
+            }
+            result.push_back(temp);
+        }
+        return result;
+    }
+};
+</code></pre><h2 id="思路2">思路2</h2>
+<p>//B[i]=A[0]<em>A[1]</em>&hellip;*A[i-1]<em>A[i+1]</em>&hellip;<em>A[n-1]<br>
+//从左到右算 B[i]=A[0]<em>A[1]</em>&hellip;<em>A[i-1]<br>
+//从右到左算B[i]</em>=A[i+1]</em>&hellip;*A[n-1]</p>
+<h2 id="代码-1">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    vector&lt;int&gt; multiply(const vector&lt;int&gt;&amp; A) {
+     
+        int n=A.size();
+        vector&lt;int&gt; b(n);
+        int ret=1;
+        for(int i=0;i&lt;n;ret*=A[i++]){
+            b[i]=ret;
+        }
+        ret=1;
+        for(int i=n-1;i&gt;=0;ret*=A[i--]){
+            b[i]*=ret;
+        }
+        return b;
+    }
+};
+</code></pre><h2 id="52题目描述">52题目描述</h2>
+<p>正则表达式匹配<br>
+请实现一个函数用来匹配包括&rsquo;.&lsquo;和&rsquo;<em>&lsquo;的正则表达式。模式中的字符&rsquo;.&lsquo;表示任意一个字符，而&rsquo;</em>&lsquo;表示它前面的字符可以出现任意次（包含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串&quot;aaa&quot;与模式&quot;a.a&quot;和&quot;ab<em>ac</em>a&quot;匹配，但是与&quot;aa.a&quot;和&quot;ab*a&quot;均不匹配</p>
+<h2 id="思路">思路</h2>
+<p>使用递归</p>
+<pre tabindex="0"><code>    首先，考虑特殊情况：
+         1&gt;两个字符串都为空，返回true
+         2&gt;当第一个字符串不空，而第二个字符串空了，返回false（因为这样，就无法
+            匹配成功了,而如果第一个字符串空了，第二个字符串非空，还是可能匹配成
+            功的，比如第二个字符串是“a*a*a*a*”,由于‘*’之前的元素可以出现0次，
+            所以有可能匹配成功）
+    之后就开始匹配第一个字符，这里有两种可能：匹配成功或匹配失败。但考虑到pattern
+    下一个字符可能是‘*’， 这里我们分两种情况讨论：pattern下一个字符为‘*’或
+    不为‘*’：
+          1&gt;pattern下一个字符不为‘*’：这种情况比较简单，直接匹配当前字符。如果
+            匹配成功，继续匹配下一个；如果匹配失败，直接返回false。注意这里的
+            “匹配成功”，除了两个字符相同的情况外，还有一种情况，就是pattern的
+            当前字符为‘.’,同时str的当前字符不为‘\0’。
+          2&gt;pattern下一个字符为‘*’时，稍微复杂一些，因为‘*’可以代表0个或多个。
+            这里把这些情况都考虑到：
+               a&gt;当‘*’匹配0个字符时，str当前字符不变，pattern当前字符后移两位，
+                跳过这个‘*’符号；
+               b&gt;当‘*’匹配1个或多个时，str当前字符移向下一个，pattern当前字符
+                不变。（这里匹配1个或多个可以看成一种情况，因为：当匹配一个时，
+                由于str移到了下一个字符，而pattern字符不变，就回到了上边的情况a；
+                当匹配多于一个字符时，相当于从str的下一个字符继续开始匹配）
+    之后再写代码就很简单了。
+</code></pre><h2 id="代码-2">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    bool match(char* str, char* pattern)
+    {
+        if(*str == &#39;\0&#39; &amp;&amp; *pattern == &#39;\0&#39;) return true;
+        if(*str != &#39;\0&#39; &amp;&amp; *pattern == &#39;\0&#39;) return false;
+        if(*(pattern + 1) != &#39;*&#39;)
+        {
+            if((*pattern == *str) || (*str != &#39;\0&#39; &amp;&amp; *pattern == &#39;.&#39;))
+                return match(str + 1, pattern + 1);
+            else
+                return false;
+        }
+        else
+        {
+            if((*pattern == *str) || (*str != &#39;\0&#39; &amp;&amp; *pattern == &#39;.&#39;))
+                return match(str + 1, pattern) || match(str, pattern + 2);
+            else
+                return match(str, pattern + 2);
+        }
+    }
+};
+</code></pre><h2 id="53题目描述">53题目描述</h2>
+<p>表示数值的字符串<br>
+请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。例如，字符串&quot;+100&quot;,&ldquo;5e2&rdquo;,&quot;-123&quot;,&ldquo;3.1416&quot;和&rdquo;-1E-16&quot;都表示数值。 但是&quot;12e&quot;,&ldquo;1a3.14&rdquo;,&ldquo;1.2.3&rdquo;,&quot;+-5&quot;和&quot;12e+4.3&quot;都不是。</p>
+<h2 id="思路-1">思路</h2>
+<p>依旧是各路判断，判断条件见注释。</p>
+<h2 id="代码-3">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    bool isNumeric(char* string)
+    {
+        if(*string == &#39;\0&#39;) return false;
+        bool symbol = false, demical = false, hasE = false;
+        for(int i = 0; i &lt; strlen(string); i++)
+        {
+            if(string[i] == &#39;e&#39; || string[i] == &#39;E&#39;)
+            {
+                if(hasE) return false; //E后面不能再有E
+                if(i == (strlen(string) - 1)) return false; //E不能在数值末尾
+                hasE = true;
+                continue;
+            }
+            else if(string[i] == &#39;+&#39; || string[i] == &#39;-&#39;)
+            {
+                if(symbol &amp;&amp; string[i - 1] != &#39;E&#39; &amp;&amp; string[i - 1] != &#39;e&#39;) return false; //符号出现第二次必须在E或e后面
+                if(!symbol &amp;&amp; i &gt; 0 &amp;&amp; string[i - 1] != &#39;e&#39; &amp;&amp; string[i - 1] != &#39;E&#39;) return false; //符号出现第一次符号且不在开头的话 同样也需要在E或e后面
+                symbol = true;
+                continue;
+            }
+            else if(string[i] == &#39;.&#39;)
+            {
+                if(hasE || demical) return false; //.不能出现两次或E的后面 这里一个疑问是.为什么能在开头
+                demical = true;
+                continue;
+            }
+            else if(string[i] &lt; &#39;0&#39; || string[i] &gt; &#39;9&#39;) return false;
+        }
+        return true;
+    }
+
+};
+</code></pre><h2 id="54题目描述">54题目描述</h2>
+<p>字符流中第一个不重复的字符<br>
+请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符&quot;go&quot;时，第一个只出现一次的字符是&quot;g&quot;。当从该字符流中读出前六个字符“google&quot;时，第一个只出现一次的字符是&quot;l&quot;。</p>
+<h2 id="思路-2">思路</h2>
+<p>建立一个256大小的数组用来记录256个字符出现的次数，然后直接在里面寻找出现一次的就行了。重点在于知道256字符。</p>
+<h2 id="代码-4">代码</h2>
+<pre tabindex="0"><code>class Solution
+{
+public:
+    int count[256] = {0};
+    string s;
+  //Insert one char from stringstream
+    void Insert(char ch)
+    {
+        s += ch;
+        count[int(ch)]++;
+    }
+  //return the first appearence once char in current stringstream
+    char FirstAppearingOnce()
+    {
+        char result = &#39;#&#39;;
+        for(int i = 0; i &lt; s.size(); i++)
+        {
+            if(count[int(s[i])] == 1)
+            {
+                result = s[i];
+                break;
+            }
+        }
+        return result;
+    }
+
+};
+</code></pre><h2 id="55题目描述">55题目描述</h2>
+<p>链表中环的入口结点<br>
+给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。</p>
+<h2 id="思路1-1">思路1</h2>
+<p>设置快慢指针，都从链表头出发，快指针每次走两步，慢指针一次走一步，假如有环，一定相遇于环中某点(结论1)。接着让两个指针分别从相遇点和链表头出发，两者都改为每次走一步，最终相遇于环入口(结论2)。以下是两个结论证明：<br>
+两个结论：<br>
+1、设置快慢指针，假如有环，他们最后一定相遇。<br>
+2、两个指针分别从链表头和相遇点继续出发，每次走一步，最后一定相遇与环入口。<br>
+证明结论1：设置快慢指针fast和low，fast每次走两步，low每次走一步。假如有环，两者一定会相遇（因为low一旦进环，可看作fast在后面追赶low的过程，每次两者都接近一步，最后一定能追上）。<br>
+证明结论2：<br>
+设：<br>
+链表头到环入口长度为&ndash;a<br>
+环入口到相遇点长度为&ndash;b<br>
+相遇点到环入口长度为&ndash;c<br>
+则：相遇时<br>
+快指针路程=a+(b+c)k+b ，k&gt;=1  其中b+c为环的长度，k为绕环的圈数（k&gt;=1,即最少一圈，不能是0圈，不然和慢指针走的一样长，矛盾）。<br>
+慢指针路程=a+b<br>
+快指针走的路程是慢指针的两倍，所以：<br>
+（a+b）*2=a+(b+c)k+b<br>
+化简可得：<br>
+a=(k-1)(b+c)+c 这个式子的意思是： 链表头到环入口的距离=相遇点到环入口的距离+（k-1）圈环长度。其中k&gt;=1,所以k-1&gt;=0圈。所以两个指针分别从链表头和相遇点出发，最后一定相遇于环入口。</p>
+<h2 id="代码-5">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+    int val;
+    struct ListNode *next;
+    ListNode(int x) :
+        val(x), next(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    ListNode* EntryNodeOfLoop(ListNode* pHead)
+    {
+        if(pHead == NULL) return NULL;
+        ListNode* fast = pHead;
+        ListNode* slow = pHead;
+        while(fast &amp;&amp; fast -&gt; next)
+        {
+            fast = fast -&gt; next -&gt; next;
+            slow = slow -&gt; next;
+            if(fast == slow) break;
+        }
+        if(fast == NULL || fast -&gt; next == NULL) return NULL;
+        slow = pHead;
+        while(slow != fast)
+        {
+            fast = fast -&gt; next;
+            slow = slow -&gt; next;
+        }
+        return slow;
+    }
+};
+</code></pre><h2 id="思路2-1">思路2</h2>
+<p>这个思路要比1好推断出来。<br>
+首先先计算环中结点个数。计算方法：（设置快慢两个指针，如果有环，则两者一定会相遇且相遇在环中）。从相遇点转一圈找到环的个数。<br>
+然后再设置两个快慢指针，快的先走环个数步，然后两者一起往后走 当两者相遇时，就是入口。</p>
+<h2 id="代码-6">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+    int val;
+    struct ListNode *next;
+    ListNode(int x) :
+        val(x), next(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    ListNode* EntryNodeOfLoop(ListNode* pHead)
+    {
+         if(pHead==NULL)return NULL;
+         //先计算环中结点的个数
+         //快慢指针相遇结点一定在环中
+         ListNode *pFast=pHead,*pSlow=pHead-&gt;next;
+         while(pFast!=NULL&amp;&amp;pSlow!=NULL&amp;&amp;pFast!=pSlow){
+            pSlow=pSlow-&gt;next;
+            pFast=pFast-&gt;next;
+            if(pFast!=NULL)
+                pFast=pFast-&gt;next;
+         }
+         //开始统计环结点数
+         int countNum=1;
+         ListNode *pTempNode=pFast-&gt;next;
+         if(pFast==pSlow&amp;&amp;pFast!=NULL){
+             while(pTempNode!=pFast){
+                 pTempNode=pTempNode-&gt;next;
+                 ++countNum;
+             }
+         }
+         else
+             return NULL;
+         //再设两指针，一先一后
+         ListNode *pNode1=pHead,*pNode2=pHead;
+         for(int i=0;i&lt;countNum;i++){
+                pNode1=pNode1-&gt;next;
+         }
+         while(pNode1!=pNode2){
+             pNode1=pNode1-&gt;next;
+             pNode2=pNode2-&gt;next;
+         }
+         return pNode1;
+          
+    }
+};
+</code></pre><h2 id="56题目描述">56题目描述</h2>
+<p>删除链表中重复的结点<br>
+在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5 处理后为 1-&gt;2-&gt;5</p>
+<h2 id="思路-3">思路</h2>
+<p>见注释</p>
+<h2 id="代码-7">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+    int val;
+    struct ListNode *next;
+    ListNode(int x) :
+        val(x), next(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    ListNode* deleteDuplication(ListNode* pHead)
+    {
+        if( pHead == NULL ) return pHead;
+ 
+        ListNode *pre = NULL; //指向前面最晚访问过的不重复结点
+        ListNode *p = pHead; //指向当前处理的结点
+        ListNode *q = NULL; //指向当前处理结点后面结点
+ 
+        while( p != NULL )
+        {
+            //当前结点p，（其实是p指向当前结点），与它下一个结点p-&gt;next的val相同，说明要删掉有这个val的所有结点
+            if( p-&gt;next != NULL &amp;&amp; p-&gt;next-&gt;val == p-&gt;val )
+            {
+                q = p-&gt;next;
+ 
+                //找到q，它指向最后一个与p val相同的结点，那p 到 q （包含） 都是要删除的
+                while( q != NULL &amp;&amp; q-&gt;next != NULL &amp;&amp; q-&gt;next-&gt;val == p-&gt;val )
+                {
+                    q = q-&gt;next;
+                }
+     
+                //如果p指向链表中第一个元素，p -&gt; ... -&gt; q -&gt;... , 要删除p到q, 将指向链表第一个元素的指针pHead指向q-&gt;next。
+                if( p == pHead )
+                {
+                    pHead = q-&gt;next;
+                }
+                else//如果p不指向链表中第一个元素，pre -&gt; p -&gt;...-&gt;q -&gt;... ，要删除p到q，即pre-&gt;next = q-&gt;next
+                {
+                    pre-&gt;next = q-&gt;next;
+                }
+                //当前处理的p要向链表尾部移动
+                p = q-&gt;next;
+            }
+            else
+            {
+                pre = p;
+                p = p-&gt;next;
+            }
+        }
+        return pHead;
+    }
+};
+</code></pre><h2 id="57题目描述">57题目描述</h2>
+<p>二叉树的下一个结点<br>
+给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子结点，同时包含指向父结点的指针。</p>
+<h2 id="思路-4">思路</h2>
+<p>分析二叉树的下一个节点，一共有以下情况：<br>
+1.二叉树为空，则返回空；<br>
+2.节点右孩子存在，则设置一个指针从该节点的右孩子出发，一直沿着指向左子结点的指针找到的叶子节点即为下一个节点；<br>
+3.节点不是根节点。如果该节点是其父节点的左孩子，则返回父节点；否则继续向上遍历其父节点的父节点，重复之前的判断，返回结果。</p>
+<h2 id="代码-8">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeLinkNode {
+    int val;
+    struct TreeLinkNode *left;
+    struct TreeLinkNode *right;
+    struct TreeLinkNode *next;
+    TreeLinkNode(int x) :val(x), left(NULL), right(NULL), next(NULL) {
+        
+    }
+};
+*/
+class Solution {
+public:
+    TreeLinkNode* GetNext(TreeLinkNode* pNode)
+    {
+        if(pNode == NULL) return NULL;
+        if(pNode -&gt; right)
+        {
+            pNode = pNode -&gt; right;
+            while(pNode -&gt; left)
+                pNode = pNode -&gt; left;
+            return pNode;
+        }
+        while(pNode -&gt; next != NULL)
+        {
+            TreeLinkNode *proot=pNode-&gt;next;
+            if(proot-&gt;left==pNode)
+                return proot;
+            pNode=pNode-&gt;next;
+        }
+        return NULL;
+    }
+};
+</code></pre><h2 id="58题目描述">58题目描述</h2>
+<p>对称的二叉树<br>
+请实现一个函数，用来判断一颗二叉树是不是对称的。注意，如果一个二叉树同此二叉树的镜像是同样的，定义其为对称的。</p>
+<h2 id="思路-5">思路</h2>
+<p>采用递归</p>
+<h2 id="代码-9">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    bool isSymmetrical(TreeNode* pRoot)
+    {
+        return IS(pRoot, pRoot);
+    }
+    
+    bool IS(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        if(pRoot1 == NULL &amp;&amp; pRoot2 == NULL) return true;
+        if(pRoot1 == NULL || pRoot2 == NULL) return false;
+        if(pRoot1 -&gt; val != pRoot2 -&gt; val) return false;
+        return IS(pRoot1 -&gt; left, pRoot2 -&gt; right) &amp;&amp; IS(pRoot1 -&gt; right, pRoot2 -&gt; left);
+    }
+
+};
+</code></pre><h2 id="59题目描述">59题目描述</h2>
+<p>按之字形顺序打印二叉树<br>
+请实现一个函数按照之字形打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右至左的顺序打印，第三行按照从左到右的顺序打印，其他行以此类推。</p>
+<h2 id="思路-6">思路</h2>
+<p>采用两个栈来存取所读节点，因为栈的输出是倒序，正好符合之字型输出。</p>
+<h2 id="代码-10">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+    vector&lt;vector&lt;int&gt; &gt; Print(TreeNode* pRoot) 
+    {
+        vector&lt;vector&lt;int&gt;&gt; result;
+        if(pRoot == NULL) return result;
+        stack&lt;TreeNode*&gt; stackR;
+        stack&lt;TreeNode*&gt; stackL;
+        stackL.push(pRoot);
+        vector&lt;int&gt; temp;
+        temp.push_back(pRoot -&gt; val);
+        result.push_back(temp);
+        temp.clear();
+        while(!stackL.empty() || !stackR.empty())
+        {
+            while(!stackL.empty())
+            {
+                TreeNode* L = stackL.top();
+                stackL.pop();
+                if(L -&gt; right)
+                {
+                    stackR.push(L -&gt; right);
+                    temp.push_back(L -&gt; right -&gt; val);
+                }
+                if(L -&gt; left)
+                {
+                    stackR.push(L -&gt; left);
+                    temp.push_back(L -&gt; left -&gt; val);
+                }
+            }
+            if(!temp.empty())
+            {
+                result.push_back(temp);
+                temp.clear();
+            }
+            while(!stackR.empty())
+            {
+                TreeNode* R = stackR.top();
+                stackR.pop();
+                if(R -&gt; left)
+                {
+                    stackL.push(R -&gt; left);
+                    temp.push_back(R -&gt; left -&gt; val);
+                }
+                if(R -&gt; right)
+                {
+                    stackL.push(R -&gt; right);
+                    temp.push_back(R -&gt; right -&gt; val);
+                }
+            }
+            if(!temp.empty())
+            {
+                result.push_back(temp);
+                temp.clear();
+            }
+        }
+        return result;
+    }
+    
+};
+</code></pre><h2 id="60题目描述">60题目描述</h2>
+<p>把二叉树打印成多行<br>
+从上到下按层打印二叉树，同一层结点从左至右输出。每一层输出一行。</p>
+<h2 id="思路-7">思路</h2>
+<p>与上一题思路一样，只不过输出顺序变为从左至右 也就是不许转换顺序，所以用两个队列就可以。</p>
+<h2 id="代码-11">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+    TreeNode(int x) :
+            val(x), left(NULL), right(NULL) {
+    }
+};
+*/
+class Solution {
+public:
+        vector&lt;vector&lt;int&gt;&gt; Print(TreeNode* pRoot) 
+        {
+            vector&lt;vector&lt;int&gt;&gt; result;
+            if(pRoot == NULL) return result;
+            queue&lt;TreeNode*&gt; que1;
+            queue&lt;TreeNode*&gt; que2;
+            que1.push(pRoot);
+            vector&lt;int&gt; temp;
+            temp.push_back(pRoot -&gt; val);
+            result.push_back(temp);
+            temp.clear();
+            while(!que1.empty() || !que2.empty())
+            {
+                while(!que1.empty())
+                {
+                    TreeNode* front1 = que1.front();
+                    que1.pop();
+                    if(front1 -&gt; left)
+                    {
+                        que2.push(front1 -&gt; left);
+                        temp.push_back(front1 -&gt; left -&gt; val);
+                    }
+                    if(front1 -&gt; right)
+                    {
+                        que2.push(front1 -&gt; right);
+                        temp.push_back(front1 -&gt; right -&gt; val);
+                    }
+                }
+                if(!temp.empty())
+                {
+                    result.push_back(temp);
+                    temp.clear();
+                }
+                while(!que2.empty())
+                {
+                    TreeNode* front2 = que2.front();
+                    que2.pop();
+                    if(front2 -&gt; left)
+                    {
+                        que1.push(front2 -&gt; left);
+                        temp.push_back(front2 -&gt; left -&gt; val);
+                    }
+                    if(front2 -&gt; right)
+                    {
+                        que1.push(front2 -&gt; right);
+                        temp.push_back(front2 -&gt; right -&gt; val);
+                    }
+                }
+                if(!temp.empty())
+                {
+                    result.push_back(temp);
+                    temp.clear();
+                }
+            }
+            return result;
+        }
+};
+</code></pre>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

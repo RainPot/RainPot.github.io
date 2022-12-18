@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> DANet-CCNet - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="LeetCode" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/danet-ccnet/" />
+    <meta property="og:title" content="DANet-CCNet" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="LeetCode" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="DANet-CCNet" />
+    <meta name="twitter:description" content="LeetCode" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/danet-ccnet/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">DANet-CCNet</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Mon Jan 21 2019 00:00:00 UTC'>
+	    2019-01-21
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/danet-ccnet/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/semantic-segmentation">
+		  #Semantic Segmentation
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <p>两篇文章都是将self-attention机制应用到分割当中，扩大感受野。第二篇文章采用了更巧妙的方法来减少参数。</p>
+<h2 id="danet">DANet</h2>
+<p><a href="https://arxiv.org/abs/1809.02983">Dual Attention Network for Scene Segmentation</a></p>
+<p>self-attention在分割中应用的大致思想是：特征图与特征图的转置进行矩阵相乘，由于特征图有channel维度，相当于是每个像素与另外每个元素都进行点乘操作，而向量的点乘几何意义为计算两个向量的<strong>相似度</strong>，两个向量越相似，它们点乘越大。看下图，特征图转置与特征图矩阵相乘后用softmax进行归一化就得到了Attention map S。S再与特征图的转置进行矩阵相乘，这个操作把相关性信息重新分布到原始特征图上，最后再将这个信息与特征图A相加，得到最终输出，这个输出结合了整张图的相关性结果。</p>
+<p><img src="https://i.loli.net/2019/02/25/5c73485641635.png" alt="attention"></p>
+<p>整个网络的框架如下图：非常简单，<em><strong>特征提取-&gt;attention module-&gt;上采样得到分割图</strong></em></p>
+<p><img src="https://c2.staticflickr.com/8/7896/40180410623_4f9679fd0e_c.jpg" alt="structure"></p>
+<p>除了上面说的那一部分attention，作者还加了蓝色channel attention，在这里计算特征图与特征图转置矩阵相乘操作时，相乘的顺序调换了一下，这相当于是让channel与channel之间进行点乘操作，计算channel之间的相似性，在这里我认为每张channel map代表了不同类别，这样让类别与类别计算距离，来进行辅助。作者并没有解释为什么这么做，估计这也是论文不中的原因之一。</p>
+<p>实验结果在cityscapes，PASCAL Context，COCO Stuff上都达到了SOTA。</p>
+<h2 id="ccnet">CCNet</h2>
+<p><a href="https://arxiv.org/abs/1811.11721">CCNet: Criss-Cross Attention for Semantic Segmentation</a></p>
+<p>本篇文章的亮点在于用了巧妙的方法减少了参数量。在上面的DANet中，attention map计算的是所有像素与所有像素之间的相似性，空间复杂度为(HxW)x(HxW)，而本文采用了criss-cross思想，只计算每个像素与其同行同列即十字上的像素的相似性，通过进行循环(两次相同操作)，间接计算到每个像素与每个像素的相似性，将空间复杂度降为(HxW)x(H+W-1)，以图为例为下：</p>
+<p><img src="https://c2.staticflickr.com/8/7855/33269146498_d88d65fa1c.jpg" alt="Criss-Cross"></p>
+<p>整个网络的架构与DANet相同，只不过attention模块有所不同，如下图：在计算矩阵相乘时每个像素只抽取特征图中对应十字位置的像素进行点乘，计算相似度。</p>
+<p><img src="https://c2.staticflickr.com/8/7834/46421141234_df4a92107c_o.png" alt="attention"></p>
+<p>经过一轮此attention计算得到的attention map如下图R1所示，对于每个元素只有十字上的相似性，而通过两轮此计算，对于每个元素就会得到整张图的相似性，如R2。</p>
+<p><img src="https://i.loli.net/2019/02/25/5c734f3259325.png" alt="result"></p>
+<p>得到此结果的原因如下图，经过一轮计算，每个像素可以得到在其十字上的相似性，对于不同列不同行(不在其十字上)的像素是没有相似性的，但是这个不同行不同列像素同样也进行了相似性计算，计算了在其十字上的相似性，那么两个十字必有相交，在第二次attention计算的时候，通过交点，相当于是间接计算了这两个不同列不同行像素之间的相似性。</p>
+<p>实验结果达到了SOTA水平，但没有计算全部像素的attention方法准确率高。</p>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

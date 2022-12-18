@@ -5,6 +5,52 @@
     <link>/categories/</link>
     <description>Recent content in Categories on RainPot Blog</description>
     
-    <language>en-us</language><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>daily</title>
+      <link>/categories/daily/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/daily/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>剑指offer</title>
+      <link>/categories/%E5%89%91%E6%8C%87offer/</link>
+      <pubDate>Fri, 17 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%89%91%E6%8C%87offer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Computer Vision</title>
+      <link>/categories/computer-vision/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/computer-vision/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LeetCode</title>
+      <link>/categories/leetcode/</link>
+      <pubDate>Tue, 21 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/leetcode/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pytorch</title>
+      <link>/categories/pytorch/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/pytorch/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

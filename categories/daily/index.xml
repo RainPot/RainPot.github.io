@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>daily on RainPot Blog</title>
+    <link>/categories/daily/</link>
+    <description>Recent content in daily on RainPot Blog</description>
+    
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/daily/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows Terminal</title>
+      <link>/blog/windows-terminal/</link>
+      <pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/windows-terminal/</guid>
+      <description>记录Windows Terminal配置过程
+Windows Terminal Windows Terminal 作为一名新晋的Windows终端，当然要来试一下。 目前Windows Terminal已经趋于成熟，个人感觉已经可以让它成为主力终端， 它实现了社区用户热切期望的许多功能(如多标签、主题样式、可配置性、富文本等)，并保持了快速与高效，不会消耗大量内存与电量。下面简单记录一下配置过程。
+Windows Ternimal GitRep
+Windows Terminal Installation Windows Terminal已经在微软商店上架，如果可已登录microsoft store，直接在商店搜索安装即可。
+如果没有办法使用，可以在release 下载Microsoft.WindowsTerminal_1.1.1671.0_8wekyb3d8bbwe.msixbundle直接安装即可。
+也可以用chocolatey安装：
+choco install microsoft-windows-terminal 安装好后，WT的界面是有些丑的&amp;hellip; 下面讲一下如何进一步配置WT。
+Windows Terminal Settings 首先我们要进入Windows Terminal的配置文件，在下拉菜单中，选择设置/Settings，这一操作会使用系统默认文本编辑器打开Windows Terminal的配置文件。 配置文件是一个JSON格式文件，我们可以在其中定义全部Windows Terminal的属性。 结构非常清晰，大致上，配置包含如下几个部分：
+全局属性：位于最外侧，包含设置亮暗主题、默认Profile等项目的配置。 profiles：主要功能为定义从下拉菜单中唤起的各种环境(如PowerShell，WSL，cmd等)，以及各种环境的显示方案(主题、背景、字体等)。 schemes：配色主题，可以去iTerm2-Color-Schemes里找喜欢的 keybindings：自定义快捷键的绑定。 Appearance Configuration 调整背景
+Windows Terminal的背景可以是一种纯色，也可以是一张高清壁纸，GIF动图等。纯色背景可以直接设为默认，也可以根据你的colorSchemes(我们的配色主题)改变，也可以在profiles的每个环境里面单独设置。同时我们让背景添加透明的亚克力着色，就可以使用下面三条指令：
+&amp;#34;profiles&amp;#34;: { &amp;#34;defaults&amp;#34;: { // Put settings here that you want to apply to all profiles. &amp;#34;background&amp;#34;: &amp;#34;#013456&amp;#34;, &amp;#34;useAcrylic&amp;#34;: true, &amp;#34;acrylicOpacity&amp;#34;: 0.8 }, 当然我们也可以让一张图片作为背景，我们首先进入Windows Terminal安装目录C:\Users\{用户名}\AppData\Local\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe里面的RoamingState文件夹，将壁纸放入其中。之后在配置文件加入以下内容：</description>
+    </item>
+    
+    <item>
+      <title>首次提交</title>
+      <link>/blog/firstpost/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/firstpost/</guid>
+      <description>&lt;p&gt;blog首次提交测试&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 实用的数据结构 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="LeetCode" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E5%AE%9E%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" />
+    <meta property="og:title" content="实用的数据结构" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="LeetCode" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="实用的数据结构" />
+    <meta name="twitter:description" content="LeetCode" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E5%AE%9E%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">实用的数据结构</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Tue Jan 21 2020 00:00:00 UTC'>
+	    2020-01-21
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E5%AE%9E%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86">
+		  #基础知识
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <p>课程第一章 实用的数据结构</p>
+<h3 id="数组字符串">数组、字符串</h3>
+<p>优点：<br>
+构建一个数组非常简单<br>
+能让我们在O(1)的时间里根据数组的下标(index)查询某个元素</p>
+<p>缺点：<br>
+构建时必须分配一段连续的空间<br>
+查询某个元素是否存在时需要遍历整个数组，耗费O(n)的时间(其中n是元素的个数)<br>
+删除和添加某元素时 同样需要耗费O(n)的时间</p>
+<h3 id="链表">链表</h3>
+<p>优点：<br>
+灵活地分配内存空间
+能在O(1)时间内删除或者添加元素</p>
+<p>缺点：<br>
+查询元素需要O(n)时间</p>
+<h3 id="栈">栈</h3>
+<p>特点：<br>
+先进后出(LIFO)</p>
+<p>算法的基本思想：<br>
+可以用一个单链表来实现<br>
+只关心上一次的操作<br>
+处理完上一次的操作后，能在O(1)时间内查找到更前一次的操作</p>
+<h3 id="队列">队列</h3>
+<p>特点：<br>
+先进先出(FIFO)</p>
+<p>常用的场景：<br>
+广度优先搜索</p>
+<h3 id="树">树</h3>
+<p>树的共性：<br>
+结构直观<br>
+通过树问题来考察 <strong>递归算法</strong> 掌握的熟练程度</p>
+<p>面试中常考的树的形状有：<br>
+普通二叉树<br>
+平衡二叉树<br>
+完全二叉树<br>
+二叉搜索树<br>
+四叉树<br>
+多叉树<br>
+<strong>特殊的树</strong> 红黑树、自平衡二叉搜索树</p>
+<p>遍历：<br>
+前序遍历 中序遍历 后序遍历</p>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

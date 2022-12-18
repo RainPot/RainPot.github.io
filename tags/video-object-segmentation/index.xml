@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Video Object Segmentation on RainPot Blog</title>
+    <link>/tags/video-object-segmentation/</link>
+    <description>Recent content in Video Object Segmentation on RainPot Blog</description>
+    
+    <language>en-us</language>
+    <lastBuildDate>Wed, 29 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/video-object-segmentation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AGSS-VOS: Attention Guided Single-Shot Video Object Segmentation 论文解读</title>
+      <link>/blog/agss-vos/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/agss-vos/</guid>
+      <description>&lt;p&gt;此篇文章为iccv2019中关于视频分割的一篇文章，主要针对多物体进行视频object分割，值得一读&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

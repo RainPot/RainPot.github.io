@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 剑指offer11-20 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="剑指offer" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E5%89%91%E6%8C%87offer11-20/" />
+    <meta property="og:title" content="剑指offer11-20" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="剑指offer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="剑指offer11-20" />
+    <meta name="twitter:description" content="剑指offer" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E5%89%91%E6%8C%87offer11-20/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">剑指offer11-20</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Wed Mar 25 2020 00:00:00 UTC'>
+	    2020-03-25
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    5 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E5%89%91%E6%8C%87offer11-20/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/problems">
+		  #Problems
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h2 id="11题目描述">11题目描述</h2>
+<p>二进制中1的个数：</p>
+<p>输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。</p>
+<h2 id="思路">思路</h2>
+<p>首先要明白几个常识 1.计算机中整数都是以补码存储，所以此题不需考虑正负问题 2.按位与操作&amp;要熟悉。</p>
+<p>题解思路：如果一个整数不为0，那么这个整数至少有一位是1。如果我们把这个整数减1，那么原来处在整数最右边的1就会变为0，原来在1后面的所有的0都会变成1(如果最右边的1后面还有0的话)。其余所有位将不会受到影响。
+举个例子：一个二进制数1100，从右边数起第三位是处于最右边的一个1。减去1后，第三位变成0，它后面的两位0变成了1，而前面的1保持不变，因此得到的结果是1011.我们发现减1的结果是把最右边的一个1开始的所有位都取反了。这个时候如果我们再把原来的整数和减去1之后的结果做与运算，从原来整数最右边一个1那一位开始所有位都会变成0。如1100&amp;1011=1000.也就是说，把一个整数减去1，再和原整数做与运算，会把该整数最右边一个1变成0.那么一个整数的二进制有多少个1，就可以进行多少次这样的操作。</p>
+<h2 id="代码">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+     int  NumberOf1(int n) 
+     {
+         int count = 0;
+         while(n != 0)
+         {
+             count++;
+             n = n &amp; (n - 1);
+         }
+         return count;
+     }
+};
+</code></pre><h2 id="12题目描述">12题目描述</h2>
+<p>数值的整数次方：</p>
+<p>给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。</p>
+<p>保证base和exponent不同时为0</p>
+<h2 id="思路-1">思路</h2>
+<p>本题看题解 如果不用pow函数则需要充分考虑base exponent的各种极端情况， 我使用了pow函数，直接ac了。。</p>
+<h2 id="代码-1">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    double Power(double base, int exponent) {
+        //if(base == 0) return 0.0;
+        //if(exponent == 0) return 1.0;
+        return pow(base, exponent);
+    }
+};
+</code></pre><h2 id="13题目描述">13题目描述</h2>
+<p>调整数组顺序使奇数位于偶数前面：</p>
+<p>输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。</p>
+<h2 id="思路1">思路1</h2>
+<p>采用最暴力的方法，类似冒泡排序，两个循环，相邻两个数进行对比，如果前面为偶数后面为奇数 则两者互换。</p>
+<h2 id="代码-2">代码</h2>
+<pre tabindex="0"><code>class Solution 
+{
+public:
+    void reOrderArray(vector&lt;int&gt; &amp;array) 
+    {
+        for(int i = 0; i &lt; array.size(); i++)
+        {
+            for(int j = 0; j &lt; array.size(); j++)
+            {
+                if(((array[j] % 2) == 0) &amp;&amp; (array[j + 1] % 2) == 1)
+                {
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+                else continue;
+            }
+        }
+    }
+};
+</code></pre><h2 id="思路2">思路2</h2>
+<p>再创建一个数组，遇见偶数就存入，同时在原数组中删除，最后再存入原数组中。这里主要熟悉vector迭代器的使用。</p>
+<h2 id="代码-3">代码</h2>
+<pre tabindex="0"><code>class Solution{
+public:
+    void reOrderArray(vector&lt;int&gt; &amp;array) {
+ 
+        vector&lt;int&gt; array_temp;
+        vector&lt;int&gt;::iterator ib1, ie1;
+        ib1 = array.begin();
+ 
+ 
+        for (; ib1 != array.end();){            //遇见偶数，就保存到新数组，同时从原数组中删除
+            if (*ib1 % 2 == 0) {
+                array_temp.push_back(*ib1);
+                ib1 = array.erase(ib1);
+            }
+            else{
+                ib1++;
+            }
+ 
+        }
+        vector&lt;int&gt;::iterator ib2, ie2;
+        ib2 = array_temp.begin();
+        ie2 = array_temp.end();
+ 
+        for (; ib2 != ie2; ib2++)             //将新数组的数添加到老数组
+        {
+            array.push_back(*ib2);
+        }
+    }
+};
+</code></pre><h2 id="14题目描述">14题目描述</h2>
+<p>链表中倒数第k个结点：</p>
+<p>输入一个链表，输出该链表中倒数第k个结点。</p>
+<h2 id="思路-2">思路</h2>
+<p>首先计算出链表长度，新建一个指针指向表头，然后向后遍历到length - k的结点就可以。思路比较简单，此题主要是特殊情况的判断，对于原链表和K的判断一定要考虑全面。</p>
+<h2 id="代码-4">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
+class Solution {
+public:
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) 
+    {
+        if(pListHead == NULL || k &lt;= 0)
+            return NULL;
+        int length = 0;
+        ListNode* pre = pListHead;
+        while(pListHead != NULL)
+        {
+            pListHead = pListHead -&gt; next;
+            length++;
+        }
+        if(k &gt; length) return NULL;
+        for(int i = 0; i &lt; length - k; i++)
+        {
+            pre = pre -&gt; next;
+        }
+        return pre;
+    }
+};
+</code></pre><h2 id="15题目描述">15题目描述</h2>
+<p>反转链表：</p>
+<p>输入一个链表，反转链表后，输出新链表的表头。</p>
+<h2 id="思路-3">思路</h2>
+<p>很普通的反转链表，卡了好长时间，才发现是判断的==没补全。。。。还是要注意一些细节</p>
+<h2 id="代码-5">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
+class Solution {
+public:
+    ListNode* ReverseList(ListNode* pHead) 
+    {
+        if(pHead == NULL) return pHead;
+        ListNode* now = pHead;
+        ListNode* pre = NULL;
+        ListNode* next = NULL;
+        while(now != NULL)
+        {
+            next = now -&gt; next;
+            now -&gt; next = pre;
+            pre = now;
+            now = next;
+        }
+        return pre;
+    }
+};
+</code></pre><h2 id="16题目描述">16题目描述</h2>
+<p>合并两个排序的链表：</p>
+<p>输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。</p>
+<h2 id="思路-4">思路</h2>
+<p>本题最好不要在原始链表上进行操作而是新建一个链表，两两比较，小的加入到新链表末尾，这是最方便的做法。  还有第二种思路是递归，不太容易想到，明白即可。</p>
+<h2 id="代码-6">代码</h2>
+<pre tabindex="0"><code>/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
+class Solution {
+public:
+    ListNode* Merge(ListNode* pHead1, ListNode* pHead2)
+    {
+        //if(pHead1 == NULL &amp;&amp; pHead2 == NULL) return NULL;
+        //if(pHead1 == NULL &amp;&amp; pHead2 != NULL) return pHead2;
+        //if(pHead1 != NULL &amp;&amp; pHead2 == NULL) return pHead1;
+        ListNode* new_head = new ListNode(1);
+        ListNode* head = new_head;
+        ListNode* cur = new_head;
+        while(pHead1 != NULL &amp;&amp; pHead2 != NULL)
+        {
+            if(pHead1 -&gt; val &lt;= pHead2 -&gt; val)
+            {
+                cur -&gt; next = pHead1;
+                cur = cur -&gt; next;
+                pHead1 = pHead1 -&gt; next;
+            }
+            else
+            {
+                cur -&gt; next = pHead2;
+                cur = cur -&gt; next;
+                pHead2 = pHead2 -&gt; next;
+            }
+        }
+        if(pHead1 != NULL) cur -&gt; next = pHead1;
+        if(pHead2 != NULL) cur -&gt; next = pHead2;
+        return head -&gt; next;
+    }
+};
+</code></pre><h2 id="17题目描述">17题目描述</h2>
+<p>树的子结构：</p>
+<p>输入两棵二叉树A，B，判断B是不是A的子结构。（ps：我们约定空树不是任意一个树的子结构）</p>
+<h2 id="思路-5">思路</h2>
+<p>明显使用递归，这里需要使用两个递归来完成此任务，一个递归负责向下递推树1，第二个递归负责判断从此开始的树1子树与树2是否相同。</p>
+<h2 id="代码-7">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+	int val;
+	struct TreeNode *left;
+	struct TreeNode *right;
+	TreeNode(int x) :
+			val(x), left(NULL), right(NULL) {
+	}
+};*/
+class Solution {
+public:
+    bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        if(pRoot1 == NULL || pRoot2 == NULL) return false;
+        if(pRoot1 -&gt; val == pRoot2 -&gt; val)
+        {
+            if(IsSubtree(pRoot1, pRoot2)) return true;
+        }
+        return HasSubtree(pRoot1 -&gt; left, pRoot2) || HasSubtree(pRoot1 -&gt; right, pRoot2);
+    }
+    
+    bool IsSubtree(TreeNode* pRoot1, TreeNode* pRoot2)
+    {
+        if(pRoot2 == NULL) return true;
+        if(pRoot1 == NULL) return false;
+        if(pRoot1 -&gt; val != pRoot2 -&gt; val) return false;
+        return (IsSubtree(pRoot1 -&gt; left, pRoot2 -&gt; left) &amp;&amp; IsSubtree(pRoot1 -&gt; right, pRoot2 -&gt; right));
+    }
+};
+</code></pre><h2 id="18题目描述">18题目描述</h2>
+<p>二叉树的镜像：</p>
+<p>操作给定的二叉树，将其变换为源二叉树的镜像。</p>
+<h2 id="思路-6">思路</h2>
+<p>采用递归，这里为了避免太多判断，重点在于进行递归出口的判断(为空)，然后进行递归即可。</p>
+<h2 id="代码-8">代码</h2>
+<pre tabindex="0"><code>/*
+struct TreeNode {
+	int val;
+	struct TreeNode *left;
+	struct TreeNode *right;
+	TreeNode(int x) :
+			val(x), left(NULL), right(NULL) {
+	}
+};*/
+class Solution {
+public:
+    void Mirror(TreeNode *pRoot) 
+    {
+        if(pRoot == NULL) return;
+        if(pRoot -&gt; left == NULL &amp;&amp; pRoot -&gt; right == NULL) return;
+        TreeNode* temp = NULL;
+        temp = pRoot -&gt; left;
+        pRoot -&gt; left = pRoot -&gt; right;
+        pRoot -&gt; right = temp;
+        Mirror(pRoot -&gt; left);
+        Mirror(pRoot -&gt; right);
+    }
+};
+</code></pre><h2 id="19题目描述">19题目描述</h2>
+<p>顺时针打印矩阵：</p>
+<p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字，例如，如果输入如下4 X 4矩阵： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 则依次打印出数字1,2,3,4,8,12,16,15,14,13,9,5,6,7,11,10.</p>
+<h2 id="思路-7">思路</h2>
+<p>这个题说实话还挺难的，用自己的思路没做出来，采用了一个最清晰易懂的思路：首先模拟矩阵，找规律，发现设置好四个变量后每一圈对于一个方向都是相同的。设置4个变量，分别代表目前的上下左右情况，遍历完一圈后算作一次loop，上下左右都往内部缩一圈。这其中比较难想到的是特殊情况：矩阵为单独一列或者单独一行，要想让此case通过必须在第三四个循环上加上判断。</p>
+<h2 id="代码-9">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    vector&lt;int&gt; printMatrix(vector&lt;vector&lt;int&gt; &gt; matrix) {
+        vector&lt;int&gt; printM;
+        if(matrix.empty() || matrix[0].empty()) return printM;
+        int rows = matrix.size();
+        int colomns = matrix[0].size();
+        int top = 0, left = 0, bottom = rows - 1, right = colomns - 1;
+        while(top &lt;= bottom &amp;&amp; left &lt;= right)
+        {
+            for(int i = left; i &lt;= right; i++)
+                printM.push_back(matrix[top][i]);
+            for(int i = top + 1; i &lt;= bottom; i++)
+                printM.push_back(matrix[i][right]);
+            if(top &lt; bottom)
+            {
+                for(int i = right - 1; i &gt;= left; i--)
+                    printM.push_back(matrix[bottom][i]);
+            }
+            if(left &lt; right)
+            {
+                for(int i = bottom - 1; i &gt; top; i--)
+                    printM.push_back(matrix[i][left]);
+            }
+            top++, left++, bottom--, right--;
+        }
+        return printM;
+    }
+};
+</code></pre><h2 id="20题目描述">20题目描述</h2>
+<p>包含min函数的栈：</p>
+<p>定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+注意：保证测试中不会当栈为空的时候，对栈调用pop()或者min()或者top()方法。</p>
+<h2 id="思路-8">思路</h2>
+<p>使用两个栈，一个存放模拟真实的栈，第二个栈用来存放最小数，当新压入的数小于等于最小时压入第二个栈，此时要注意pop时，如果pop的是最小数，同样要在第二个栈中pop出。</p>
+<h2 id="代码-10">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    stack&lt;int&gt; s;
+    stack&lt;int&gt; min_s;
+    void push(int value) {
+        s.push(value);
+        if(min_s.empty()) min_s.push(value);
+        if(!min_s.empty())
+            if(value &lt;= min_s.top())
+                min_s.push(value);
+    }
+    void pop() {
+        if(s.top() == min_s.top())
+        {
+            s.pop();
+            min_s.pop();
+        }
+        else
+            s.pop();
+    }
+    int top() {
+        return s.top();
+    }
+    int min() {
+        return min_s.top();
+    }
+};
+</code></pre>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

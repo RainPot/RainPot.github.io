@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pytorch on RainPot Blog</title>
+    <link>/categories/pytorch/</link>
+    <description>Recent content in Pytorch on RainPot Blog</description>
+    
+    <language>en-us</language>
+    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="/categories/pytorch/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pytorch Tensorboard</title>
+      <link>/blog/torchtensorboard/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/torchtensorboard/</guid>
+      <description>&lt;p&gt;Pytorch Tensorboard的简单使用
+&lt;img src=&#34;/images/tensorboard01.png&#34; alt=&#34;preview&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> VisDrone2019记录 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="LeetCode" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/visdrone2019/" />
+    <meta property="og:title" content="VisDrone2019记录" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="LeetCode" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="VisDrone2019记录" />
+    <meta name="twitter:description" content="LeetCode" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/visdrone2019/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">VisDrone2019记录</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Mon Jul 22 2019 00:00:00 UTC'>
+	    2019-07-22
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/visdrone2019/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/object-detection">
+		  #Object Detection
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <p>简单介绍本组VisDrone2019比赛Object Detection in Images任务所采用的算法方法。</p>
+<!-- more -->
+<h2 id="introduction">Introduction</h2>
+<h3 id="rrnet">RRNet</h3>
+<p>本次比赛提出并采用的网络框架为——RRNet，主要思想为将单阶段anchor-free算法(CenterNet)通过<strong>再次回归</strong>变为二阶段算法，通过再回归的方式让本就较精确的bbox更加精准。下图为网络框架图：</p>
+<p><img src="/images/VisDrone01.png" alt="Structure"></p>
+<center>RRNet Struecture</center>
+<p>网络主体为<a href="https://arxiv.org/abs/1904.07850">CenterNet</a>,backbone为hourglass-104，两个hourglass block的输出全部参与分类及回归，Heatmap代表中心点的激活图，Size代表中心点所对应object长宽的激活图，输出的一共4个map分别进行focal loss和l1 loss的计算。此上为<a href="https://arxiv.org/abs/1904.07850">CenterNet</a>的主要部分，接下来我们继续利用其输出的特征图，送入后面的Re-Regression Module进行二次回归。Re-Regression Module内部结构如下：</p>
+<p><img src="/images/VisDrone02.png" alt=""></p>
+<center>Re-Regression Module</center>
+<p>通过<a href="https://arxiv.org/abs/1904.07850">CenterNet</a>生成的Heatmap以及SIzemap，我们可以直接将其转换成为bbox，得到bbox之后(我们可以将其类比为faster-rcnn中RPN网络生成的候选框)，我们将这些候选区域送入ROI Align，进行再一次回归得到偏移量，将此偏移量加到原始bbox上的到修正后的输出。<br></p>
+<h2 id="major-features">Major features</h2>
+<p>除了再回归网络，我们还采用了以下一些方法让性能进一步提升：</p>
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th>mAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.two-stage/multi-stage</td>
+<td>↑2%</td>
+</tr>
+<tr>
+<td>2.wh conv</td>
+<td>↑0.3%</td>
+</tr>
+<tr>
+<td>3.re-sample</td>
+<td>↑1%</td>
+</tr>
+<tr>
+<td>4.multiscale training/test</td>
+<td>↑2%</td>
+</tr>
+<tr>
+<td>5.sync training</td>
+<td>↑1%</td>
+</tr>
+<tr>
+<td>6.nms/soft nms</td>
+<td>↑1%</td>
+</tr>
+<tr>
+<td>7.KL-Loss</td>
+<td>(↑1%?)</td>
+</tr>
+<tr>
+<td>8.warm up lr</td>
+<td>-</td>
+</tr>
+<tr>
+<td>9.mix up</td>
+<td>-</td>
+</tr>
+<tr>
+<td>10.ellipse gaussian</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="details">Details</h2>
+<h3 id="1two-stagemulti-stage">1.two-stage/multi-stage</h3>
+<p>two-stage便指再回归思想，对于进行多次回归(multi-stage)我们目前还没有进行实验。这个再回归让mAP提高了2%</p>
+<h3 id="2wh-conv">2.wh conv</h3>
+<p>对于<a href="https://arxiv.org/abs/1904.07850">CenterNet</a>中SIzemap的回归是单纯使用3x3卷积，我们认为这种卷积核并不能get到整个object的全部信息，从而以这种方式推理出object的长与宽是不合理的，于是我们采用1xk，kx1的卷积核分别推理object的宽和长，这样可能会获得更多有效信息。 此方法提升了0.3%的mAP。</p>
+<p><img src="/images/VisDrone03.png" alt=""></p>
+<center>wh conv</center>
+<h3 id="3data-augmentation">3.Data Augmentation</h3>
+<p>简单介绍一下数据增强方面所采用的一些方法</p>
+<h4 id="re-sample">re-sample</h4>
+<p>我们发现对于people，pedestrian等小目标的类准确率非常低，于是采用了将hard-sample再次采样(复制)放到图上进行训练的方式。考虑到背景信息，我们首先使用在Cityscapes数据集上训好的deeplabv3以及图像腐蚀+中值滤波在我们自己的无人机数据集上分割出道路，这样复制出的人，自行车一类就可以让他们放在道路上而不是天上或楼上。</p>
+<p><img src="/images/VisDrone04.png" alt=""></p>
+<p>与此同时，由于镜头视角的缘故，在同一张图片中一个人的大小是不同的，直接复制出来填到任意一个地方也是不合理的，于是我们为了解决这个问题，首先在图中找到一个像素h(高度)最矮的一个人，同时再找三个h最高的人，建立一个人的高度h与图片像素位置H的线性关系，这样就可以根据要插入的位置，计算人应有的高度放进去也就不违和了。</p>
+<p><img src="/images/VisDrone05.png" alt=""></p>
+<h4 id="multiscale-trainingtest">multiscale training/test</h4>
+<p>此方法比较普遍，就不过多介绍了，基本对于任何算法(检测、分割)都可以提升最终的准确率。</p>
+<h4 id="mix-up">mix up</h4>
+<p>通过将同一batch中的随机两两图片间进行按一定比例线性叠加，同时loss回传也按照此比例回传。论文中表明有用，但在我们的任务上性能并没有提升。</p>
+<h4 id="random-crop--flip--normalization">Random Crop | flip | Normalization</h4>
+<p>随机裁剪为600x600，水平翻转及正则化。</p>
+<h3 id="4sync-training">4.sync training</h3>
+<p>因为用的多卡进行训练，采用同步bn优化收敛过程。效果提升1%</p>
+<p><img src="/images/VisDrone06.png" alt=""></p>
+<h3 id="5nmssoft-nms">5.nms/soft nms</h3>
+<p>由于此数据集中重叠物体较多，采用普通nms会将许多TP框去掉，于是采用softnms，缓解此现象的影响。</p>
+<p><img src="/images/VisDrone07.png" alt=""></p>
+<h3 id="6-kl-loss">6. KL-Loss</h3>
+<p>由于视角问题，在同一张图片中，同一类物体的大小可能相距甚远，这会影响训练，那么如何才能减少此影响呢。我们将object的分布假设为正态分布，使用KL-Loss，拉近同类物体之间在特征图上的特征分布。这在没有使用multiscale training / test的时候有1%的提升，但当用了之后便没有效果，可能是与multiscale相冲突了。</p>
+<p><img src="/images/VisDrone08.png" alt=""></p>
+<h2 id="results">Results</h2>
+<p>在val上mAP为39.4%</p>
+<h2 id="acknowledgement">Acknowledgement</h2>
+<p>RRNet是一个采用了再回归思想的two stage anchor-free目标检测算法，通过二阶段回归获得更加精准bbox。欢迎大家在此工作上提出新的意见建议，也希望大家可以把博客网站利用起来，积极分享有用的知识，一起加油😄</p>
+
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

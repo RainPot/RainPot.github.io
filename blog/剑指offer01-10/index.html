@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 剑指offer01-10 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="剑指offer" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E5%89%91%E6%8C%87offer01-10/" />
+    <meta property="og:title" content="剑指offer01-10" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="剑指offer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="剑指offer01-10" />
+    <meta name="twitter:description" content="剑指offer" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E5%89%91%E6%8C%87offer01-10/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">剑指offer01-10</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Mon Mar 23 2020 00:00:00 UTC'>
+	    2020-03-23
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    3 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E5%89%91%E6%8C%87offer01-10/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/problems">
+		  #Problems
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h2 id="01题目描述">01题目描述</h2>
+<pre tabindex="0"><code>在一个二维数组中（每个一维数组的长度相同），每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+</code></pre><h2 id="思路">思路</h2>
+<p>注意这个数组的特点，从左到右递增，从上到下递增，我的思路是利用这个特点进行最简单的遍历查找。<br>
+一行一行进行比较，首先从第一行开始，判断行的首元素与target大小，如果首元素大，直接判定数组不包涵此target，如果相等返回true，如果首元素小，从行末往前进行遍历，判断target与每个元素大小，如果元素大，继续向前比，如果元素小，跳出循环进行下一行的比较</p>
+<p>**注意！！**编好之后一直堆栈溢出，才发现是没有判断数组是否为空，这点以后一定要注意。</p>
+<h2 id="代码">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    bool Find(int target, vector&lt;vector&lt;int&gt; &gt; array)
+    {
+        
+        if (array.empty())return false;
+        for(int i=0;i &lt; array.size(); i++)
+        {
+            if(array[i].empty())continue;
+            if(array[i][0] &gt; target) return false;
+            else if(target == array[i][0]) return true;
+            else if(target &gt; array[i][0])
+            {
+                for(int j=(array[i].size() - 1);j&gt;0;j--)
+                {
+                    if(target == array[i][j]) return true;
+                    else if(target &lt; array[i][j]) continue;
+                    else if(target &gt; array[i][j]) break;
+                }
+            }
+        }
+        return false;
+    }
+};
+</code></pre><h2 id="02题目描述">02题目描述</h2>
+<pre tabindex="0"><code>请实现一个函数，将一个字符串中的每个空格替换成“%20”。例如，当字符串为We Are Happy.则经过替换之后的字符串为We%20Are%20Happy。
+</code></pre><h2 id="思路-1">思路</h2>
+<p>这里注意一个重点是将一个字符替换成3个字符，所以不能简单搜索并替换，要考虑多加进去的两个字符，所以简单思路为明白了每一个空格就会多两个字符这个关键信息，首先统计空格个数，再算出来更改后字符串长度，再从后向前复制原始字符串内容到新字符串中，与此同时替换掉空格。</p>
+<h2 id="代码-1">代码</h2>
+<pre tabindex="0"><code>class Solution
+{
+public:
+	void replaceSpace(char *str,int length) 
+    {
+        int i = 0;
+        int numSpace = 0;
+        int newLen = 0;
+        while(str[i] != &#39;\0&#39;)
+        {
+            if(str[i] == &#39; &#39;)
+            {
+                numSpace++;
+            }
+            i++;
+        }
+        newLen = i + numSpace * 2;
+        for(int j = i; j &gt;= 0, newLen &gt;= 0;)
+        {
+            if(str[j] == &#39; &#39;)
+            {
+                str[newLen--] = &#39;0&#39;;
+                str[newLen--] = &#39;2&#39;;
+                str[newLen--] = &#39;%&#39;;
+                j--;
+            }
+            else
+            {
+                str[newLen--] = str[j--];
+            }
+        }
+	}
+};
+</code></pre><h2 id="03题目描述">03题目描述</h2>
+<pre tabindex="0"><code>输入一个链表，按链表从尾到头的顺序返回一个ArrayList。
+</code></pre><h2 id="思路1">思路1</h2>
+<p>这一题主要熟悉一下链表的操作及栈操作。第一个思路：从头到尾遍历链表，压入栈  然后从栈中弹出送入vector中。 第二个思路：</p>
+<h2 id="代码-2">代码</h2>
+<pre tabindex="0"><code>/**
+*  struct ListNode {
+*        int val;
+*        struct ListNode *next;
+*        ListNode(int x) :
+*              val(x), next(NULL) {
+*        }
+*  };
+*/
+class Solution 
+{
+public:
+    vector&lt;int&gt; printListFromTailToHead(ListNode* head) 
+    {
+        vector&lt;int&gt; value;
+        ListNode *p = NULL;
+        p = head;
+        stack&lt;int&gt; stk;
+        while(p != NULL)
+        {
+            stk.push(p -&gt; val);
+            p = p -&gt; next;
+        }
+        while(!stk.empty())
+        {
+            value.push_back(stk.top());
+            stk.pop();
+        }
+        return value;
+    }
+};
+</code></pre><h2 id="思路2">思路2</h2>
+<p>按顺序遍历链表，将值放入array中，再用vector的翻转函数进行翻转。</p>
+<h2 id="代码-3">代码</h2>
+<pre tabindex="0"><code>class Solution 
+{
+public:
+    vector&lt;int&gt; printListFromTailToHead(ListNode* head) 
+    {
+        vector&lt;int&gt; value;
+        ListNode* p = NULL;
+        p = head;
+        while(p != NULL)
+        {
+            value.push_back(p -&gt; val);
+            p = p -&gt; next;
+        }
+        
+        reverse(value.begin(), value.end());
+        return value;
+    }
+};
+</code></pre><h2 id="04题目描述">04题目描述</h2>
+<pre tabindex="0"><code>输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+</code></pre><h2 id="思路-2">思路</h2>
+<p>主要是要清楚前序遍历后序遍历的规律，采用递归的思想，找到根节点及此节点下面的左子树，右子树，送入递归。</p>
+<h2 id="代码-4">代码</h2>
+<pre tabindex="0"><code>/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* reConstructBinaryTree(vector&lt;int&gt; pre,vector&lt;int&gt; vin) 
+    {
+        if(pre.size() == 0 || vin.size() == 0)
+            return NULL;
+        return reConstructBinaryTreeIT(pre, vin);
+    }
+    
+    TreeNode* reConstructBinaryTreeIT(vector&lt;int&gt; pre, vector&lt;int&gt; vin)
+    {
+        if(pre.empty())
+            return NULL;
+        TreeNode* root = new TreeNode(pre[0]);
+        auto num_root = find(vin.begin(), vin.end(), pre[0]);
+        int left_num = num_root - vin.begin();
+        
+        root -&gt; left = reConstructBinaryTreeIT(vector&lt;int&gt;(pre.begin() + 1, pre.begin() + 1 + left_num), vector&lt;int&gt;(vin.begin(), vin.begin() + left_num));
+        root -&gt; right = reConstructBinaryTreeIT(vector&lt;int&gt;(pre.begin() + 1 + left_num, pre.end()), vector&lt;int&gt;(vin.begin() + 1 + left_num, vin.end()));
+        return root;
+    }
+};
+</code></pre><h2 id="05题目描述">05题目描述</h2>
+<pre tabindex="0"><code>用两个栈来实现一个队列，完成队列的Push和Pop操作。 队列中的元素为int类型。
+</code></pre><h2 id="思路-3">思路</h2>
+<p>两个栈实现队列，因为栈的输出与队列相反，使用一个最原始的思路就是将输入压入一个栈，输出时将一个栈输入到另一个栈，这样另一个栈出栈的输出就是队列的顺序，与此同时还需要将第一个栈的这个输出pop出来，故再将第二个栈的pop完的剩余元素再次压入第一个栈中，此为一个pop过程。</p>
+<h2 id="代码-5">代码</h2>
+<pre tabindex="0"><code>class Solution
+{
+public:
+    void push(int node) {
+        stack1.push(node);
+    }
+
+    int pop() {
+        while(!stack1.empty())
+        {
+            stack2.push(stack1.top());
+            stack1.pop();
+        }
+        int pop_num = stack2.top();
+        stack2.pop();
+        while(!stack2.empty())
+        {
+            stack1.push(stack2.top());
+            stack2.pop();
+        }
+        return pop_num;
+    }
+
+private:
+    stack&lt;int&gt; stack1;
+    stack&lt;int&gt; stack2;
+};
+</code></pre><h2 id="06题目描述">06题目描述</h2>
+<pre tabindex="0"><code>把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+输入一个非递减排序的数组的一个旋转，输出旋转数组的最小元素。
+例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
+NOTE：给出的所有元素都大于0，若数组大小为0，请返回0。
+</code></pre><h2 id="思路-4">思路</h2>
+<p>本题主要在于理解非递减序列。非递减序列: 1,2,4,5,5,5,6  递增序列:1,2,4,5,6,7  当数组旋转后，最小数就很好找了。本题还有一个就是要多考虑特殊情况。各个情况考虑周全。</p>
+<h2 id="代码-6">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    int minNumberInRotateArray(vector&lt;int&gt; rotateArray) {
+        if(rotateArray.empty())
+            return 0;
+        if(rotateArray.size() == 1) return rotateArray[0];
+        for(int i = 0; i &lt; rotateArray.size(); i++)
+        {
+            if (rotateArray[i + 1] &lt; rotateArray[i])
+                return rotateArray[i + 1];
+            //if rotateArray[i + 1] &gt;= rotateArray[i]
+                //continue;
+        }
+        return rotateArray[0];
+    }
+};
+</code></pre><h2 id="07题目描述">07题目描述</h2>
+<pre tabindex="0"><code>大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项（从0开始，第0项为0）。
+n&lt;=39
+</code></pre><h2 id="思路-5">思路</h2>
+<p>主要得知道斐波那契数列的规则和题目的要求 斐波那契数列：F(1)=1，F(2)=1, F(n)=F(n - 1)+F(n - 2)</p>
+<h2 id="代码-7">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    int Fibonacci(int n) 
+    {
+        if(n == 0) return 0;
+        if(n == 1 || n == 2) return 1;
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+};
+</code></pre><h2 id="08题目描述">08题目描述</h2>
+<pre tabindex="0"><code>跳青蛙：一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
+</code></pre><h2 id="思路-6">思路</h2>
+<p>一个斐波那契数列的变种。主要考察递归</p>
+<h2 id="代码-8">代码</h2>
+<pre tabindex="0"><code>class Solution 
+{
+public:
+    int jumpFloor(int number) 
+    {
+        if(number == 0) return 0;
+        if(number == 1) return 1;
+        if(number == 2) return 2;
+        return jumpFloor(number - 1) + jumpFloor(number - 2);
+    }
+};
+</code></pre><h2 id="09题目描述">09题目描述</h2>
+<pre tabindex="0"><code>变态跳青蛙：一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+</code></pre><h2 id="思路-7">思路</h2>
+<p>从简到难，写出前几个需要的跳法，找到规律，就是斐波那契数列的变种，用递归即可。</p>
+<h2 id="代码-9">代码</h2>
+<pre tabindex="0"><code>class Solution {
+public:
+    int jumpFloorII(int number) 
+    {
+        if(number == 1) return 1;
+        return jumpFloorII(number - 1) + jumpFloorII(number - 1);
+    }
+};
+</code></pre><h2 id="10题目描述">10题目描述</h2>
+<pre tabindex="0"><code>矩形覆盖：我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+
+比如n=3时，2*3的矩形块有3种覆盖方法：
+</code></pre><h2 id="思路-8">思路</h2>
+<p>还是写出前几个的覆盖数，寻找规律，可以察觉又是斐波那契数列，此时不要忘记特殊情况0的处理。</p>
+<p>##代码</p>
+<pre tabindex="0"><code>class Solution {
+public:
+    int rectCover(int number) {
+        if(number == 0) return 0;
+        if(number == 1) return 1;
+        if(number == 2) return 2;
+        return rectCover(number - 2) + rectCover(number - 1);
+    }
+};
+</code></pre>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2022
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>
