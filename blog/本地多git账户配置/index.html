@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 本地多Git账户配置 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="本地多git账户管理" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E6%9C%AC%E5%9C%B0%E5%A4%9Agit%E8%B4%A6%E6%88%B7%E9%85%8D%E7%BD%AE/" />
+    <meta property="og:title" content="本地多Git账户配置" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="本地多git账户管理" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="本地多Git账户配置" />
+    <meta name="twitter:description" content="本地多git账户管理" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E6%9C%AC%E5%9C%B0%E5%A4%9Agit%E8%B4%A6%E6%88%B7%E9%85%8D%E7%BD%AE/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">本地多Git账户配置</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  
+	  <span class="date middot meta-data" title='Fri Jan 14 2022 00:00:00 UTC'>
+	    2022-01-14
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E6%9C%AC%E5%9C%B0%E5%A4%9Agit%E8%B4%A6%E6%88%B7%E9%85%8D%E7%BD%AE/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h2 id="1多git需求">1.多git需求</h2>
+<p>大部分人会有本地多git账号需求，用来管理不同git归属仓库(如公司/学校/github等代码托管平台)，简单记录下配置过程。</p>
+<h2 id="2git-ssh机制">2.git ssh机制</h2>
+<p>在<a href="https://so.csdn.net/so/search?q=gitlab&amp;spm=1001.2101.3001.7020">gitlab</a>，github上面拷贝代码时，通常用到了<code>git clone ssh://XXX</code>命令。其中ssh指<code>secure shell</code>（一种安全的<a href="https://so.csdn.net/so/search?q=%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE&amp;spm=1001.2101.3001.7020">网络协议</a>），git使用这种协议进行远程加密登录。
+git使用SSH配置， 初始需要以下三个步骤</p>
+<ol>
+<li>使用秘钥生成工具<code>生成</code>rsa秘钥和公钥</li>
+<li>将rsa<code>公钥添加</code>到代码托管平台</li>
+<li>将rsa<code>秘钥添加</code>到ssh-agent中，为ssh client指定使用的秘钥文件<br>
+<br /></li>
+</ol>
+<h2 id="3具体步骤">3.具体步骤</h2>
+<p>比如当前需要管理两个git账户</p>
+<h3 id="a生成两个密钥">a.生成两个密钥</h3>
+<p>首先我们需要两个ssh密钥，对应你的两个身份(假设为public和private)
+如果使用过git的话，我们基本已经拥有一个密钥了，比如通过以下命令生成了密钥：
+<code>ssh-keygen -t rsa -C “youremail@gmail.com”</code>生成了<code>id_rsa</code>与<code>id_rsa.pub</code>，保存在了 <code>~/.ssh/</code>目录下。
+然后我们需要再使用另外一个邮箱账号生成另外一个密钥，<code>ssh-keygen -t rsa -C “private_mail@gmail.com”</code>，⚠️注意此时需要重命名，否则会覆盖我们之前已经在使用的密钥。重命名后假设我们生成了<code>private_id_rsa</code>与<code>private_id_rsa.pub</code>。不要忘记将此private密钥加入到你的第二个git托管平台中。</p>
+<h3 id="b编辑ssh配置文件">b.编辑ssh配置文件</h3>
+<p>编辑<code>~/.ssh/config</code>文件。如果该文件不存在的话，直接创建一个就好。内容如下：</p>
+<pre tabindex="0"><code># 原有，假设为github
+Host github_public
+Hostname ssh.github.com
+IdentityFile ~/.ssh/id_rsa
+port 22
+
+# 新增，刚添加的第二个git账号
+Host git_private
+Hostname ssh.sankuai.com
+IdentityFile ~/.ssh/private_id_rsa
+port 22
+</code></pre><p>修改完之后，在<code>git bash</code>运行以下命令（<code>@</code>后面的主机名为上面配置文件中填写的<code>Host</code>），检查是否正常。</p>
+<p>**（注意：不要忘记将新增的密钥添加到对应的git托管平台）</p>
+<pre tabindex="0"><code>ssh -T git@github_public
+ssh -T git@git_private
+</code></pre><p>如果能正常返回，就说明配置正常。</p>
+<p>同样的方式你就可以配置更多的以SSH登录的不同git用户。</p>
+<h3 id="c使用">c.使用</h3>
+<p>通过变换不同的Host，就可以自由使用期望的账号进行git clone及新建仓库了。
+比如我要以公司账号clone与使用公司仓库，可以使用：</p>
+<pre tabindex="0"><code>git clone git@git_private:RainPot/RainPot.sankuai.git
+</code></pre>
+
+	</div>
+	
+      </div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2023
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

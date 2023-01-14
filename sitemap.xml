@@ -2,19 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 	xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/blog/</loc>
+    <lastmod>2022-01-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2022-01-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/%E6%9C%AC%E5%9C%B0%E5%A4%9Agit%E8%B4%A6%E6%88%B7%E9%85%8D%E7%BD%AE/</loc>
+    <lastmod>2022-01-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>/about/</loc>
     <lastmod>2021-12-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/blog/</loc>
-    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
     <lastmod>2020-06-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/daily/</loc>
-    <lastmod>2020-06-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/</loc>
     <lastmod>2020-06-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/blog/windows-terminal/</loc>
