@@ -6,7 +6,18 @@
     <description>Recent content on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Fri, 14 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>简单介绍YoloV7原理及使用</title>
+      <link>/blog/yolov7%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/yolov7%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/</guid>
+      <description>1.YoloV7 论文名称：《YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors》 论文地址： https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2207.02696.pdf 论文代码： https://link.zhihu.com/?target=https%3A//github.com/WongKinYiu/yolov7
+YoloV7是由YoloV4团队提出的检测器，目前在速度与精度上有不小的优势。作者称YOLOv7 在 5 FPS 到 160 FPS 范围内，速度和精度都超过了所有已知的目标检测器，并在 GPU V100 上，30 FPS 的情况下达到实时目标检测器的最高精度 56.8% AP。 整体模型如下图： 2.改进点 1.Model re-parametrization techniques(重参化技术) 对应架构图当中的REP模块。我们可通过RepVGG: make VGG great again!来快速理解什么为重参化技术。浅显地总结下：对于一个多分支block，可通过一定的方式将多分支合并为单分支，减少参数量同时提升效果。在RepVGG中，RepConv定义如下图，总结下就是一个3x3卷积 一个1x1卷积和一个恒等映射，可以压缩为一个单一的3x3卷积： 2.ELAN ELAN-W E-ELAN 对于ELAN，可通过下面这个博客进行了解：理解Yolov7使用的ELAN，目标是为了从梯度路径层面优化模型效果。 ELAN-W模块，与ELAN所略有不同的是它在第二条分支的时候选取的输出数量不同。 E-ELAN，其主要架构如下图所示。在大规模ELAN中，无论梯度路径长度和计算模块数量如何，都达到了稳定的状态。但如果更多计算模块被无限地堆叠，这种稳定状态可能会被破坏，参数利用率也会降低。本文提出的E-ELAN采用expand、shuffle、merge cardinality结构，实现在不破坏原始梯度路径的情况下，提高网络的学习能力。 3.Model scaling for concatenation-based models 模型缩放通过改变模型的宽度、深度和分辨率来生成不同大小的模型。 如果将上述E-EALN方法应用到基于级联的模型，我们会发现，当对深度放大或缩小时，基于级联的计算模块之后的过渡层的通道会随之减少或增加。如下图a-&amp;gt;b所示。 如果按比例放大深度，这种行为会导致过渡层的深入通道和输出通道的比例会变化，从而导致模型的硬件使用量下降。因此，对于基于级联的模型，必须提出一种复合模型缩放方法。即同时考虑深度因子以及过渡层的宽度因子。如上图(c)所示。
+4.辅助Loss及标签分配 辅助头（Aux head）指使用网络中间层进行损失计算来辅助网络训练（深度监督：监督网络不同深度特征）。如图（a）无辅助头。图（b）有辅助头。一般来说，在训练时增加辅助头可带来更好的性能，在推理时，去掉辅助头，加快模型推理速度。 本文作者将负责最终预测的head称为lead head，用于辅助训练的head称为aux head。用于训练两个head的样本分配策略如图（d）和（e）所示。 在过去，在深度网络的训练中，标签分配通常直接指的是ground truth，并根据给定的规则生成hard label（未经过softmax）。然而近年来，以目标检测为例，研究者经常利用网络预测的质量分布来结合ground truth，使用一些计算和优化方法来生成可靠的软标签（soft label）。例如，YOLO使用bounding box预测和ground truth的IoU作为软标签。在本文中，作者将网络预测结果与ground truth一起考虑后再分配软标签的机制称为“标签分配器”。无论辅助头或引导头，都需要对目标进行深度监督。那么，‘’如何为辅助头和引导头合理分配软标签？”，这是作者需要考虑的问题。目前最常用的方法如图5（c）所示，即将辅助头和引导头分离，然后利用它们各自的预测结果和ground truth执行标签分配。本文提出的方法是一种新的标签分配方法，通过引导头的预测来引导辅助头以及自身。换句话说，首先使用引导头的prediction作为指导，生成从粗到细的层次标签，分别用于辅助头和引导头的学习，具体可看图5(d)和(e)。</description>
+    </item>
+    
     <item>
       <title>本地多Git账户配置</title>
       <link>/blog/%E6%9C%AC%E5%9C%B0%E5%A4%9Agit%E8%B4%A6%E6%88%B7%E9%85%8D%E7%BD%AE/</link>
