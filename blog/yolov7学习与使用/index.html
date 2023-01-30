@@ -96,8 +96,8 @@
 	  
 	  
 	  
-	  <span class="date middot meta-data" title='Sat Jan 15 2022 00:00:00 UTC'>
-	    2022-01-15
+	  <span class="date middot meta-data" title='Sun Jan 15 2023 00:00:00 UTC'>
+	    2023-01-15
 	  </span>
 	  <span class="reading-time middot meta-data">
 	    1 min read
@@ -113,15 +113,15 @@
 	<div class="markdown blog-post-content">
 	  <h2 id="1yolov7">1.YoloV7</h2>
 <p>论文名称：《YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors》</p>
-<p>论文地址： <a href="https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2207.02696.pdf">https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2207.02696.pdf</a></p>
-<p>论文代码： <a href="https://link.zhihu.com/?target=https%3A//github.com/WongKinYiu/yolov7">https://link.zhihu.com/?target=https%3A//github.com/WongKinYiu/yolov7</a></p>
+<p>论文地址： <a href="https://arxiv.org/pdf/2207.02696.pdf">https://arxiv.org/pdf/2207.02696.pdf</a></p>
+<p>论文代码： <a href="https://github.com/WongKinYiu/yolov7">https://github.com/WongKinYiu/yolov7</a></p>
 <p>YoloV7是由YoloV4团队提出的检测器，目前在速度与精度上有不小的优势。作者称YOLOv7 在 5 FPS 到 160 FPS 范围内，速度和精度都超过了所有已知的目标检测器，并在 GPU V100 上，30 FPS 的情况下达到实时目标检测器的最高精度 56.8% AP。
-整体模型如下图：
-<img src="/images/yolov7-1.png" alt=""></p>
+整体模型如下图：</p>
+<center><img src="/images/yolov7-1.png" width="60%" height="50%" /></center>
 <h2 id="2改进点">2.改进点</h2>
 <h4 id="1model-re-parametrization-techniques重参化技术">1.Model re-parametrization techniques(重参化技术)</h4>
-<p><strong>对应架构图当中的REP模块</strong>。我们可通过<a href="https://zhuanlan.zhihu.com/p/344324470">RepVGG: make VGG great again!</a>来快速理解什么为重参化技术。浅显地总结下：对于一个多分支block，可通过一定的方式将多分支合并为单分支，减少参数量同时提升效果。在RepVGG中，RepConv定义如下图，总结下就是一个3x3卷积 一个1x1卷积和一个恒等映射，可以压缩为一个单一的3x3卷积：
-<img src="/images/yolov7-2.png" alt=""></p>
+<p><strong>对应架构图当中的REP模块</strong>。我们可通过<a href="https://zhuanlan.zhihu.com/p/344324470">RepVGG: make VGG great again!</a>来快速理解什么为重参化技术。浅显地总结下：对于一个多分支block，可通过一定的方式将多分支合并为单分支，减少参数量同时提升效果。在RepVGG中，RepConv定义如下图，总结下就是一个3x3卷积 一个1x1卷积和一个恒等映射，可以压缩为一个单一的3x3卷积：</p>
+<center><img src="/images/yolov7-2.png" width="50%" height="50%" /></center>
 <h4 id="2elan-elan-w-e-elan">2.ELAN ELAN-W E-ELAN</h4>
 <p>对于ELAN，可通过下面这个博客进行了解：<a href="https://zhuanlan.zhihu.com/p/598642990">理解Yolov7使用的ELAN</a>，目标是为了从梯度路径层面优化模型效果。</p>
 <p>ELAN-W模块，与ELAN所略有不同的是它在第二条分支的时候选取的输出数量不同。</p>
@@ -141,19 +141,19 @@
 <p><strong>Coarse-to-fine lead head guided label assigner：</strong> Coarse-to-fine引导头使用到了自身的prediction和ground truth来生成软标签，引导标签进行分配。然而，在这个过程中，作者生成了两组不同的软标签，即粗标签和细标签，其中细标签与引导头在标签分配器上生成的软标签相同，粗标签是通过降低正样本分配的约束，允许更多的网格作为正目标（可以看下FastestDet的label assigner，不单单只把gt中心点所在的网格当成候选目标，还把附近的三个也算进行去，增加正样本候选框的数量）。原因是一个辅助头的学习能力并不需要强大的引导头，为了避免丢失信息，作者将专注于优化样本召回的辅助头。对于引导头的输出，可以从查准率中过滤出高精度值的结果作为最终输出。然而，值得注意的是，如果粗标签的附加权重接近细标签的附加权重，则可能会在最终预测时产生错误的先验结果。</p>
 <h2 id="3实验">3.实验</h2>
 <h4 id="消融实验">消融实验</h4>
-<p>模型缩放：
-<img src="/images/yolov7-6.png" alt="">
-RepConv：
-<img src="/images/yolov7-7.png" alt="">
-RepResidual：
-<img src="/images/yolov7-8.png" alt="">
-辅助头：
-<img src="/images/yolov7-9.png" alt=""></p>
+<p>模型缩放：</p>
+<center><img src="/images/yolov7-6.png" width="40%" height="40%" /></center> 
+<p>RepConv：</p>
+<center><img src="/images/yolov7-7.png" width="40%" height="40%" /></center> 
+<p>RepResidual：</p>
+<center><img src="/images/yolov7-8.png" width="40%" height="40%" /></center> 
+<p>辅助头：</p>
+<center><img src="/images/yolov7-9.png" width="40%" height="40%" /></center>
 <h4 id="baseline对比">baseline对比</h4>
-<p><img src="/images/yolov7-10.png" alt=""></p>
+<center><img src="/images/yolov7-10.png" width="70%" height="70%" /></center>
 <h2 id="4训练">4.训练</h2>
 <h4 id="1数据集结构">1.数据集结构：</h4>
-<p><img src="/images/yolov7-11.png" alt=""></p>
+<center><img src="/images/yolov7-11.png" width="40%" height="40%" /></center>
 <h4 id="2coco-数据集-格式">2.coco 数据集 格式</h4>
 <p><a href="https://blog.csdn.net/weixin_44326452/article/details/122674257">https://blog.csdn.net/weixin_44326452/article/details/122674257</a>
 x y w h定义：</p>
@@ -187,10 +187,9 @@ category_id x y w h
 <p>使用<a href="https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7_training.pt">yolov7_training.pt</a>预训练模型(专门用于迁移的预训练模型)进行训练，这里设置batch_size为6 epoch为120：</p>
 <pre tabindex="0"><code>python3 train.py --weights yolov7_training.pt --cfg cfg/training/yolov7-gnan.yaml --data data/gnan.yaml --device 0 --batch-size 6 --epoch 120
 </code></pre><h4 id="5查看结果">5.查看结果</h4>
-<p>yolov7会自动生成完备的训练结果，在/runs/train/下。
-<img src="/images/yolov7-14.png" alt="">
-<img src="/images/yolov7-15.png" alt=""></p>
-
+<p>yolov7会自动生成完备的训练结果，在/runs/train/下。</p>
+<center><img src="/images/yolov7-14.png" width="30%" height="30%" /></center>
+<center><img src="/images/yolov7-15.png" width="70%" height="70%" /></center>
 
 	</div>
 	
