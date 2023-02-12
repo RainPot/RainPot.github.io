@@ -6,14 +6,25 @@
     <description>Recent content in Blogs on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>hugo自建主题指南01</title>
+      <title>hugo博客增加disqus评论</title>
       <link>/blog/hugo%E8%87%AA%E5%BB%BA%E4%B8%BB%E9%A2%98%E6%8C%87%E5%8D%9701/</link>
-      <pubDate>Sun, 05 Feb 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 12 Feb 2023 00:00:00 +0000</pubDate>
       
       <guid>/blog/hugo%E8%87%AA%E5%BB%BA%E4%B8%BB%E9%A2%98%E6%8C%87%E5%8D%9701/</guid>
-      <description>hugo介绍 </description>
+      <description>disqus介绍 disqus官网：https://help.disqus.com/en/
+disqus是一个社区平台，通过disqus可以让你的网站拥有功能丰富评论系统，不少博客的评论区都使用disqus，让博主用户们通过disqus连结起来。disqus可以通过插入代码在网站上使用社区评论功能，并且可以自定义评论样式，查看评论数据等。
+一个默认的样式如下：
+Hugo如何使用disqus Hugo自身提供了内置模板，称为 Internal Templates。
+一般的使用方法有以下几步：
+1. 注册disqus 注册页面
+2. 开通留言板并获得disqus shortname 登陆disqus后，Add new site ： 在这里填写你自己定义的shortname，其他的按需填写即可：
+服务页面选择免费方案即可。
+一直点到最后一步Comlete Setup，自此你的disqus site就建立好了。此中最重要为shortname，这里一定要对应好。
+在建立好后，还建议将自己的网页添加进disqus信任域名中：add-to-trusted-domain
+3. 在主题的config.yaml或toml中添加你在disqus上注册的shortname disqusShortname: your-disqus-shortname 4. 在主题模板文件中添加disqus代码。 在layouts/partials/目录下新建layouts/partials/disqus.html，并添加代码:
+&amp;lt;div id=&amp;#34;disqus_thread&amp;#34;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;script type=&amp;#34;text/javascript&amp;#34;&amp;gt; (function() { // Don&amp;#39;t ever inject Disqus on localhost--it creates unwanted // discussions from &amp;#39;localhost:1313&amp;#39; on your Disqus account... if (window.location.hostname == &amp;#34;localhost&amp;#34;) return; var dsq = document.createElement(&amp;#39;script&amp;#39;); dsq.type = &amp;#39;text/javascript&amp;#39;; dsq.async = true; var disqus_shortname = &amp;#39;{{ .</description>
     </item>
     
     <item>
