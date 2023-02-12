@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> hugo博客增加disqus评论 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/" />
+    <meta property="og:title" content="hugo博客增加disqus评论" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="hugo博客增加disqus评论" />
+    <meta name="twitter:description" content="" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">hugo博客增加disqus评论</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sun Feb 12 2023 00:00:00 UTC'>
+	    2023-02-12
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    1 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h1 id="disqus介绍">disqus介绍</h1>
+<p>disqus官网：<a href="https://help.disqus.com/en/">https://help.disqus.com/en/</a></p>
+<center><img src="/images/hugo-disqus-01.png" width="50%" height="50%" /></center>
+<p>disqus是一个社区平台，通过disqus可以让你的网站拥有功能丰富评论系统，不少博客的评论区都使用disqus，让博主用户们通过disqus连结起来。disqus可以通过插入代码在网站上使用社区评论功能，并且可以自定义评论样式，查看评论数据等。</p>
+<p>一个默认的样式如下：</p>
+<center><img src="/images/hugo-disqus-02.png" width="50%" height="50%" /></center>
+<h1 id="hugo如何使用disqus">Hugo如何使用disqus</h1>
+<p>Hugo自身提供了内置模板，称为 <a href="https://gohugo.io/templates/internal/">Internal Templates</a>。</p>
+<p>一般的使用方法有以下几步：</p>
+<h3 id="1-注册disqus">1. 注册disqus</h3>
+<p><a href="https://disqus.com/profile/signup/intent/">注册页面</a></p>
+<h3 id="2-开通留言板并获得disqus-shortname">2. 开通留言板并获得disqus shortname</h3>
+<p>登陆disqus后，<a href="https://disqus.com/features/engage/">Add new site</a> ：
+<img src="/images/Pasted%20image%2020230212230010.png" alt=""></p>
+<center><img src="/images/Pasted%20image%2020230212230117.png" width="50%" height="50%" /></center>
+<p>在这里填写你自己定义的shortname，其他的按需填写即可：</p>
+<center><img src="/images/Pasted%20image%2020230212230245.png" width="50%" height="50%" /></center>
+<p>服务页面选择免费方案即可。</p>
+<p>一直点到最后一步Comlete Setup，自此你的disqus site就建立好了。此中最重要为shortname，这里一定要对应好。</p>
+<p>在建立好后，还建议将自己的网页添加进disqus信任域名中：<a href="https://help.disqus.com/en/articles/1717206-how-to-use-trusted-domains">add-to-trusted-domain</a></p>
+<h3 id="3-在主题的configyaml或toml中添加你在disqus上注册的shortname">3. 在主题的config.yaml或toml中添加你在disqus上注册的shortname</h3>
+<pre tabindex="0"><code>disqusShortname: your-disqus-shortname
+</code></pre><h3 id="4-在主题模板文件中添加disqus代码">4. 在主题模板文件中添加disqus代码。</h3>
+<p>在<code>layouts/partials/</code>目录下新建<code>layouts/partials/disqus.html</code>，并添加代码:</p>
+<pre tabindex="0"><code>&lt;div id=&#34;disqus_thread&#34;&gt;&lt;/div&gt;
+&lt;script type=&#34;text/javascript&#34;&gt;
+
+(function() {
+    // Don&#39;t ever inject Disqus on localhost--it creates unwanted
+    // discussions from &#39;localhost:1313&#39; on your Disqus account...
+    if (window.location.hostname == &#34;localhost&#34;)
+        return;
+
+    var dsq = document.createElement(&#39;script&#39;); dsq.type = &#39;text/javascript&#39;; dsq.async = true;
+    var disqus_shortname = &#39;{{ .Site.DisqusShortname }}&#39;;
+    dsq.src = &#39;//&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
+    (document.getElementsByTagName(&#39;head&#39;)[0] || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(dsq);
+})();
+&lt;/script&gt;
+&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&#34;https://disqus.com/?ref_noscript&#34;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
+&lt;a href=&#34;https://disqus.com/&#34; class=&#34;dsq-brlink&#34;&gt;comments powered by &lt;span class=&#34;logo-disqus&#34;&gt;Disqus&lt;/span&gt;&lt;/a&gt;
+</code></pre><p>在你的网站的任意位置加入以下模板代码即可：</p>
+<pre tabindex="0"><code>{{ partial &#34;disqus.html&#34; . }}
+</code></pre><p>比如我会在<code>layouts/blog/single.html</code>(主题单个博客模板html)的footer前面添加以上代码。</p>
+<h1 id="可能遇到的问题">可能遇到的问题</h1>
+<p>1.在hugo本地调试时，disqus加载不出来，但上线后在blog中可以显示</p>
+<p>2.disqus在国内被墙了，可能需要翻墙</p>
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2023
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 12 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>hugo博客增加disqus评论</title>
-      <link>/blog/hugo%E8%87%AA%E5%BB%BA%E4%B8%BB%E9%A2%98%E6%8C%87%E5%8D%9701/</link>
+      <link>/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/</link>
       <pubDate>Sun, 12 Feb 2023 00:00:00 +0000</pubDate>
       
-      <guid>/blog/hugo%E8%87%AA%E5%BB%BA%E4%B8%BB%E9%A2%98%E6%8C%87%E5%8D%9701/</guid>
+      <guid>/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/</guid>
       <description>disqus介绍 disqus官网：https://help.disqus.com/en/
 disqus是一个社区平台，通过disqus可以让你的网站拥有功能丰富评论系统，不少博客的评论区都使用disqus，让博主用户们通过disqus连结起来。disqus可以通过插入代码在网站上使用社区评论功能，并且可以自定义评论样式，查看评论数据等。
 一个默认的样式如下：
