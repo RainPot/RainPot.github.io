@@ -6,7 +6,19 @@
     <description>Recent content in Blogs on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>QTypist论文阅读</title>
+      <link>/blog/qtypist%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/qtypist%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</guid>
+      <description>Abstract Fill in the Blank: Context-aware Automated Text Input Generation for Mobile GUI Testing - ICSE2023
+本文介绍了一个生成UI页面需填写内容的工具。
+自动化 GUI 测试被广泛用于帮助确保APP质量。但是许多 GUI 需要适当的文本输入才能进入下一页，这仍然是测试覆盖率的一个重要障碍。考虑到有效输入（例如，航班起飞、电影名称）的多样性和语义要求，自动化文本输入生成具有挑战性。受大型语言模型（LLM）在文本生成方面取得显着进步的启发，本文提出了一种基于 LLM 的名为 QTypist 的方法，用于根据 GUI 上下文智能地生成语义输入文本。为了提高 LLM 在GUI测试场景中的性能，本文开发了一种基于Prompt的数据构建和调优方法，该方法可以自动提取Prompt和answers以进行模型调优。本文在 Google Play 的 106 个应用程序上评估 QTypist，结果显示 QTypist 的通过率为 87%，比baseline高93%。我们还将 QTypist 与自动化 GUI 测试工具集成在一起，与原始工具相比，它可以覆盖的app activities(不太明确此activities概念)提升了42%，覆盖的页面增加了52%。
+Intro &amp;amp;&amp;amp; Motivation 引出了当前移动APP GUI测试的工作，including model based [5], [6], [7], probability based [8], [9], [10] and deep learning based [11], [12] ones to dynamically explore mobile apps by executing different actions such as scrolling, clicking based on the analysis of code structure of the current page to verify UI functionality，这些工作主要是针对于滑动 / 点击的操作，而没有关注 text input generation。而当前很多测试场景需要填写后进入到下一个页面进行测试覆盖，举了下图例子，需要输入后才能进入其他比如选座 / 查询新闻等页面进行测试： 在Intro后半部分首先说明了填空这个任务是比较困难的(even for human)，因为不同的input box需要很多专业 / 前验知识，比如健康APP的血压值，编程APP的代码输入等，其次一副页面中前后的输入也是有关联的。当前一些工作主要是进行随机 / 依据规则 / RNN的输入信息生成，这些基本不太可用且有些方法需要大量标注数据，所以本文利用当前Large Language Model(LLM)来帮助实现填空的需求。</description>
+    </item>
+    
     <item>
       <title>hugo博客增加disqus评论</title>
       <link>/blog/hugo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0disqus%E8%AF%84%E8%AE%BA/</link>
