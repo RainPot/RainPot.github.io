@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> Frida Hook工具 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Frida hook工具简单总结" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/frida-hook%E5%B7%A5%E5%85%B7/" />
+    <meta property="og:title" content="Frida Hook工具" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="Frida hook工具简单总结" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="Frida Hook工具" />
+    <meta name="twitter:description" content="Frida hook工具简单总结" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/frida-hook%E5%B7%A5%E5%85%B7/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">Frida Hook工具</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Mon Feb 27 2023 00:00:00 UTC'>
+	    2023-02-27
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    5 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/frida-hook%E5%B7%A5%E5%85%B7/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <p>Frida工具官网：<a href="https://frida.re/">https://frida.re/</a></p>
+<p>开源地址：<a href="https://github.com/frida/frida">https://github.com/frida/frida</a></p>
+<p><img src="/images/Pasted%20image%2020230227220605.png" alt=""></p>
+<h1 id="0hook">0.Hook</h1>
+<p>Hook中文翻译为“钩子”，实际上就是一段程序代码，挂在某个调用或方法上。每当有调用或方法被触发，就会走到Hook这段代码当中，Hook代码可以捕获消息做自己的动作，从而改变本身调用所得到的结果，本质就是<code>劫持函数调用</code></p>
+<h1 id="1frida">1.Frida</h1>
+<p>Frida是一款基于Python + JavaScript的开源、免费、跨平台hook框架，可以实现对Windows、Linux、Android、iOS、MacOS应用程序的动态插桩需求。主要使用动态二进制插桩技术。插桩技术是指将额外的代码注入程序中以收集运行时的信息，可分为两种：一是源代码插桩【Source Code Instrumentation(SCI)】：额外代码注入到程序源代码中；二是二进制插桩【Binary Instrumentation】：额外代码注入到二进制可执行文件中，其又可分为两种：静态二进制插桩（程序执行前）与动态二进制插桩（程序执行中runtime）。</p>
+<p>整体Frida分为客户端于服务端：</p>
+<ul>
+<li>客户端：使用python，主要作用：1.负责与服务端通信 2.定义hook的方法，以js代码形式传输至服务端，由服务端实现对应方法的hook</li>
+<li>服务端：服务端接受<code>JS</code>代码并将其注入到目标进程中，操作内存空间然后给客户端发送消息。服务端分为两种，一种是正常的<a href="https://github.com/frida/frida/releases"><code>frida-server</code></a>，如果我们能够获取到设备的Root权限（比如安卓手机Root权限），可以使用<a href="https://github.com/frida/frida/releases"><code>frida-server</code></a>获得手机系统层级权限完成hook。若我们当前没有Root权限（或iOS手机未越狱），我们可以使用<a href="https://github.com/frida/frida/releases"><code>frida-gadget</code></a>，安卓.so iOS .dylib植入到目标APP中进行重打包，获取APP级别权限，完成对APP的hook。</li>
+</ul>
+<h1 id="2使用">2.使用</h1>
+<p>下面是Frida官方提供的一个demo：</p>
+<blockquote>
+<p>其中中间部分是js代码，上下部分是python；<br>
+python部分只是单纯的为了将js代码发送到设备而已，核心hook行为还是在js部分实现；<br>
+1，js语言是弱语言，不对变量类型做强检查，所以我们可以都用<code>var</code>表示；<br>
+2，java中的类都用<code>java.use</code>获取；<br>
+3，js代码function大括号内部是用于hook的主要代码，其余部分基本不变</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">import</span> <span style="color:#000">frida</span><span style="color:#ce5c00;font-weight:bold">,</span> <span style="color:#000">sys</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">def</span> <span style="color:#000">on_message</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">message</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">data</span><span style="color:#000;font-weight:bold">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">message</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;type&#39;</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#4e9a06">&#39;send&#39;</span><span style="color:#000;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;[*] </span><span style="color:#4e9a06">{0}</span><span style="color:#4e9a06">&#34;</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">format</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">message</span><span style="color:#000;font-weight:bold">[</span><span style="color:#4e9a06">&#39;payload&#39;</span><span style="color:#000;font-weight:bold">]))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">else</span><span style="color:#000;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">message</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">jscode</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">Java.perform(function () {
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  // Function to hook is defined here
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  var MainActivity = Java.use(&#39;com.example.seccon2015.rock_paper_scissors.MainActivity&#39;);
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  // Whenever button is clicked
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  var onClick = MainActivity.onClick;
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  onClick.implementation = function (v) {
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    // Show a message to know that the function got called
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    send(&#39;onClick&#39;);
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    // Call the original onClick handler
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    onClick.call(this, v);
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    // Set our values after running the original onClick handler
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    this.m.value = 0;
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    this.n.value = 1;
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    this.cnt.value = 999;
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    // Log to the console that it&#39;s done, and we should have the flag!
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">    console.log(&#39;Done:&#39; + JSON.stringify(this.cnt));
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">  };
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">});
+</span></span></span><span style="display:flex;"><span><span style="color:#4e9a06">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">process</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">frida</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">get_usb_device</span><span style="color:#000;font-weight:bold">()</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">attach</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;com.example.seccon2015.rock_paper_scissors&#39;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">script</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">process</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">create_script</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">jscode</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">script</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">on</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;message&#39;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">on_message</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;[*] Running CTF&#39;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">script</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">load</span><span style="color:#000;font-weight:bold">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">sys</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">stdin</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">read</span><span style="color:#000;font-weight:bold">()</span>
+</span></span></code></pre></div><h1 id="3总结">3.总结</h1>
+<p>Frida主要特点：</p>
+<ul>
+<li>平台支持 Android、IOS、Windows、Linux、MacOS 等</li>
+<li>在 Android 系统上，不仅支持对 Java 层的 Hook，还支持对 so 库文件 Native 层的 Hook</li>
+<li>支持 Python 语法或 js 语法编写 Hook 脚本</li>
+<li>有 VSCode 扩展，支持 Frida 语法智能感知</li>
+</ul>
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2023
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

@@ -6,7 +6,27 @@
     <description>Recent content in Blogs on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Frida Hook工具</title>
+      <link>/blog/frida-hook%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/frida-hook%E5%B7%A5%E5%85%B7/</guid>
+      <description>Frida工具官网：https://frida.re/
+开源地址：https://github.com/frida/frida
+0.Hook Hook中文翻译为“钩子”，实际上就是一段程序代码，挂在某个调用或方法上。每当有调用或方法被触发，就会走到Hook这段代码当中，Hook代码可以捕获消息做自己的动作，从而改变本身调用所得到的结果，本质就是劫持函数调用
+1.Frida Frida是一款基于Python + JavaScript的开源、免费、跨平台hook框架，可以实现对Windows、Linux、Android、iOS、MacOS应用程序的动态插桩需求。主要使用动态二进制插桩技术。插桩技术是指将额外的代码注入程序中以收集运行时的信息，可分为两种：一是源代码插桩【Source Code Instrumentation(SCI)】：额外代码注入到程序源代码中；二是二进制插桩【Binary Instrumentation】：额外代码注入到二进制可执行文件中，其又可分为两种：静态二进制插桩（程序执行前）与动态二进制插桩（程序执行中runtime）。
+整体Frida分为客户端于服务端：
+客户端：使用python，主要作用：1.负责与服务端通信 2.定义hook的方法，以js代码形式传输至服务端，由服务端实现对应方法的hook 服务端：服务端接受JS代码并将其注入到目标进程中，操作内存空间然后给客户端发送消息。服务端分为两种，一种是正常的frida-server，如果我们能够获取到设备的Root权限（比如安卓手机Root权限），可以使用frida-server获得手机系统层级权限完成hook。若我们当前没有Root权限（或iOS手机未越狱），我们可以使用frida-gadget，安卓.so iOS .dylib植入到目标APP中进行重打包，获取APP级别权限，完成对APP的hook。 2.使用 下面是Frida官方提供的一个demo：
+其中中间部分是js代码，上下部分是python；
+python部分只是单纯的为了将js代码发送到设备而已，核心hook行为还是在js部分实现；
+1，js语言是弱语言，不对变量类型做强检查，所以我们可以都用var表示；
+2，java中的类都用java.use获取；
+3，js代码function大括号内部是用于hook的主要代码，其余部分基本不变
+import frida, sys def on_message(message, data): if message[&amp;#39;type&amp;#39;] == &amp;#39;send&amp;#39;: print(&amp;#34;[*] {0}&amp;#34;.format(message[&amp;#39;payload&amp;#39;])) else: print(message) jscode = &amp;#34;&amp;#34;&amp;#34; Java.perform(function () { // Function to hook is defined here var MainActivity = Java.use(&amp;#39;com.example.seccon2015.rock_paper_scissors.MainActivity&amp;#39;); // Whenever button is clicked var onClick = MainActivity.onClick; onClick.implementation = function (v) { // Show a message to know that the function got called send(&amp;#39;onClick&amp;#39;); // Call the original onClick handler onClick.</description>
+    </item>
+    
     <item>
       <title>QTypist论文笔记</title>
       <link>/blog/qtypist%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</link>
