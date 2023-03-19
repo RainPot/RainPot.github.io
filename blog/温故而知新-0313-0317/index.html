@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 温故而知新-0313-0317 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="温故而知新" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0313-0317/" />
+    <meta property="og:title" content="温故而知新-0313-0317" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="温故而知新" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="温故而知新-0313-0317" />
+    <meta name="twitter:description" content="温故而知新" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0313-0317/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">温故而知新-0313-0317</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sun Mar 19 2023 00:00:00 UTC'>
+	    2023-03-19
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    3 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0313-0317/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h3 id="1nsbundle">1.NSBundle</h3>
+<p>最近有在APP中以组件运行动态库的需求，遂调研了下如何实现。首先需要用到NSBundle来定位我们组件中带入的动态库。
+官方对NSBundle的解释：</p>
+<blockquote>
+<p>A representation of the code and resources stored in a bundle directory on disk.</p>
+<p>Apple uses bundles to represent apps, frameworks, plug-ins, and many other specific types of content. Bundles organize their contained resources into well-defined subdirectories, and bundle structures vary depending on the platform and the type of the bundle. By using a bundle object, you can access a bundle&rsquo;s resources without knowing the structure of the bundle. The bundle object provides a single interface for locating items, taking into account the bundle structure, user preferences, available localizations, and other relevant factors.</p>
+<p>Any executable can use a bundle object to locate resources, either inside an app’s bundle or in a known bundle located elsewhere. You don&rsquo;t use a bundle object to locate files in a container directory or in other parts of the file system.</p>
+</blockquote>
+<p>官方提供的用法：</p>
+<blockquote>
+<p>The general pattern for using a bundle object is as follows:</p>
+<ol>
+<li>Create a bundle object for the intended bundle directory.</li>
+<li>Use the methods of the bundle object to locate or load the needed resource.</li>
+<li>Use other system APIs to interact with the resource.</li>
+</ol>
+</blockquote>
+<p>首先在组件中建立bundle directory，<code>yourResources.bundle</code>，在此路径下放入我们需要运行的动态库，同时在组件的podspec中加入此路径，这样我们APP在运行中才可以获取到此路径下的资源：
+<code>s.resource = '****/yourResources.bundle'</code>
+做好前置准备后，就可以在代码中通过以下方式获取到你的动态库资源了：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objc" data-lang="objc"><span style="display:flex;"><span><span style="color:#000">NSBundle</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">main</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">NSBundle</span> <span style="color:#000">mainBundle</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">NSString</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">resourcePath</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">main</span> <span style="color:#f57900">pathForResource</span><span style="color:#000;font-weight:bold">:</span><span style="color:#4e9a06">@&#34;yourResources/yourDylib&#34;</span> <span style="color:#f57900">ofType</span><span style="color:#000;font-weight:bold">:</span><span style="color:#4e9a06">@&#34;dylib&#34;</span><span style="color:#000;font-weight:bold">];</span>
+</span></span></code></pre></div><h3 id="2dlopen">2.dlopen</h3>
+<p>获取到资源后下面就行装载运行动态库了，Linux提供了一套API来动态装载库。下面列出了这些API：</p>
+<blockquote>
+<p>dlopen：该函数将打开一个新库，并把它装入内存。该函数主要用来加载库中的符号，这些符号在编译的时候是不知道的。这种机制使得在系统中添加或者删除一个模块时，都不需要重新进行编译。<br>
+dlsym：在打开的动态库中查找符号的值。<br>
+dlclose：关闭动态库。<br>
+dlerror：返回一个描述最后一次调用dlopen、dlsym，或dlclose的错误信息的字符串。</p>
+</blockquote>
+<p>在我们拿到动态库的resourcePath后，直接使用dlopen，就可以运行啦:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objc" data-lang="objc"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">void</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">handle</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000">dlopen</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">resourcePath</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">RTLD_LAZY</span><span style="color:#000;font-weight:bold">);</span>
+</span></span></code></pre></div><h3 id="3动态库的链接地址">3.动态库的链接地址</h3>
+<p>同时我们还需要注意不要忘记修改动态库的链接地址，dylib的id和引用路径是指dylib文件的唯一标识和被其他文件引用时的查找路径]。我们可以使用otool命令查看dylib的id和引用路径，例如：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>otool -L libtest.dylib
+</span></span></code></pre></div><p>同时我们可以使用install_name_tool命令修改dylib的id和引用路径，例如：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>install_name_tool -id @rpath/libtest.dylib libtest.dylib
+</span></span></code></pre></div><p>这样就把dylib的id改为了@rpath/libtest.dylib，表示在运行时根据@rpath变量来查找dylib文件。</p>
+<hr>
+<h3 id="4python删除元素">4.python删除元素</h3>
+<p>本周犯了一个低级错误，删除元素没有注意方法，导致list出现了奇怪了现象，排查了很久，最终才注意到是删除元素存在问题。错误示范：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000">element</span> <span style="color:#204a87;font-weight:bold">in</span> <span style="color:#000">element_list</span><span style="color:#000;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">element</span> <span style="color:#ce5c00;font-weight:bold">==</span> <span style="color:#4e9a06">&#39;***&#39;</span><span style="color:#000;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#204a87;font-weight:bold">del</span> <span style="color:#000">element</span>
+</span></span></code></pre></div><p>以上是经典的错误示范，Python list在for循环中删除元素有几种方法，但是要注意不要直接修改正在迭代的列表，否则可能会出现意外的结果或错误</p>
+<p>一种方法是创建一个新的列表，只包含你想要保留的元素，然后用新的列表替换原来的列表。例如：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000">ls</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">5</span><span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">ls</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">x</span> <span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000">x</span> <span style="color:#204a87;font-weight:bold">in</span> <span style="color:#000">ls</span> <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">x</span> <span style="color:#ce5c00;font-weight:bold">!=</span> <span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#8f5902;font-style:italic"># 删除所有等于3的元素</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ls</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#8f5902;font-style:italic"># [1, 2, 4, 5]</span>
+</span></span></code></pre></div><p>另一种方法是使用list.remove()方法，在for循环之外逐个删除你不想要的元素。例如：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000">ls</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">5</span><span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">to_remove</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#8f5902;font-style:italic"># 要删除的元素列表</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000">x</span> <span style="color:#204a87;font-weight:bold">in</span> <span style="color:#000">to_remove</span><span style="color:#000;font-weight:bold">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">ls</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">remove</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">x</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#8f5902;font-style:italic"># 删除第一个等于x的元素</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ls</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#8f5902;font-style:italic"># [1, 2, 4, 5]</span>
+</span></span></code></pre></div><p>我最后采用的方式是倒序删除：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000">ls</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">2</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">4</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#0000cf;font-weight:bold">5</span><span style="color:#000;font-weight:bold">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">to_remove</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#8f5902;font-style:italic"># 要删除的元素列表</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">for</span> <span style="color:#000">i</span> <span style="color:#204a87;font-weight:bold">in</span> <span style="color:#204a87">range</span><span style="color:#000;font-weight:bold">(</span><span style="color:#204a87">len</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ls</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#ce5c00;font-weight:bold">-</span> <span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#ce5c00;font-weight:bold">-</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#ce5c00;font-weight:bold">-</span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#000;font-weight:bold">):</span> <span style="color:#8f5902;font-style:italic"># 倒序遍历列表</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#204a87;font-weight:bold">if</span> <span style="color:#000">ls</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">i</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#204a87;font-weight:bold">in</span> <span style="color:#000">to_remove</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#8f5902;font-style:italic"># 如果元素在要删除的列表中</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#204a87;font-weight:bold">del</span> <span style="color:#000">ls</span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">i</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#8f5902;font-style:italic"># 删除该元素</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87">print</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">ls</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#8f5902;font-style:italic"># [1, 2, 4, 5]</span>
+</span></span></code></pre></div><hr>
+<h3 id="5prompt-engineering">5.prompt engineering</h3>
+<p>可以参考：</p>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/611137227">https://zhuanlan.zhihu.com/p/611137227</a><br>
+<a href="https://zhuanlan.zhihu.com/p/488279606">https://zhuanlan.zhihu.com/p/488279606</a></p>
+</blockquote>
+<h3 id="6ios访问自定义类别的私有属性">6.iOS访问自定义类别的私有属性：</h3>
+<p>在Objective-C中，可以使用KVC（键值编码）来访问私有变量。KVC是Objective-C的一种机制，可以通过键名称访问对象的属性，即使这些属性是私有的。</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objc" data-lang="objc"><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"># 私有方法及属性定义
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">@interface</span> <span style="color:#000">Person</span> : <span style="color:#000">NSObject</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@property</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">nonatomic</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">strong</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">NSString</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">name</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@implementation</span> <span style="color:#000">Person</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">Address</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">_address</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@interface</span> <span style="color:#000">Address</span> : <span style="color:#000">NSObject</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@property</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">nonatomic</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">strong</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">NSString</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">street</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@property</span> <span style="color:#000;font-weight:bold">(</span><span style="color:#204a87;font-weight:bold">nonatomic</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#204a87;font-weight:bold">strong</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000">NSString</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">city</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@implementation</span> <span style="color:#000">Address</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">@end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objc" data-lang="objc"><span style="display:flex;"><span><span style="color:#000">Person</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">person</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[[</span><span style="color:#000">Person</span> <span style="color:#000">alloc</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#000">init</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">Address</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">address</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[[</span><span style="color:#000">Address</span> <span style="color:#000">alloc</span><span style="color:#000;font-weight:bold">]</span> <span style="color:#000">init</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">address</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">street</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">@&#34;123 Main St.&#34;</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">address</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">city</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">@&#34;Anytown&#34;</span><span style="color:#000;font-weight:bold">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">person</span> <span style="color:#f57900">setValue</span><span style="color:#000;font-weight:bold">:</span><span style="color:#000">address</span> <span style="color:#f57900">forKey</span><span style="color:#000;font-weight:bold">:</span><span style="color:#4e9a06">@&#34;_address&#34;</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000">Address</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">personAddress</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">person</span> <span style="color:#f57900">valueForKey</span><span style="color:#000;font-weight:bold">:</span><span style="color:#4e9a06">@&#34;_address&#34;</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">NSLog</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">@&#34;%@, %@&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">personAddress</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">street</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">personAddress</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">city</span><span style="color:#000;font-weight:bold">);</span> <span style="color:#8f5902;font-style:italic">// Output: 123 Main St., Anytown
+</span></span></span></code></pre></div><p>需要注意的是，访问私有变量可能会违反封装性原则，可能会导致代码的不稳定性。建议在实际开发中尽量避免访问私有变量，尽可能使用类提供的公共接口来进行操作。</p>
+<hr>
+<h3 id="7throttle-debounce">7.throttle debounce</h3>
+<center><img src="/images/Pasted%20image%2020230319145329.png" width="60%" height="50%" /></center>
+lodash 提供了`debounce`和`throttle`两个方法。文档上是这么描述这两个方法的：
+<ul>
+<li>throttle <strong>创建一个节流函数</strong>，在 <code>wait</code> 毫秒内最多执行 <code>func</code> 一次；</li>
+<li>debounce <strong>创建一个防抖函数</strong>，该函数会从上一次被调用后，延迟 <code>wait</code> 毫秒后调用 <code>func</code> 。</li>
+</ul>
+<p>可以通过下图理解两个函数及一些参数的作用：</p>
+<center><img src="/images/Pasted%20image%2020230319145652.png" width="60%" height="50%" /></center>
+可以把throttle看作是地铁，debounce看作是电梯，throttle的不管上了多少人，什么时候上的，时间一到就按时发车。debounce就像电梯，第一个人进去以后，如果在10s（假设值）内有人进来，电梯又要等10s才关门，以次类推。直到电梯装满，人们都主动等下一趟了，电梯才会关门。
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2023
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>
