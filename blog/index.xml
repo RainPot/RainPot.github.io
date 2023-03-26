@@ -6,7 +6,18 @@
     <description>Recent content in Blogs on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 19 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>温故而知新-0320-0324</title>
+      <link>/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0320-0324/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0320-0324/</guid>
+      <description>0.一些感悟 对于解决问题的能力：
+首先是对于需求方提出的需求：如果遇到 技术上较难解决 / 成本较高 的需求时，难免会陷入内耗拒绝抱怨的心态，而此时更难得的是保持一颗解决问题的心，要主动去思考为什么没人解决、可以通过什么方式去解决，快速高效地去实现出来。 其次是主动发现需求点的能力：要主动跟需求方沟通，了解他们的工作模式方式，可能会存在一些可以主动提效的点，针对这些点去改进。 较大型的项目/需求：leader强调过，要把自己当作一个合格的产品+开发+测试，需求分析、可行性分析、方案设计、开发测试、上线维护都要考虑到，且每一步都应尽可能得完善。 1.RN原生桥 iOS 获取 JSContext 你可以通过 RCTBridgeDelegate 协议的 sourceURLForBridge: 方法来获取 RN 加载的 JS 代码的 URL。 你可以通过 RCTBridge 的 executeSourceCode: 方法来执行 JS 代码，并返回一个 JSContext 实例。 你可以通过 RCTJavaScriptExecutor 协议的 executeBlockOnJavaScriptQueue: 方法来在 JS 线程上执行一个 Block，并在 Block 中访问 JSContext 实例。 你可以通过 JSContext 的 setObject:forKeyedSubscript: 方法来向 JS 环境中注入原生对象或函数。 在 React Native 中，如果您需要在原生代码中获取当前的 JavaScript 上下文（JSContext），可以通过 RCTBridge 类的 currentBridge 方法来实现。 RCTBridge 类是 React Native 框架中的一个核心类，它负责管理 JavaScript 和原生代码之间的通信，并提供了一些方法和属性来处理这种通信。
+您可以使用以下代码获取当前的 JSContext：</description>
+    </item>
+    
     <item>
       <title>温故而知新-0313-0317</title>
       <link>/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0313-0317/</link>
