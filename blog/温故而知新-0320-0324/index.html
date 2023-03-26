@@ -291,7 +291,7 @@
 工程化工具：<a href="https://python.langchain.com/en/latest/getting_started/getting_started.html#">https://python.langchain.com/en/latest/getting_started/getting_started.html#</a><br>
 visual chatgpt：<a href="https://github.com/microsoft/visual-chatgpt">https://github.com/microsoft/visual-chatgpt</a></p>
 </blockquote>
-<p>本地试了下visual chatgpt，在第一步图像理解方面，对于APP界面理解较差无法使用，对于自然图像理解能力尚可，但依旧依赖前置VFM的能力。本地M1搭了一下也可以使用，只不过比较慢，下面是几个实例：</p>
+<p>本地试了下visual chatgpt，对于VQA依赖前置VFM对图像的理解，稍微复杂的场景就不可用了。感觉整体还是偏向于简单任务处理图像。本地M1搭了一下也可以使用，只不过比较慢，下面是几个实例：</p>
 <center><img src="/images/Pasted%20image%2020230326201405.png" width="75%" height="75%" /></center>
 <p>模型对于图像的理解：</p>
 <pre tabindex="0"><code>Human: provide a figure named image/0afb204f.png. The description is: a man in a room with a tv and a television. This information helps you to understand this image, but you should use tools to finish following tasks, rather than directly imagine from my description. If you understand, say &#34;Received&#34;. 
