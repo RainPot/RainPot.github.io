@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> 温故而知新-0327-0331 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="温故而知新" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0327-0331/" />
+    <meta property="og:title" content="温故而知新-0327-0331" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="温故而知新" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="温故而知新-0327-0331" />
+    <meta name="twitter:description" content="温故而知新" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0327-0331/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">温故而知新-0327-0331</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="Cynicsss">
+	    Cynicsss
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sun Apr 2 2023 00:00:00 UTC'>
+	    2023-04-02
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    3 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0327-0331/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h3 id="1git修改强制覆盖本地-git">1.git修改强制覆盖本地 #git</h3>
+<pre tabindex="0"><code>git fetch --all    //只是下载代码到本地，不进行合并操作
+git reset --hard origin/分支名如master    //把HEAD指向最新下载的版本
+</code></pre><hr>
+<h3 id="2objective-c-获取当前线程调用栈-objc">2.Objective-C 获取当前线程调用栈 #objc</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-objc" data-lang="objc"><span style="display:flex;"><span><span style="color:#000">NSArray</span> <span style="color:#ce5c00;font-weight:bold">*</span><span style="color:#000">callStackSymbols</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">[</span><span style="color:#000">NSThread</span> <span style="color:#000">callStackSymbols</span><span style="color:#000;font-weight:bold">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">NSLog</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">@&#34;%@&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">callStackSymbols</span><span style="color:#000;font-weight:bold">);</span>
+</span></span></code></pre></div><p>输出示例：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#ce5c00;font-weight:bold">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;0   MyApp                       0x000000010b339d08 -[MyViewController viewDidLoad] + 136&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;1   UIKitCore                      0x00007fff2e035038 -[UIViewController loadViewIfRequired] + 1184&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;2   UIKitCore                      0x00007fff2e03548e -[UIViewController view] + 27&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;3   UIKitCore                      0x00007fff2dc65ccd -[UIWindow addRootViewControllerViewIfPossible] + 150&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;4   UIKitCore                      0x00007fff2dc65337 -[UIWindow _setHidden:forced:] + 302&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;5   UIKitCore                      0x00007fff2dc76b28 -[UIWindow makeKeyAndVisible] + 42&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;6   MyApp                       0x000000010b3385c5 -[AppDelegate application:didFinishLaunchingWithOptions:] + 165&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;7   UIKitCore                      0x00007fff2d9bbbf9 -[UIApplication _handleDelegateCallbacksWithOptions:isSuspended:restoreState:] + 281&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;8   UIKitCore                      0x00007fff2d9bdd2c -[UIApplication _callInitializationDelegatesWithActions:forCanvas:payload:fromOriginatingProcess:] + 4524&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;9   UIKitCore                      0x00007fff2d9c320c -[UIApplication _runWithMainScene:transitionContext:completion:] + 5980&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;10  UIKitCore                      0x00007fff2c2c8d1e __111-[__UICanvasLifecycleMonitor_Compatability _scheduleFirstCommitForScene:transition:firstActivation:completion:]_block_invoke + 828&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;11  UIKitCore                      0x00007fff2c2d503c +[_UICanvas _enqueuePostSettingUpdateTransactionBlock:] + 153&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;12  UIKitCore                      0x00007fff2c2c897d -[__UICanvasLifecycleMonitor_Compatability _scheduleFirstCommitForScene:transition:firstActivation:completion:] + 236&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;13  UIKitCore                      0x00007fff2c2c9229 -[__UICanvasLifecycleMonitor_Compatability activateEventsOnly:withContext:completion:] + 1091&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;14  UIKitCore                      0x00007fff2ccc3d32 __82-[_UIApplicationCanvas _transitionLifecycleStateWithTransitionContext:completion:]_block_invoke + 782&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;15  UIKitCore                      0x00007fff2ccc3970 -[_UIApplicationCanvas _transitionLifecycleStateWithTransitionContext:completion:] + 433&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;16  UIKitCore                      0x00007fff2d9f0c3e __125-[_UICanvasLifecycleSettingsDiffAction performActionsForCanvas:withUpdatedScene:settingsDiff:fromSettings:transitionContext:]_block_invoke + 576&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;17  UIKitCore                      0x00007fff2d9f10fb _performActionsWithDelayForTransitionContext + 100&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;18  UIKitCore                      0x00007fff2d9f0a7b -[_UICanvasLifecycleSettingsDiffAction performActionsForCanvas:withUpdatedScene:settingsDiff:fromSettings:transitionContext:] + 221&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;19  UIKitCore                      0x00007fff2c2d41cf -[_UICanvas scene:didUpdateWithDiff:transitionContext:completion:] + 392&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;20  UIKitCore                      0x00007fff2d9c1dc2 -[UIApplication workspace:didCreateScene:withTransitionContext:completion:] + 514&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;21  UIKitCore                      0x00007fff2c1d7c8a -[UIApplicationSceneClientAgent scene:didInitializeWithEvent:completion:] + 361&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;22  FrontBoardServices             0x00007fff365ccf5a -[FBSSceneImpl _didCreateWithTransitionContext:completion:] + 448&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;23  FrontBoardServices             0x00007fff365d79e5 __56-[FBSWorkspace client:handleCreateScene:withCompletion:]_block_invoke_3 + 225&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;24  libdispatch.dylib               0x000000010c7cf77a _dispatch_client_callout + 8&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;25  libdispatch.dylib               0x000000010c7d3033 _dispatch_block_invoke_direct + 301&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;26  FrontBoardServices             0x00007fff366012a8 __FBSSERIALQUEUE_IS_CALLING_OUT_TO_A_BLOCK__ + 30&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;27  FrontBoardServices             0x00007fff36600f67 -[FBSSerialQueue _performNext] + 457&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;28  FrontBoardServices             0x00007fff3660143d -[FBSSerialQueue _performNextFromRunLoopSource] + 42&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;29  CoreFoundation                 0x00007fff23a0a7be __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__ + 17&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;30  CoreFoundation                 0x00007fff23a0a724 __CFRunLoopDoSource0 + 108&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;31  CoreFoundation                 0x00007fff23a0a1b4 __CFRunLoopDoSources0 + 195&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;32  CoreFoundation                 0x00007fff239fe79e __CFRunLoopRun + 1183&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;33  CoreFoundation                 0x00007fff239fe0d2 CFRunLoopRunSpecific + 626&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;34  GraphicsServices               0x00007fff38b2c2fe GSEventRunModal + 65&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;35  UIKitCore                      0x00007fff2d9c47fc UIApplicationMain + 1621&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;36  MyApp                       0x000000010b337bfc main + 76&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4e9a06">&#34;37  libdyld.dylib                  0x00007fff5228cb85 start + 1&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ce5c00;font-weight:bold">)</span>
+</span></span></code></pre></div><hr>
+<h3 id="3rss">3.RSS</h3>
+<p>RSS 的全称是 Really Simple Syndication（简易信息聚合），它是一种消息来源的格式规范，网站可以按照这种格式规范提供文章的标题、摘要、全文等信息给订阅用户，用户可以通过订阅不同网站 RSS 链接的方式将不同的信息源进行聚合，在一个工具里阅读这些内容。
+<a href="https://sspai.com/post/56391">https://sspai.com/post/56391</a></p>
+<ul>
+<li>MacOS RSS阅读：fluent reader</li>
+<li>Android RSS阅读：Feedly</li>
+<li>一个MacOS小工具：utools(效率平台非RSS相关)</li>
+</ul>
+<hr>
+<h3 id="4langchain学习">4.LangChain学习</h3>
+<p>持续学习中&hellip;</p>
+<hr>
+<h3 id="5python-项目结构-python">5.python 项目结构 #python</h3>
+<p>大部分人及Kenneth Reitz推荐的：https://github.com/navdeep-G/samplemod
+目录结构：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── LICENSE     <span style="color:#8f5902;font-style:italic"># 许可证  </span>
+</span></span><span style="display:flex;"><span>├── MANIFEST.in
+</span></span><span style="display:flex;"><span>├── Makefile    
+</span></span><span style="display:flex;"><span>├── README.rst  <span style="color:#8f5902;font-style:italic"># 项目说明文档</span>
+</span></span><span style="display:flex;"><span>├── docs        <span style="color:#8f5902;font-style:italic"># 项目相关配置文件</span>
+</span></span><span style="display:flex;"><span>│   ├── Makefile
+</span></span><span style="display:flex;"><span>│   ├── conf.py
+</span></span><span style="display:flex;"><span>│   ├── index.rst
+</span></span><span style="display:flex;"><span>│   └── make.bat
+</span></span><span style="display:flex;"><span>├── requirements.txt
+</span></span><span style="display:flex;"><span>├── sample      <span style="color:#8f5902;font-style:italic"># 项目核心代码</span>
+</span></span><span style="display:flex;"><span>│   ├── __init__.py
+</span></span><span style="display:flex;"><span>│   ├── core.py
+</span></span><span style="display:flex;"><span>│   └── helpers.py
+</span></span><span style="display:flex;"><span>├── setup.py    <span style="color:#8f5902;font-style:italic"># 打包</span>
+</span></span><span style="display:flex;"><span>└── tests
+</span></span><span style="display:flex;"><span>    ├── __init__.py
+</span></span><span style="display:flex;"><span>    ├── context.py
+</span></span><span style="display:flex;"><span>    ├── test_advanced.py
+</span></span><span style="display:flex;"><span>    └── test_basic.py
+</span></span></code></pre></div><hr>
+<h3 id="6adb获取截图以及xml-adb">6.adb获取截图以及xml #adb</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"># 获取页面元素xml文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;adb shell uiautomator dump /sdcard/uidump.xml&#34;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">f</span><span style="color:#4e9a06">&#34;adb pull /sdcard/uidump.xml ./sample/init/</span><span style="color:#4e9a06">{</span><span style="color:#000">case_name</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">.xml&#34;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"># 获取页面截图</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;adb shell screencap -p /sdcard/screenshot.png&#34;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">f</span><span style="color:#4e9a06">&#34;adb pull /sdcard/screenshot.png ./sample/init/</span><span style="color:#4e9a06">{</span><span style="color:#000">case_name</span><span style="color:#4e9a06">}</span><span style="color:#4e9a06">.png&#34;</span><span style="color:#000;font-weight:bold">)</span>
+</span></span></code></pre></div><hr>
+<h3 id="7adb拉起app-adb">7.adb拉起app #adb</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"># 通过package_name及activity_name拉起</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">def</span> <span style="color:#000">launch_app</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">package_name</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">activity_name</span><span style="color:#000;font-weight:bold">):</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">cmd</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;adb shell am start --activity-clear-top -n </span><span style="color:#4e9a06">{}</span><span style="color:#4e9a06">/</span><span style="color:#4e9a06">{}</span><span style="color:#4e9a06">&#39;</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">format</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">package_name</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">activity_name</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">cmd</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"># 通过urlscheme拉起</span>
+</span></span><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">def</span> <span style="color:#000">launch_app_by_urlscheme</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">urlscheme</span><span style="color:#000;font-weight:bold">):</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">cmd</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#4e9a06">&#39;adb shell am start --activity-clear-top </span><span style="color:#4e9a06">\&#34;</span><span style="color:#4e9a06">{}</span><span style="color:#4e9a06">\&#34;</span><span style="color:#4e9a06">&#39;</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">format</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">urlscheme</span><span style="color:#000;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#000">os</span><span style="color:#ce5c00;font-weight:bold">.</span><span style="color:#000">system</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000">cmd</span><span style="color:#000;font-weight:bold">)</span>
+</span></span></code></pre></div>
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2023
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>
