@@ -6,7 +6,20 @@
     <description>Recent content on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 02 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LangChain Models&#43;Prompts</title>
+      <link>/blog/langchain-models&#43;prompts/</link>
+      <pubDate>Sat, 08 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/langchain-models&#43;prompts/</guid>
+      <description>[TOC]
+1.安装 pip install langchain 2.环境配置 For this example, we will be using OpenAI’s APIs, so we will first need to install their SDK:
+pip install openai We will then need to set the environment variable in the terminal.
+export OPENAI_API_KEY=&amp;#34;...&amp;#34; Alternatively, you could do this from inside the Jupyter notebook (or Python script):
+import os os.environ[&amp;#34;OPENAI_API_KEY&amp;#34;] = &amp;#34;...&amp;#34; 3.简单LLM预测 from langchain.llms import OpenAI llm = OpenAI(temperature=0.9) text = &amp;#34;What would be a good company name for a company that makes colorful socks?</description>
+    </item>
+    
     <item>
       <title>温故而知新-0327-0331</title>
       <link>/blog/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0-0327-0331/</link>
