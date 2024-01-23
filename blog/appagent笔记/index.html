@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> AppAgent笔记 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="基于多模态大模型的APP操作Agent" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/appagent%E7%AC%94%E8%AE%B0/" />
+    <meta property="og:title" content="AppAgent笔记" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="基于多模态大模型的APP操作Agent" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="AppAgent笔记" />
+    <meta name="twitter:description" content="基于多模态大模型的APP操作Agent" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/appagent%E7%AC%94%E8%AE%B0/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">AppAgent笔记</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="RainPot">
+	    RainPot
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Tue Jan 23 2024 00:00:00 UTC'>
+	    2024-01-23
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    10 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/appagent%E7%AC%94%E8%AE%B0/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <!-- TOC -->
+<ul>
+<li><a href="#%E4%B8%80%E7%AE%80%E4%BB%8B">一、简介</a></li>
+<li><a href="#%E4%BA%8Cself_explorer%E6%B5%81%E7%A8%8B">二、self_explorer流程</a></li>
+<li><a href="#%E4%B8%89grid%E6%A8%A1%E5%BC%8F">三、Grid模式</a></li>
+<li><a href="#%E5%9B%9B%E6%80%BB%E7%BB%93">四、总结</a></li>
+</ul>
+<!-- /TOC -->
+<h1 id="一简介">一、简介</h1>
+<ul>
+<li>项目主页：<a href="https://appagent-official.github.io/">https://appagent-official.github.io/</a></li>
+<li>code: <a href="https://github.com/mnotgod96/AppAgent">https://github.com/m. otgod96/AppAgent</a></li>
+<li>paper: <a href="https://arxiv.org/pdf/2312.13771.pdf">https://arxiv.org/p. f/2312.13771.pdf</a></li>
+</ul>
+<p>2023下半年，在openai release gpt-4v api及公开相关研究(<a href="https://arxiv.org/abs/2309.17421">https://arxiv.org/abs/2309.17421</a>)后,人们开始了gpt-4v在现实tasks中落地的探索之路。其中在模拟人机交互操作领域，也出现了多个工作，如<a href="https://github.com/zzxslp/MM-Navigator">https://github.com/zzxslp/MM-Navigator</a>，本文的AppAgent，以及Rabit的LargeActionModel等。本文介绍一下AppAgent的主要思路。</p>
+<p>AppAgent通过定义一个简单的操作空间（tap、swipe、input、long_press），使LLMAgent可以像人一样操作APP。LLMAgent通过观察记录操作及操作结果，学习不同操作的作用，从而可以操作一个未见过的APP。作者使用AppAgent在10个不同APP上尝试了50多个任务，认为AppAgent可以胜任很多不同类型的UI交互操作任务。（<em><strong>Android，通过adb驱动</strong></em>）
+<img src="/images/Pasted%20image%2020240121224809.png" alt=""></p>
+<h1 id="二self_explorer流程">二、self_explorer流程</h1>
+<p>AppAgent整体上分为<strong>learn</strong>与<strong>run</strong>，learn过程为AppAgent学习思考App操作并存为Doc的过程，run可以理解为完成任务的回放过程或自动探索过程。这里简单介绍下learn过程中的self_explorer过程，其也有点类似于run中的自动探索。</p>
+<p>给定一个Task，使AppAgent自主地在指定的App上完成此task，并记录探索的步骤，为后续Agent执行任务提供参考。self_explorer的流程(简版，部分细节不做描述)如下：</p>
+<ol>
+<li>初始化(获取App信息、获取Device信息、获取Task信息、创建任务文件夹)</li>
+<li>进入Action循环</li>
+<li>获取页面元素树，整理可交互元素(ADB xml驱动)</li>
+<li>在图像中标注元素 (set-of-mark)</li>
+<li>页面信息 / 历史交互信息，组装Prompt，询问gpt-4v下一步该进行何种操作</li>
+<li>得到gpt-4v回复，进行操作</li>
+<li>获取操作后页面信息，反思并记录结果</li>
+<li>重复循环，直到完成task or 达到最大步数</li>
+</ol>
+<p>其中一个关键步骤为：Action选取 ，在self_explorer过程中整体的Prompt为：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#a40000">You</span> <span style="color:#a40000">are</span> <span style="color:#a40000">an</span> <span style="color:#a40000">agent</span> <span style="color:#a40000">that</span> <span style="color:#a40000">is</span> <span style="color:#a40000">trained</span> <span style="color:#a40000">to</span> <span style="color:#a40000">complete</span> <span style="color:#a40000">certain</span> <span style="color:#a40000">tasks</span> <span style="color:#a40000">on</span> <span style="color:#a40000">a</span> <span style="color:#a40000">smartphone.</span> <span style="color:#a40000">You</span> <span style="color:#a40000">will</span> <span style="color:#a40000">be</span> <span style="color:#a40000">given</span> <span style="color:#a40000">a</span> <span style="color:#a40000">screenshot</span> <span style="color:#a40000">of</span> <span style="color:#a40000">a</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">app.</span> <span style="color:#a40000">The</span> <span style="color:#a40000">interactive</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">elements</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screenshot</span> <span style="color:#a40000">are</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tags</span> <span style="color:#a40000">starting</span> <span style="color:#a40000">from</span> <span style="color:#0000cf;font-weight:bold">1</span><span style="color:#a40000">.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">You</span> <span style="color:#a40000">can</span> <span style="color:#a40000">call</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">functions</span> <span style="color:#a40000">to</span> <span style="color:#a40000">interact</span> <span style="color:#a40000">with</span> <span style="color:#a40000">those</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">elements</span> <span style="color:#a40000">to</span> <span style="color:#a40000">control</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#a40000">.</span> <span style="color:#a40000">tap(element:</span> <span style="color:#a40000">int)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">This</span> <span style="color:#a40000">function</span> <span style="color:#a40000">is</span> <span style="color:#a40000">used</span> <span style="color:#a40000">to</span> <span style="color:#a40000">tap</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span> <span style="color:#4e9a06">&#34;element&#34;</span> <span style="color:#a40000">is</span> <span style="color:#a40000">a</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">assigned</span> <span style="color:#a40000">to</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span> <span style="color:#a40000">A</span> <span style="color:#a40000">simple</span> <span style="color:#a40000">use</span> <span style="color:#a40000">case</span> <span style="color:#a40000">can</span> <span style="color:#a40000">be</span> <span style="color:#a40000">tap(</span><span style="color:#0000cf;font-weight:bold">5</span><span style="color:#a40000">),</span> <span style="color:#a40000">which</span> <span style="color:#a40000">taps</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">number</span> <span style="color:#0000cf;font-weight:bold">5</span><span style="color:#a40000">.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#a40000">.</span> <span style="color:#a40000">text(text_input:</span> <span style="color:#a40000">str)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">This</span> <span style="color:#a40000">function</span> <span style="color:#a40000">is</span> <span style="color:#a40000">used</span> <span style="color:#a40000">to</span> <span style="color:#a40000">insert</span> <span style="color:#a40000">text</span> <span style="color:#a40000">input</span> <span style="color:#a40000">in</span> <span style="color:#a40000">an</span> <span style="color:#a40000">input</span> <span style="color:#a40000">field/box.</span> <span style="color:#a40000">text_input</span> <span style="color:#a40000">is</span> <span style="color:#a40000">the</span> <span style="color:#a40000">string</span> <span style="color:#a40000">you</span> <span style="color:#a40000">want</span> <span style="color:#a40000">to</span> <span style="color:#a40000">insert</span> <span style="color:#a40000">and</span> <span style="color:#a40000">must</span> <span style="color:#a40000">be</span> <span style="color:#a40000">wrapped</span> <span style="color:#a40000">with</span> <span style="color:#a40000">double</span> <span style="color:#a40000">quotation</span> <span style="color:#a40000">marks.</span> <span style="color:#a40000">A</span> <span style="color:#a40000">simple</span> <span style="color:#a40000">use</span> <span style="color:#a40000">case</span> <span style="color:#a40000">can</span> <span style="color:#a40000">be</span> <span style="color:#a40000">text(</span><span style="color:#4e9a06">&#34;Hello, world!&#34;</span><span style="color:#a40000">),</span> <span style="color:#a40000">which</span> <span style="color:#a40000">inserts</span> <span style="color:#a40000">the</span> <span style="color:#a40000">string</span> <span style="color:#4e9a06">&#34;Hello, world!&#34;</span> <span style="color:#a40000">into</span> <span style="color:#a40000">the</span> <span style="color:#a40000">input</span> <span style="color:#a40000">area</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span> <span style="color:#a40000">This</span> <span style="color:#a40000">function</span> <span style="color:#a40000">is</span> <span style="color:#a40000">only</span> <span style="color:#a40000">callable</span> <span style="color:#a40000">when</span> <span style="color:#a40000">you</span> <span style="color:#a40000">see</span> <span style="color:#a40000">a</span> <span style="color:#a40000">keyboard</span> <span style="color:#a40000">showing</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">lower</span> <span style="color:#a40000">half</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#a40000">.</span> <span style="color:#a40000">long_press(element:</span> <span style="color:#a40000">int)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">This</span> <span style="color:#a40000">function</span> <span style="color:#a40000">is</span> <span style="color:#a40000">used</span> <span style="color:#a40000">to</span> <span style="color:#a40000">long</span> <span style="color:#a40000">press</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#4e9a06">&#34;element&#34;</span> <span style="color:#a40000">is</span> <span style="color:#a40000">a</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">assigned</span> <span style="color:#a40000">to</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">A</span> <span style="color:#a40000">simple</span> <span style="color:#a40000">use</span> <span style="color:#a40000">case</span> <span style="color:#a40000">can</span> <span style="color:#a40000">be</span> <span style="color:#a40000">long_press(</span><span style="color:#0000cf;font-weight:bold">5</span><span style="color:#a40000">),</span> <span style="color:#a40000">which</span> <span style="color:#a40000">long</span> <span style="color:#a40000">presses</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">number</span> <span style="color:#0000cf;font-weight:bold">5</span><span style="color:#a40000">.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">4</span><span style="color:#a40000">.</span> <span style="color:#a40000">swipe(element:</span> <span style="color:#a40000">int,</span> <span style="color:#a40000">direction:</span> <span style="color:#a40000">str,</span> <span style="color:#a40000">dist:</span> <span style="color:#a40000">str)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">This</span> <span style="color:#a40000">function</span> <span style="color:#a40000">is</span> <span style="color:#a40000">used</span> <span style="color:#a40000">to</span> <span style="color:#a40000">swipe</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen,</span> <span style="color:#a40000">usually</span> <span style="color:#a40000">a</span> <span style="color:#a40000">scroll</span> <span style="color:#a40000">view</span> <span style="color:#a40000">or</span> <span style="color:#a40000">a</span> <span style="color:#a40000">slide</span> <span style="color:#a40000">bar.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#4e9a06">&#34;element&#34;</span> <span style="color:#a40000">is</span> <span style="color:#a40000">a</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">assigned</span> <span style="color:#a40000">to</span> <span style="color:#a40000">an</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">shown</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen.</span> <span style="color:#4e9a06">&#34;direction&#34;</span> <span style="color:#a40000">is</span> <span style="color:#a40000">a</span> <span style="color:#a40000">string</span> <span style="color:#a40000">that</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">represents</span> <span style="color:#a40000">one</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">four</span> <span style="color:#a40000">directions:</span> <span style="color:#a40000">up,</span> <span style="color:#a40000">down,</span> <span style="color:#a40000">left,</span> <span style="color:#a40000">right.</span> <span style="color:#4e9a06">&#34;direction&#34;</span> <span style="color:#a40000">must</span> <span style="color:#a40000">be</span> <span style="color:#a40000">wrapped</span> <span style="color:#a40000">with</span> <span style="color:#a40000">double</span> <span style="color:#a40000">quotation</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">marks.</span> <span style="color:#4e9a06">&#34;dist&#34;</span> <span style="color:#a40000">determines</span> <span style="color:#a40000">the</span> <span style="color:#a40000">distance</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">swipe</span> <span style="color:#a40000">and</span> <span style="color:#a40000">can</span> <span style="color:#a40000">be</span> <span style="color:#a40000">one</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">three</span> <span style="color:#a40000">options:</span> <span style="color:#a40000">short,</span> <span style="color:#a40000">medium,</span> <span style="color:#a40000">long.</span> <span style="color:#a40000">You</span> <span style="color:#a40000">should</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">choose</span> <span style="color:#a40000">the</span> <span style="color:#a40000">appropriate</span> <span style="color:#a40000">distance</span> <span style="color:#a40000">option</span> <span style="color:#a40000">according</span> <span style="color:#a40000">to</span> <span style="color:#a40000">your</span> <span style="color:#a40000">need.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">A</span> <span style="color:#a40000">simple</span> <span style="color:#a40000">use</span> <span style="color:#a40000">case</span> <span style="color:#a40000">can</span> <span style="color:#a40000">be</span> <span style="color:#a40000">swipe(</span><span style="color:#0000cf;font-weight:bold">21</span><span style="color:#a40000">,</span> <span style="color:#4e9a06">&#34;up&#34;</span><span style="color:#a40000">,</span> <span style="color:#4e9a06">&#34;medium&#34;</span><span style="color:#a40000">),</span> <span style="color:#a40000">which</span> <span style="color:#a40000">swipes</span> <span style="color:#a40000">up</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">number</span> <span style="color:#0000cf;font-weight:bold">21</span> <span style="color:#a40000">for</span> <span style="color:#a40000">a</span> <span style="color:#a40000">medium</span> <span style="color:#a40000">distance.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">The</span> <span style="color:#a40000">task</span> <span style="color:#a40000">you</span> <span style="color:#a40000">need</span> <span style="color:#a40000">to</span> <span style="color:#a40000">complete</span> <span style="color:#a40000">is</span> <span style="color:#a40000">to</span> <span style="color:#a40000">&lt;task_description&gt;.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">past</span> <span style="color:#a40000">actions</span> <span style="color:#a40000">to</span> <span style="color:#a40000">proceed</span> <span style="color:#a40000">with</span> <span style="color:#a40000">this</span> <span style="color:#a40000">task</span> <span style="color:#a40000">are</span> <span style="color:#a40000">summarized</span> <span style="color:#a40000">as</span> <span style="color:#a40000">follows:</span> <span style="color:#a40000">&lt;last_act&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Now,</span> <span style="color:#a40000">given</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">screenshot,</span> <span style="color:#a40000">you</span> <span style="color:#a40000">need</span> <span style="color:#a40000">to</span> <span style="color:#a40000">think</span> <span style="color:#a40000">and</span> <span style="color:#a40000">call</span> <span style="color:#a40000">the</span> <span style="color:#a40000">function</span> <span style="color:#a40000">needed</span> <span style="color:#a40000">to</span> <span style="color:#a40000">proceed</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">include</span> <span style="color:#a40000">three</span> <span style="color:#a40000">parts</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">given</span> <span style="color:#a40000">format:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Observation:</span> <span style="color:#a40000">&lt;Describe</span> <span style="color:#a40000">what</span> <span style="color:#a40000">you</span> <span style="color:#a40000">observe</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">image&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Thought:</span> <span style="color:#a40000">&lt;To</span> <span style="color:#a40000">complete</span> <span style="color:#a40000">the</span> <span style="color:#a40000">given</span> <span style="color:#a40000">task,</span> <span style="color:#a40000">what</span> <span style="color:#a40000">is</span> <span style="color:#a40000">the</span> <span style="color:#a40000">next</span> <span style="color:#a40000">step</span> <span style="color:#a40000">I</span> <span style="color:#a40000">should</span> <span style="color:#a40000">do&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Action:</span> <span style="color:#a40000">&lt;The</span> <span style="color:#a40000">function</span> <span style="color:#a40000">call</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">correct</span> <span style="color:#a40000">parameters</span> <span style="color:#a40000">to</span> <span style="color:#a40000">proceed</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task.</span> <span style="color:#a40000">If</span> <span style="color:#a40000">you</span> <span style="color:#a40000">believe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task</span> <span style="color:#a40000">is</span> <span style="color:#a40000">completed</span> <span style="color:#a40000">or</span> <span style="color:#a40000">there</span> <span style="color:#a40000">is</span> <span style="color:#a40000">nothing</span> <span style="color:#a40000">to</span> <span style="color:#a40000">be</span> <span style="color:#a40000">done,</span> <span style="color:#a40000">you</span> <span style="color:#a40000">should</span> <span style="color:#a40000">output</span> <span style="color:#a40000">FINISH.</span> <span style="color:#a40000">You</span> <span style="color:#a40000">cannot</span> <span style="color:#a40000">output</span> <span style="color:#a40000">anything</span> <span style="color:#a40000">else</span> <span style="color:#a40000">except</span> <span style="color:#a40000">a</span> <span style="color:#a40000">function</span> <span style="color:#a40000">call</span> <span style="color:#a40000">or</span> <span style="color:#a40000">FINISH</span> <span style="color:#a40000">in</span> <span style="color:#a40000">this</span> <span style="color:#a40000">field.&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Summary:</span> <span style="color:#a40000">&lt;Summarize</span> <span style="color:#a40000">your</span> <span style="color:#a40000">past</span> <span style="color:#a40000">actions</span> <span style="color:#a40000">along</span> <span style="color:#a40000">with</span> <span style="color:#a40000">your</span> <span style="color:#a40000">latest</span> <span style="color:#a40000">action</span> <span style="color:#a40000">in</span> <span style="color:#a40000">one</span> <span style="color:#a40000">or</span> <span style="color:#a40000">two</span> <span style="color:#a40000">sentences.</span> <span style="color:#a40000">Do</span> <span style="color:#a40000">not</span> <span style="color:#a40000">include</span> <span style="color:#a40000">the</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">in</span> <span style="color:#a40000">your</span> <span style="color:#a40000">summary&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">You</span> <span style="color:#a40000">can</span> <span style="color:#a40000">only</span> <span style="color:#a40000">take</span> <span style="color:#a40000">one</span> <span style="color:#a40000">action</span> <span style="color:#a40000">at</span> <span style="color:#a40000">a</span> <span style="color:#a40000">time,</span> <span style="color:#a40000">so</span> <span style="color:#a40000">please</span> <span style="color:#a40000">directly</span> <span style="color:#a40000">call</span> <span style="color:#a40000">the</span> <span style="color:#a40000">function.</span>
+</span></span></code></pre></div><p>整体上，首先给大模型prefix条件，明确当前背景，再表明当前所有给予的信息，主要有页面信息，可执行操作信息，任务信息，返回的要求。其中对于页面信息：</p>
+<p>在UI交互领域，让App页面元素变为机器可理解颗粒度的原子是一项较困难的事情，为了能让GPT-4V能够理解当前页面，以及其Action决策与页面中具体元素的coords相对应，作者使用了<a href="https://github.com/microsoft/SoM">set-of-mark</a>的方式，将通过UI Element Tree获取到的元素一一标号，并将标号画在原本的截图上，如下图所示：
+<img src="/images/Pasted%20image%2020240122222256.png" alt="">
+从而GPT-4v在返回要操作的元素时，可以直接返回元素标号，我们也可以直接根据标号去操作对应元素，打破元素信息与视觉位置的gap。</p>
+<p>询问后，GPT-4V会按照要求的 Observation Thought Action Summary返回它的观察，思考，决策与总结。我们根据他的决策，去执行对应的操作。在操作后，我们得到了此次action执行后App反应的结果截图，再次进行一遍<a href="https://github.com/microsoft/SoM">set-of-mark</a>的过程，开始进入反思reflection：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#a40000">I</span> <span style="color:#a40000">will</span> <span style="color:#a40000">give</span> <span style="color:#a40000">you</span> <span style="color:#a40000">screenshots</span> <span style="color:#a40000">of</span> <span style="color:#a40000">a</span> <span style="color:#a40000">mobile</span> <span style="color:#a40000">app</span> <span style="color:#a40000">before</span> <span style="color:#a40000">and</span> <span style="color:#a40000">after</span> <span style="color:#a40000">&lt;action&gt;</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">element</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">number</span> <span style="color:#a40000">&#39;&lt;ui_element&gt;&#39;</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">first</span> <span style="color:#a40000">screenshot.</span> <span style="color:#a40000">The</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">of</span> <span style="color:#a40000">each</span> <span style="color:#a40000">element</span> <span style="color:#a40000">is</span> <span style="color:#a40000">located</span> <span style="color:#a40000">at</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">the</span> <span style="color:#a40000">center</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">element.</span> <span style="color:#a40000">The</span> <span style="color:#a40000">action</span> <span style="color:#a40000">of</span> <span style="color:#a40000">&lt;action&gt;</span> <span style="color:#a40000">this</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">was</span> <span style="color:#a40000">described</span> <span style="color:#a40000">as</span> <span style="color:#a40000">follows:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">&lt;last_act&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">The</span> <span style="color:#a40000">action</span> <span style="color:#a40000">was</span> <span style="color:#a40000">also</span> <span style="color:#a40000">an</span> <span style="color:#a40000">attempt</span> <span style="color:#a40000">to</span> <span style="color:#a40000">proceed</span> <span style="color:#a40000">with</span> <span style="color:#a40000">a</span> <span style="color:#a40000">larger</span> <span style="color:#a40000">task,</span> <span style="color:#a40000">which</span> <span style="color:#a40000">is</span> <span style="color:#a40000">to</span> <span style="color:#a40000">&lt;task_desc&gt;.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">job</span> <span style="color:#a40000">is</span> <span style="color:#a40000">to</span> <span style="color:#a40000">carefully</span> <span style="color:#a40000">analyze</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">the</span> <span style="color:#a40000">difference</span> <span style="color:#a40000">between</span> <span style="color:#a40000">the</span> <span style="color:#a40000">two</span> <span style="color:#a40000">screenshots</span> <span style="color:#a40000">to</span> <span style="color:#a40000">determine</span> <span style="color:#a40000">if</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">is</span> <span style="color:#a40000">in</span> <span style="color:#a40000">accord</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">description</span> <span style="color:#a40000">above</span> <span style="color:#a40000">and</span> <span style="color:#a40000">at</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">the</span> <span style="color:#a40000">same</span> <span style="color:#a40000">time</span> <span style="color:#a40000">effectively</span> <span style="color:#a40000">moved</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task</span> <span style="color:#a40000">forward.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">be</span> <span style="color:#a40000">determined</span> <span style="color:#a40000">based</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">situations:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">1</span><span style="color:#a40000">.</span> <span style="color:#a40000">BACK</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">If</span> <span style="color:#a40000">you</span> <span style="color:#a40000">think</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">navigated</span> <span style="color:#a40000">you</span> <span style="color:#a40000">to</span> <span style="color:#a40000">a</span> <span style="color:#a40000">page</span> <span style="color:#a40000">where</span> <span style="color:#a40000">you</span> <span style="color:#a40000">cannot</span> <span style="color:#a40000">proceed</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">given</span> <span style="color:#a40000">task,</span> <span style="color:#a40000">you</span> <span style="color:#a40000">should</span> <span style="color:#a40000">go</span> <span style="color:#a40000">back</span> <span style="color:#a40000">to</span> <span style="color:#a40000">the</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">previous</span> <span style="color:#a40000">interface.</span> <span style="color:#a40000">At</span> <span style="color:#a40000">the</span> <span style="color:#a40000">same</span> <span style="color:#a40000">time,</span> <span style="color:#a40000">describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">functionality</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">concisely</span> <span style="color:#a40000">in</span> <span style="color:#a40000">one</span> <span style="color:#a40000">or</span> <span style="color:#a40000">two</span> <span style="color:#a40000">sentences</span> <span style="color:#a40000">by</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">observing</span> <span style="color:#a40000">the</span> <span style="color:#a40000">difference</span> <span style="color:#a40000">between</span> <span style="color:#a40000">the</span> <span style="color:#a40000">two</span> <span style="color:#a40000">screenshots.</span> <span style="color:#a40000">Notice</span> <span style="color:#a40000">that</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">should</span> <span style="color:#a40000">focus</span> <span style="color:#a40000">on</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">the</span> <span style="color:#a40000">general</span> <span style="color:#a40000">function.</span> <span style="color:#a40000">Never</span> <span style="color:#a40000">include</span> <span style="color:#a40000">the</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">in</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description.</span> <span style="color:#a40000">You</span> <span style="color:#a40000">can</span> <span style="color:#a40000">use</span> <span style="color:#a40000">pronouns</span> <span style="color:#a40000">such</span> <span style="color:#a40000">as</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#4e9a06">&#34;the UI element&#34;</span> <span style="color:#a40000">to</span> <span style="color:#a40000">refer</span> <span style="color:#a40000">to</span> <span style="color:#a40000">the</span> <span style="color:#a40000">element.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">be</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">format:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Decision:</span> <span style="color:#a40000">BACK</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Thought:</span> <span style="color:#a40000">&lt;explain</span> <span style="color:#a40000">why</span> <span style="color:#a40000">you</span> <span style="color:#a40000">think</span> <span style="color:#a40000">the</span> <span style="color:#a40000">last</span> <span style="color:#a40000">action</span> <span style="color:#a40000">is</span> <span style="color:#a40000">wrong</span> <span style="color:#a40000">and</span> <span style="color:#a40000">you</span> <span style="color:#a40000">should</span> <span style="color:#a40000">go</span> <span style="color:#a40000">back</span> <span style="color:#a40000">to</span> <span style="color:#a40000">the</span> <span style="color:#a40000">previous</span> <span style="color:#a40000">interface&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Documentation:</span> <span style="color:#a40000">&lt;describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">function</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">2</span><span style="color:#a40000">.</span> <span style="color:#a40000">INEFFECTIVE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">If</span> <span style="color:#a40000">you</span> <span style="color:#a40000">find</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">changed</span> <span style="color:#a40000">nothing</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen</span> <span style="color:#a40000">(screenshots</span> <span style="color:#a40000">before</span> <span style="color:#a40000">and</span> <span style="color:#a40000">after</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">are</span> <span style="color:#a40000">identical),</span> <span style="color:#a40000">you</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">should</span> <span style="color:#a40000">continue</span> <span style="color:#a40000">to</span> <span style="color:#a40000">interact</span> <span style="color:#a40000">with</span> <span style="color:#a40000">other</span> <span style="color:#a40000">elements</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen.</span> <span style="color:#a40000">Notice</span> <span style="color:#a40000">that</span> <span style="color:#a40000">if</span> <span style="color:#a40000">you</span> <span style="color:#a40000">find</span> <span style="color:#a40000">the</span> <span style="color:#a40000">location</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">cursor</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">changed</span> <span style="color:#a40000">between</span> <span style="color:#a40000">the</span> <span style="color:#a40000">two</span> <span style="color:#a40000">screenshots,</span> <span style="color:#a40000">then</span> <span style="color:#a40000">they</span> <span style="color:#a40000">are</span> <span style="color:#a40000">not</span> <span style="color:#a40000">identical.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">be</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">format:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Decision:</span> <span style="color:#a40000">INEFFECTIVE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Thought:</span> <span style="color:#a40000">&lt;explain</span> <span style="color:#a40000">why</span> <span style="color:#a40000">you</span> <span style="color:#a40000">made</span> <span style="color:#a40000">this</span> <span style="color:#a40000">decision&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">3</span><span style="color:#a40000">.</span> <span style="color:#a40000">CONTINUE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">If</span> <span style="color:#a40000">you</span> <span style="color:#a40000">find</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">changed</span> <span style="color:#a40000">something</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen</span> <span style="color:#a40000">but</span> <span style="color:#a40000">does</span> <span style="color:#a40000">not</span> <span style="color:#a40000">reflect</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">description</span> <span style="color:#a40000">above</span> <span style="color:#a40000">and</span> <span style="color:#a40000">did</span> <span style="color:#a40000">not</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">move</span> <span style="color:#a40000">the</span> <span style="color:#a40000">given</span> <span style="color:#a40000">task</span> <span style="color:#a40000">forward,</span> <span style="color:#a40000">you</span> <span style="color:#a40000">should</span> <span style="color:#a40000">continue</span> <span style="color:#a40000">to</span> <span style="color:#a40000">interact</span> <span style="color:#a40000">with</span> <span style="color:#a40000">other</span> <span style="color:#a40000">elements</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen.</span> <span style="color:#a40000">At</span> <span style="color:#a40000">the</span> <span style="color:#a40000">same</span> <span style="color:#a40000">time,</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">functionality</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">concisely</span> <span style="color:#a40000">in</span> <span style="color:#a40000">one</span> <span style="color:#a40000">or</span> <span style="color:#a40000">two</span> <span style="color:#a40000">sentences</span> <span style="color:#a40000">by</span> <span style="color:#a40000">observing</span> <span style="color:#a40000">the</span> <span style="color:#a40000">difference</span> <span style="color:#a40000">between</span> <span style="color:#a40000">the</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">two</span> <span style="color:#a40000">screenshots.</span> <span style="color:#a40000">Notice</span> <span style="color:#a40000">that</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">should</span> <span style="color:#a40000">focus</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">general</span> <span style="color:#a40000">function.</span> <span style="color:#a40000">Never</span> <span style="color:#a40000">include</span> <span style="color:#a40000">the</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">in</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description.</span> <span style="color:#a40000">You</span> <span style="color:#a40000">can</span> <span style="color:#a40000">use</span> <span style="color:#a40000">pronouns</span> <span style="color:#a40000">such</span> <span style="color:#a40000">as</span> <span style="color:#4e9a06">&#34;the UI element&#34;</span> <span style="color:#a40000">to</span> <span style="color:#a40000">refer</span> <span style="color:#a40000">to</span> <span style="color:#a40000">the</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">element.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">be</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">format:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Decision:</span> <span style="color:#a40000">CONTINUE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Thought:</span> <span style="color:#a40000">&lt;explain</span> <span style="color:#a40000">why</span> <span style="color:#a40000">you</span> <span style="color:#a40000">think</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">does</span> <span style="color:#a40000">not</span> <span style="color:#a40000">reflect</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">description</span> <span style="color:#a40000">above</span> <span style="color:#a40000">and</span> <span style="color:#a40000">did</span> <span style="color:#a40000">not</span> <span style="color:#a40000">move</span> <span style="color:#a40000">the</span> <span style="color:#a40000">given</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">task</span> <span style="color:#a40000">forward&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Documentation:</span> <span style="color:#a40000">&lt;describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">function</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0000cf;font-weight:bold">4</span><span style="color:#a40000">.</span> <span style="color:#a40000">SUCCESS</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">If</span> <span style="color:#a40000">you</span> <span style="color:#a40000">think</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">successfully</span> <span style="color:#a40000">moved</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task</span> <span style="color:#a40000">forward</span> <span style="color:#a40000">(even</span> <span style="color:#a40000">though</span> <span style="color:#a40000">it</span> <span style="color:#a40000">did</span> <span style="color:#a40000">not</span> <span style="color:#a40000">completed</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task),</span> <span style="color:#a40000">you</span> <span style="color:#a40000">should</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">functionality</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">concisely</span> <span style="color:#a40000">in</span> <span style="color:#a40000">one</span> <span style="color:#a40000">or</span> <span style="color:#a40000">two</span> <span style="color:#a40000">sentences.</span> <span style="color:#a40000">Notice</span> <span style="color:#a40000">that</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">element</span> <span style="color:#a40000">should</span> <span style="color:#a40000">focus</span> <span style="color:#a40000">on</span> <span style="color:#a40000">the</span> <span style="color:#a40000">general</span> <span style="color:#a40000">function.</span> <span style="color:#a40000">Never</span> <span style="color:#a40000">include</span> <span style="color:#a40000">the</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element</span> <span style="color:#a40000">in</span> <span style="color:#a40000">your</span> <span style="color:#a40000">description.</span> <span style="color:#a40000">You</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">can</span> <span style="color:#a40000">use</span> <span style="color:#a40000">pronouns</span> <span style="color:#a40000">such</span> <span style="color:#a40000">as</span> <span style="color:#4e9a06">&#34;the UI element&#34;</span> <span style="color:#a40000">to</span> <span style="color:#a40000">refer</span> <span style="color:#a40000">to</span> <span style="color:#a40000">the</span> <span style="color:#a40000">element.</span> <span style="color:#a40000">Your</span> <span style="color:#a40000">output</span> <span style="color:#a40000">should</span> <span style="color:#a40000">be</span> <span style="color:#a40000">in</span> <span style="color:#a40000">the</span> <span style="color:#a40000">following</span> <span style="color:#a40000">format:</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Decision:</span> <span style="color:#a40000">SUCCESS</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Thought:</span> <span style="color:#a40000">&lt;explain</span> <span style="color:#a40000">why</span> <span style="color:#a40000">you</span> <span style="color:#a40000">think</span> <span style="color:#a40000">the</span> <span style="color:#a40000">action</span> <span style="color:#a40000">successfully</span> <span style="color:#a40000">moved</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task</span> <span style="color:#a40000">forward&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a40000">Documentation:</span> <span style="color:#a40000">&lt;describe</span> <span style="color:#a40000">the</span> <span style="color:#a40000">function</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">UI</span> <span style="color:#a40000">element&gt;</span>
+</span></span></code></pre></div><p>将&lt;上一个操作描述&gt; &lt;交互后页面信息&gt; &lt;task信息&gt; &lt;当前reflection结果&gt;给予GPT-4V，让其返回当前action最终的Decision Thought 与Documentation。其中反思结果会进行落库作为经验知识。反思完成后完成当前Action循环。</p>
+<h1 id="三grid模式">三、Grid模式</h1>
+<p>元素与坐标的<a href="https://github.com/microsoft/SoM">set-of-mark</a>对应，作者开始的实现是利用元素树，而做APP自动化有一个很大的痛点便是技术栈多种多样，不同APP元素树的组成、获取方式都不一样，仅通过Native的元素树，很容易出现元素丢失的情况，甚至在某些APP上直接不可用，于是作者更新了Grid模式，具体的描述如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#a40000">You</span> <span style="color:#a40000">should</span> <span style="color:#a40000">call</span> <span style="color:#a40000">this</span> <span style="color:#a40000">function</span> <span style="color:#a40000">when</span> <span style="color:#a40000">you</span> <span style="color:#a40000">find</span> <span style="color:#a40000">the</span> <span style="color:#a40000">element</span> <span style="color:#a40000">you</span> <span style="color:#a40000">want</span> <span style="color:#a40000">to</span> <span style="color:#a40000">interact</span> <span style="color:#a40000">with</span> <span style="color:#a40000">is</span> <span style="color:#a40000">not</span> <span style="color:#a40000">labeled</span> <span style="color:#a40000">with</span> <span style="color:#a40000">a</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tag</span> <span style="color:#a40000">and</span> <span style="color:#a40000">other</span> <span style="color:#a40000">elements</span> <span style="color:#a40000">with</span> <span style="color:#a40000">numeric</span> <span style="color:#a40000">tags</span> <span style="color:#a40000">cannot</span> <span style="color:#a40000">help</span> <span style="color:#a40000">with</span> <span style="color:#a40000">the</span> <span style="color:#a40000">task.</span> <span style="color:#a40000">The</span> <span style="color:#a40000">function</span> <span style="color:#a40000">will</span> <span style="color:#a40000">bring</span> <span style="color:#a40000">up</span> <span style="color:#a40000">a</span> <span style="color:#a40000">grid</span> <span style="color:#a40000">overlay</span> <span style="color:#a40000">to</span> <span style="color:#a40000">divide</span> <span style="color:#a40000">the</span> <span style="color:#a40000">smartphone</span> <span style="color:#a40000">screen</span> <span style="color:#a40000">into</span> <span style="color:#a40000">small</span> <span style="color:#a40000">areas</span> <span style="color:#a40000">and</span> <span style="color:#a40000">this</span> <span style="color:#a40000">will</span> <span style="color:#a40000">give</span> <span style="color:#a40000">you</span> <span style="color:#a40000">more</span> <span style="color:#a40000">freedom</span> <span style="color:#a40000">to</span> <span style="color:#a40000">choose</span> <span style="color:#a40000">any</span> <span style="color:#a40000">part</span> <span style="color:#a40000">of</span> <span style="color:#a40000">the</span> <span style="color:#a40000">screen</span> <span style="color:#a40000">to</span> <span style="color:#a40000">tap,</span> <span style="color:#a40000">long</span> <span style="color:#a40000">press,</span> <span style="color:#a40000">or</span> <span style="color:#a40000">swipe.</span>
+</span></span></code></pre></div><p>思路便是将整个页面按滑动窗口分成不同的区域(patch)，每个区域有一个标号，从而有些无法用元素树标号的元素，可以通过Grid的标号来代表。用此种方式兼容了元素树缺失的情况。</p>
+<h1 id="四总结">四、总结</h1>
+<p>最后贴一个效果流程：
+<img src="/images/Pasted%20image%2020240122225652.png" alt="">
+在约束了Action Space(可操作空间)，假如经验知识后，任务完成成功率可达到84.4%，接近人工水平。
+<img src="/images/Pasted%20image%2020240123205842.png" alt=""></p>
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2024
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

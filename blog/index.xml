@@ -6,7 +6,20 @@
     <description>Recent content in Blogs on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AppAgent笔记</title>
+      <link>/blog/appagent%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/appagent%E7%AC%94%E8%AE%B0/</guid>
+      <description>一、简介 二、self_explorer流程 三、Grid模式 四、总结 一、简介 项目主页：https://appagent-official.github.io/ code: https://github.com/m. otgod96/AppAgent paper: https://arxiv.org/p. f/2312.13771.pdf 2023下半年，在openai release gpt-4v api及公开相关研究(https://arxiv.org/abs/2309.17421)后,人们开始了gpt-4v在现实tasks中落地的探索之路。其中在模拟人机交互操作领域，也出现了多个工作，如https://github.com/zzxslp/MM-Navigator，本文的AppAgent，以及Rabit的LargeActionModel等。本文介绍一下AppAgent的主要思路。
+AppAgent通过定义一个简单的操作空间（tap、swipe、input、long_press），使LLMAgent可以像人一样操作APP。LLMAgent通过观察记录操作及操作结果，学习不同操作的作用，从而可以操作一个未见过的APP。作者使用AppAgent在10个不同APP上尝试了50多个任务，认为AppAgent可以胜任很多不同类型的UI交互操作任务。（Android，通过adb驱动） 二、self_explorer流程 AppAgent整体上分为learn与run，learn过程为AppAgent学习思考App操作并存为Doc的过程，run可以理解为完成任务的回放过程或自动探索过程。这里简单介绍下learn过程中的self_explorer过程，其也有点类似于run中的自动探索。
+给定一个Task，使AppAgent自主地在指定的App上完成此task，并记录探索的步骤，为后续Agent执行任务提供参考。self_explorer的流程(简版，部分细节不做描述)如下：
+初始化(获取App信息、获取Device信息、获取Task信息、创建任务文件夹) 进入Action循环 获取页面元素树，整理可交互元素(ADB xml驱动) 在图像中标注元素 (set-of-mark) 页面信息 / 历史交互信息，组装Prompt，询问gpt-4v下一步该进行何种操作 得到gpt-4v回复，进行操作 获取操作后页面信息，反思并记录结果 重复循环，直到完成task or 达到最大步数 其中一个关键步骤为：Action选取 ，在self_explorer过程中整体的Prompt为：
+You are an agent that is trained to complete certain tasks on a smartphone. You will be given a screenshot of a smartphone app. The interactive UI elements on the screenshot are labeled with numeric tags starting from 1.</description>
+    </item>
+    
     <item>
       <title>LangChain Models&#43;Prompts</title>
       <link>/blog/langchain-models&#43;prompts/</link>
