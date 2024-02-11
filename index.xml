@@ -5,8 +5,23 @@
     <link>/</link>
     <description>Recent content on RainPot Blog</description>
     
-    <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Sun, 11 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mobile-Agent解析</title>
+      <link>/blog/mobile-agent%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Sun, 11 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/mobile-agent%E8%A7%A3%E6%9E%90/</guid>
+      <description>一、简介 二、核心算法 2.1 Text Localization 2.2 Icon Localization 三、整体流程Prompt 3.1 Operation 3.2 Self-Planning 3.2 Self-Reflection 四、Experiments 近期又出现了一个关于LLM-Agent + RPA的工作，来自北交+阿里，名为MobileAgent。
+项目地址：MobileAgent Github 论文地址：MobileAgent Arxiv 一、简介 此工作所针对的任务目标与上一篇AppAgent介绍的相同，利用多模态大模型能力，完成终端的操作驱动。工作的主要创新：
+纯视觉的解决方案，不需要XML元素树，以及系统元信息。 操作范围不受限制，可进行多应用操作。 利用多种CV工具，用于UI操作定位。 不需要额外的探索历史和训练，即插即用。 简单介绍图： 二、核心算法 整个架构包含三部分：
+1.多模态大模型(MLLM GPT-4V) 2.OCR模型(for text localization) 3.Object Detection+CLIP模型(for icon localization) 多项工作都证明了GPT-4V无法直接有效地输出所预测交互的location，所以目前已有工作都在探索如何使用辅助工具帮助GPT-4V进行交互位置的决策，比如AppAgent利用set-of-mark的方式，将元素ID或区块ID送予GPT-4V让其进行选择，从而完成操作location的映射。
+2.1 Text Localization 如果Agent需要与某个具体的文字区块进行交互，作者使用OCR进行文字识别，从而得到文字的位置。这里作者列举了三个场景：
+1.当OCR检测结果不包括指定的文本时，将指示Agent重新选择要点击的文本或直接选择替代的文字。这种情况经常发生在复杂的情况下，GPT-4V可能有少量的幻觉。 2.当OCR检测结果只有一个指定文本的实例时，我们直接生成一个操作来单击该文本框的中心坐标。 3.当OCR检测结果包括指定文本的多个实例时，我们评估结果的数量。如果有多个实例，则表示当前屏幕上有太多相似的内容，使工程师难以做出选择。在这种情况下，会要求Agent重新选择要点击的文本。如果实例很少，我们会裁剪这些区域并在其上绘制检测框。然后，我们使用这些区域让代理选择要点击的区域。裁剪时，我们将文本检测框向外延伸一定范围，然后在这些裁剪的图像上绘制检测框。这样做是为了保存更多信息并加强Agent的决策过程。 关于第三点，例子如下： 2.2 Icon Localization 当Agent需要点击一个icon时，作者会利用一个目标检测模型，以及CLIP模型，两者结合完成icon的定位。具体来说，我们会先让Agent提供我们需要点击icon的特征，包括icon的颜色和形状。然后我们使用Grounding DINO抽取出类别为&amp;quot;icon&amp;quot;的objects。最后我们将这些objects以及icon的特征送入CLIP模型，进行图像与文本的匹配，将最相似的icon作为交互的目标。流程如下图： 这里介绍下Grounding DINO
+简单来说，Grounding DINO可以根据文字描述检测指定目标，比如我的Prompt为 &amp;ldquo;icon&amp;rdquo;，那么它就可以把图像中的所有icon给框定出来，为“开集目标检测”。整体上Grounding DINO为双encoder，单decoder结构，双encoder一个处理文本，一个处理图像，中间一个Feature Enhancer将两种模态数据进行融合，language-guide query selection模块用于query初始化、一个cross-modality decoder用于bbox预测。整体如下图所示： 三、整体流程Prompt opreation_prompt = &amp;#39;&amp;#39;&amp;#39;This is the current screenshot.</description>
+    </item>
+    
     <item>
       <title>AppAgent笔记</title>
       <link>/blog/appagent%E7%AC%94%E8%AE%B0/</link>
