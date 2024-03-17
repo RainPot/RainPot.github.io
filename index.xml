@@ -6,7 +6,21 @@
     <description>Recent content on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 17 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>4 - 浩瀚苍穹</title>
+      <link>/weekly/0317/</link>
+      <pubDate>Sun, 17 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/weekly/0317/</guid>
+      <description>SpaceX返照，美丽但感觉加了滤镜。 1.项目： 大模型书籍summary 项目地址
+使用大模型总结书籍内容示例项目，涉及到文件读取、分块、embedding、聚类，可以参考。
+2.项目： 大模型直接解析HTML 项目地址
+大模型获取HTML中所需信息，可参考用于xml分析、爬虫等。
+3.工具： fzf fzf
+模糊搜索工具</description>
+    </item>
+    
     <item>
       <title>3 - 周公除三害</title>
       <link>/weekly/0310/</link>
