@@ -6,7 +6,26 @@
     <description>Recent content on RainPot Blog</description>
     
     <language>en-us</language>
-    <lastBuildDate>Sun, 17 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 17 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AUITestAgent-一句话让AI帮你做UI测试</title>
+      <link>/blog/auitestagent/</link>
+      <pubDate>Wed, 17 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/auitestagent/</guid>
+      <description>论文地址：https://arxiv.org/abs/2407.09018
+Github项目地址：https://github.com/bz-lab/AUITestAgent
+论文标题：AUITestAgent: Automatic Requirements Oriented GUI Function Testing
+我们的团队与复旦大学周扬帆教授团队，一起进行的工作。该工具是第一个能够基于自然语言测试用例，自动化完成终端UI测试驱动、校验全流程的智能化测试工具。仅需输入自然语言形式的测试需求，AUITestAgent通过多个智能代理（Agent）的合作，自动化的进行从交互到检查的全链路测试过程，包括：自动与终端应用进行交互，然后执行对交互过程的检查，最后输出对应的测试结果。
+以对美团App的测试为例，测试人员输入测试需求“查看景点门票频道中自然风光下第一个景点的评分，检查其评分在不同页面上是否一致”。如下方视频和图片所示，AUITestAgent从美团首页出发，自动搜索并进入美团门票频道，查看自然风光下的第一个景点的评分页面；然后，AUITestAgent将检查交互过程，从中提取所需的信息，进行判断并给出理由。
+在英文场景下， AUITestAgent表现也同样出色：在Facebook场景下输入测试需求：&amp;ldquo;Send a post with content &amp;lsquo;Hello everyone&amp;rsquo; and like it, check whether it is correctly displayed, and whether the like button turns blue.&amp;ldquo;如下方视频和图片所示，AUITestAgent将自动完成了推文的发送和点赞；然后，AUITestAgent提取所需的信息，并根据两个校验要求依次进行了检查。
+在实现上，AUITestAgent创造性地提出了交互与检查解耦的双流结构。通过将测试任务分解为交互和检查两个正交的子任务，降低了任务的复杂性，从而提高了任务的成功率和项目的稳定性。
+例如，对原始测试需求&amp;quot;Send a post with content &amp;lsquo;Hello everyone&amp;rsquo; and like it, check whether it is correctly displayed, and whether the like button turns blue&amp;rdquo; ，首先利用Agent将其分解为： “发送一条内容为&amp;rdquo; Hello everyone&amp;quot;的推文并点赞”这一交互指令和**“检查推文发送后是否在主页显示”、“检查点赞后点赞按钮是否变为蓝色”这两个校验指令**，再分别进行交互和检查。
+具体而言，AUITestAgent的工作流程如下图所示，其包含三个主要部分：
+任务分解模块（Task Decomposer）：AUITestAgent首先将原始的测试需求分解为交互指令和多个校验指令，分别作为后续交互和检查模块的输入。
+交互模块（GUI Interaction Module）：接受分解后的交互指令，动态组织代理以处理不同难度的交互指令，实现与终端应用的图形用户界面（GUI）的直接操作，最后生成交互过程信息。</description>
+    </item>
+    
     <item>
       <title>4 - 浩瀚苍穹</title>
       <link>/reflection/0317/</link>

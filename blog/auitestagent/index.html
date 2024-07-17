@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> AUITestAgent-一句话让AI帮你做UI测试 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="前端UI测试Agent" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/auitestagent/" />
+    <meta property="og:title" content="AUITestAgent-一句话让AI帮你做UI测试" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="前端UI测试Agent" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="AUITestAgent-一句话让AI帮你做UI测试" />
+    <meta name="twitter:description" content="前端UI测试Agent" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/auitestagent/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/reflection/">
+		
+		Reflection
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">AUITestAgent-一句话让AI帮你做UI测试</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="RainPot">
+	    RainPot
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Wed Jul 17 2024 00:00:00 UTC'>
+	    2024-07-17
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    10 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/auitestagent/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <blockquote>
+<p>论文地址：https://arxiv.org/abs/2407.09018</p>
+</blockquote>
+<p>Github项目地址：https://github.com/bz-lab/AUITestAgent</p>
+<p>论文标题：AUITestAgent: Automatic Requirements Oriented GUI Function Testing</p>
+<p>我们的团队与复旦大学<a href="http://y-droid.com/yz/">周扬帆教授团队</a>，一起进行的工作。该工具是第一个能够基于自然语言测试用例，自动化完成终端UI测试驱动、校验全流程的智能化测试工具。仅需输入自然语言形式的测试需求，AUITestAgent通过多个智能代理（Agent）的合作，自动化的进行从交互到检查的全链路测试过程，包括：自动与终端应用进行交互，然后执行对交互过程的检查，最后输出对应的测试结果。</p>
+<p>以对美团App的测试为例，测试人员输入测试需求“查看景点门票频道中自然风光下第一个景点的评分，检查其评分在不同页面上是否一致”。如下方视频和图片所示，AUITestAgent从美团首页出发，自动搜索并进入美团门票频道，查看自然风光下的第一个景点的评分页面；然后，AUITestAgent将检查交互过程，从中提取所需的信息，进行判断并给出理由。</p>
+<p><video src="https://github.com/user-attachments/assets/48341d06-bc05-4b71-accd-c8a1c7215834"></video></p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/demo1.png" alt="demo1"></p>
+<p>在英文场景下， AUITestAgent表现也同样出色：在Facebook场景下输入测试需求：&ldquo;Send a post with content &lsquo;Hello everyone&rsquo; and like it, check whether it is correctly displayed, and whether the like button turns blue.&ldquo;如下方视频和图片所示，AUITestAgent将自动完成了推文的发送和点赞；然后，AUITestAgent提取所需的信息，并根据两个校验要求依次进行了检查。</p>
+<p><video src="https://github.com/user-attachments/assets/8c0a33ab-11ab-4f95-b767-678472e8d902"></video></p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/demo2.png" alt="demo2"></p>
+<p>在实现上，AUITestAgent创造性地提出了<strong>交互与检查解耦的双流结构</strong>。通过将测试任务分解为交互和检查两个正交的子任务，降低了任务的复杂性，从而提高了任务的成功率和项目的稳定性。</p>
+<p>例如，对原始测试需求&quot;Send a post with content &lsquo;Hello everyone&rsquo; and like it, check whether it is correctly displayed, and whether the like button turns blue&rdquo; ，首先利用Agent将其分解为： <strong>“发送一条内容为&rdquo; Hello everyone&quot;的推文并点赞”这一交互指令</strong>和**“检查推文发送后是否在主页显示”、“检查点赞后点赞按钮是否变为蓝色”这两个校验指令**，再分别进行交互和检查。</p>
+<p>具体而言，AUITestAgent的工作流程如下图所示，其包含三个主要部分：</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/overview.png" alt="overview"></p>
+<ol>
+<li>
+<p><strong>任务分解模块（Task Decomposer）</strong>：AUITestAgent首先将原始的测试需求分解为交互指令和多个校验指令，分别作为后续交互和检查模块的输入。</p>
+</li>
+<li>
+<p><strong>交互模块（GUI Interaction Module）</strong>：接受分解后的交互指令，动态组织代理以处理不同难度的交互指令，实现与终端应用的图形用户界面（GUI）的直接操作，最后生成交互过程信息。</p>
+</li>
+<li>
+<p><strong>检查模块（Function Verification Module）</strong>：接受分解后的一到多条校验指令，采用多维度数据提取策略，对交互过程信息进行分析，形成最终的测试报告，包括测试结果和原因分析。</p>
+</li>
+</ol>
+<h2 id="交互模块">交互模块</h2>
+<p>交互模块通过多个基于MLLM的智能代理（Agent）协作，实现根据交互指令自动与终端应用进行交互，其工作流程如图所示：</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/interaction_overview.png" alt="3_interaction"></p>
+<p>交互模块包含5个Agent，通过合作分别处理具体和抽象的交互指令：</p>
+<p>对于明确指明每一步需要如何操作的具体交互指令，交互模块将会通过观察者（Observer）、选择者（Selector）和执行者（Exectuor）的合作，依次执行其中的每个操作。其工作流程如下：</p>
+<ul>
+<li>首先，Observer识别当前UI页面中的所有可交互的UI元素并推断其功能，从而辅助后续Selector选择交互的目标UI元素。Observer接受多模态的输入——UI截图和对应的XML文件，从而尽可能全面地识别UI页面中的所有可交互组件，并推断其功能。对于XML文件，Observer会对其进行解析，收集文件中可交互的节点及其文本等辅助信息；而对于UI截图，Observer使用来自美团的<a href="https://github.com/Meituan-Dianping/vision-ui">vision-ui视觉模型</a>进行识别和OCR。通过多模态的信息互补，Observer将处理后的UI截图和整理后的UI元素信息提供给MLLM，对UI元素的功能进行推断。例如，对于美团首页，处理后的UI截图和MLLM的回复如下：</li>
+</ul>
+<img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/observer.png" alt="Observer" style="zoom: 33%;" />
+<ul>
+<li>
+<p>然后，Selector根据自然语言形式的单步UI操作命令，从预置的UI操作集合中进行选择。例如，当前交互指令是“点击外卖按钮”，Selector会根据Observer的输出和UI截图，生成&quot;Click 4&quot;操作命令。</p>
+</li>
+<li>
+<p>最后，Executor在终端应用上执行由Selector生成的 UI 操作。</p>
+</li>
+</ul>
+<p>而对于那些抽象的交互指令，会引入两个新的Agent：规划者（Planner）和监控者（Monitor）。</p>
+<ul>
+<li>
+<p>Planner首先根据交互命令制定当前UI页面上操作计划，计划中的每一步都是自然语言形式的，然后再具体执行计划中的每一步。举例而言，当处于上图的美团首页，指令是“查看景点门票频道中自然风光下第一个景点的评分”时，Planner生成的计划为：“1. 点击搜索框，2. 输入&rsquo;门票&rsquo;，3. 点击搜索”。</p>
+</li>
+<li>
+<p>Monitor则是用于判断交互命令是否已经完成（即用户的意图是否已经实现）。Monitor将基于当前的UI截图和已执行的操作进行判断。如果命令已完成，交互模块输出交互过程信息并停止。否则，Monitor将为Planner提供其判断理由作为制定计划的反馈。</p>
+</li>
+</ul>
+<h2 id="检查模块">检查模块</h2>
+<p>检查模块理解校验指令，从交互过程信息中抽取需要的信息，最后基于这些信息判断其是否符合测试用例中的预期。值得注意的是，对于多个校验指令，检查模块将逐一进行检查，例如对于“检查推文发送后是否在主页显示”和“检查点赞后点赞按钮是否变为蓝色”这两个校验指令，检查模块运行了两次分别进行信息抽取判断。其工作流程如下：</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/verification_overview.png" alt="3_verification"></p>
+<p>检查模块从多维度分析，精准筛选并提取关键信息，既最大限度地保留有助于判断的要素，又有效过滤了无关数据，从而提高了判断的准确性和效率。多个维度包括：UI页面的功能描述、关键UI元素信息和到达当前状态的操作信息等。例如，在检查美团门票景点评分一致性时，对于某个景点的详情页，检查模块的分析如图所示：</p>
+<img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/Page Type.png" alt="Page Type" style="zoom: 33%;" />
+<p>然后，检查模块会综合多个页面抽取的信息，进行最终的判断。如下图中所示，检查模块分别抽取了三个页面的评分，最后进行一致性判断：</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/demo1.png" alt="demo1"></p>
+<h2 id="实验结果">实验结果</h2>
+<p>我们使用两个自定义的基准（benchmark）分别评估了AUITestAgent执行交互和检查的性能。两个基准包括 8 个广泛使用的商业应用（即美团、小红书、豆瓣、Facebook、Gmail、LinkedIn、Google Play 和 YouTube Music），分别包括30个交互任务和40个检查任务。</p>
+<p>同时，为了评估AUITestAgent在不同交互指令下的执行效果，我们根据完成交互指令所需的交互步数和交互指令的详细程度两个指标，将交互任务的难度分为三个级别：简单（L1）、中等（L2）和困难（L3）。对于每个级别，我们构建了10个交互任务，并且描述在英文和中文之间均匀分配。</p>
+<h3 id="交互效果评估">交互效果评估</h3>
+<p>我们为工具的交互效果制订了4个指标，指标的制订既兼顾了测试场景的特殊性，也参考了其他基于LLM的Agent项目（也即两个baseline，<a href="https://github.com/X-PLUG/MobileAgent">MobileAgent</a>和<a href="https://github.com/mnotgod96/AppAgent">AppAgent</a>）的指标制定。全面考虑工具完成交互的正确性、指令遵循的准确性和交互的执行效率，详细定义可见我们的论文。这4个指标分别为：任务成功率（Task Completion，TC）、正确步数占比（Correct Step，CS）、正确路径占比（Correct Trace，CT）和交互效率（Step Efficiency，SE）。</p>
+<p>可以发现，AUITestAgent在L1中准确完成了 100% 的任务，在二级任务中完成了 80%，在三级任务中完成了 50%。此外，通过人工验证交互，AUITestAgent 生成并执行的交互中有 94% 与人类保持一致。这些指标表明，AUITestAgent 在将自然语言命令转换为UI交互方面显著优于baseline。</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/interaction.png" alt="interaction"></p>
+<h3 id="检查效果评估">检查效果评估</h3>
+<p>检查基准包含的40个任务，由20个校验指令对应的共40个交互过程信息组成。具体而言，每个校验任务关联了两个交互过程信息，一个是正确的，另一个包含了我们人工手动注入的异常。</p>
+<p>由于我们是该领域的首个工作，我们选用了GPT-4o并为其构建了一个多轮对话的提示词作为实验基线方法（详细实验设计参见我们的论文），而在实际业务使用的场景下，我们使用了其他模型。</p>
+<p>我们分别统计了工具在无异常的交互日志（Correct Function Verification）和存在异常的交互日志（Anomaly Detection）上的运行结果。其中，Oracle Acc.表示正确判断的任务的比例，只有当一个任务中的所有测试预言被正确判断时，才认为检查任务成功。同样地，Point Acc. 和 Reasoning Acc. 分别衡量单个测试预言判断的准确性和解释的正确性。此外，我们还统计了不同方法中大模型的Token消耗数，对比两者的成本。</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/verification.png" alt="verification"></p>
+<p>通过实验我们发现，AUITestAgent对注入的UI功能异常的召回率达到 90%，同时保持了仅 4.5% 的低误报率。由于异常检测比正确功能验证难度更大，AUITestAgent在异常检测上的效果略逊于其在正确功能验证上的效果；除此之外，GPT-4o在异常检测上的效果不佳，也证实了这一点。</p>
+<h3 id="落地效果评估">落地效果评估</h3>
+<p>自AUITestAgent推出以来，以美团的视频场景测视力为例，进行的10轮回归测试中，它发现了4个有效异常，突显了其在复杂商业应用 GUI 测试中的实际优势，其中一个异常如图所示。</p>
+<p><img src="https://github.com/bz-lab/AUITestAgent/raw/main/assets/meituan.png" alt="RQ3"></p>
+<h2 id="结论">结论</h2>
+<p>我们提出了AUITestAgent，首个基于自然语言驱动，实现操作、校验全流程的智能化终端测试智能体。在这个工作中，创造性地提出了<strong>交互与检查解耦的双流结构</strong>，提高了驱动与校验的准确性，达到了可工业落地的水平。</p>
+<p>为了评估AUITestAgent的效果，我们提出两个自定义基准，在其上的实验表明，AUITestAgent 在UI交互方面显著优于现有方法，并且能够召回 90% 的注入错误，误报率仅为 4.5%。</p>
+<p>此外，在美团的落地使用过程中的效果展示了 AUITestAgent 进行复杂商业应用UI测试的实际收益，这些突显了使用AUITestAgent在实际终端中进行大规模自动化UI测试的潜力。</p>
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2024
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>

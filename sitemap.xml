@@ -2,10 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 	xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/reflection/0317/</loc>
-    <lastmod>2024-03-17T00:00:00+00:00</lastmod>
+    <loc>/blog/auitestagent/</loc>
+    <lastmod>2024-07-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/blog/</loc>
+    <lastmod>2024-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/</loc>
+    <lastmod>2024-07-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/reflection/0317/</loc>
     <lastmod>2024-03-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/reflection/</loc>
@@ -19,9 +25,6 @@
   </url><url>
     <loc>/reflection/0225/</loc>
     <lastmod>2024-02-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>/blog/</loc>
-    <lastmod>2024-02-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/blog/mobile-agent%E8%A7%A3%E6%9E%90/</loc>
     <lastmod>2024-02-11T00:00:00+00:00</lastmod>
