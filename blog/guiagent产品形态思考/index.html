@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> GUIAgent在测试领域的产品形态思考 - RainPot Blog </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="GUIAgent在测试领域的产品形态思考" />
+    <meta property="og:site_name" content="RainPot Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/guiagent%E4%BA%A7%E5%93%81%E5%BD%A2%E6%80%81%E6%80%9D%E8%80%83/" />
+    <meta property="og:title" content="GUIAgent在测试领域的产品形态思考" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="GUIAgent在测试领域的产品形态思考" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="GUIAgent在测试领域的产品形态思考" />
+    <meta name="twitter:description" content="GUIAgent在测试领域的产品形态思考" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/guiagent%E4%BA%A7%E5%93%81%E5%BD%A2%E6%80%81%E6%80%9D%E8%80%83/">
+    
+    <link rel="stylesheet" href="/css/site.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="RainPot Blog" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">RainPot Blog</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/blog/">
+		
+		Articles
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/about">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="https://github.com/RainPot">
+		
+		Subscribe
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">GUIAgent在测试领域的产品形态思考</h1>
+	<div class="meta-data meta">
+	  
+	  
+	  
+	  <span class="author meta-data" title="RainPot">
+	    RainPot
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sat Jan 11 2025 00:00:00 UTC'>
+	    2025-01-11
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    10 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/guiagent%E4%BA%A7%E5%93%81%E5%BD%A2%E6%80%81%E6%80%9D%E8%80%83/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h1 id="一概述">一、概述</h1>
+<p>结合个别前端测试产品简单讨论GUIAgents在测试领域的角色。</p>
+<h1 id="二前端测试产品">二、前端测试产品</h1>
+<h2 id="21-rainforest-qa">2.1 Rainforest QA</h2>
+<h3 id="211-录制回放功能">2.1.1 录制回放功能</h3>
+<p><a href="https://youtu.be/TVCRepJOPrg" title="分享链接">https://youtu.be/TVCRepJOPrg</a></p>
+<p>视频中与playwright写自动化case进行了对比，整体上看通过圈选的方式定位交互的元素，提供了简洁且nocode风格的前端界面，使用无门槛，从描述上来看元素定位会保存三种信息：1.visual appearance, 2.an auto-identified DOM locator, 3.and an AI-generated element description.
+以此来保证回放时的稳定性，让回放更加可靠。</p>
+<h3 id="212-nocode-case-generation">2.1.2 nocode case generation</h3>
+<p><a href="https://youtu.be/Pbr8lUT8vZM" title="分享链接">https://youtu.be/Pbr8lUT8vZM</a></p>
+<p>功能1: 写入自然语言Prompts，自动生成操作步骤 - <a href="https://help.rainforestqa.com/docs/how-to-generate-self-healing-tests">https://help.rainforestqa.com/docs/how-to-generate-self-healing-tests</a></p>
+<p>功能2: 通过Agents在运行时做case的self-healing</p>
+<p><a href="https://www.rainforestqa.com/no-code-test-automation">https://www.rainforestqa.com/no-code-test-automation</a>
+<img src="/images/Pasted%20image%2020250103171909.png" alt="">
+<img src="/images/Pasted%20image%2020250103172644.png" alt=""></p>
+<p>启发：</p>
+<ul>
+<li>1.是否可以把写case也变成一种可交互的流程，对于用户来说只需要提供：1.初始页面 2.测试同学的测试目标（比如：测试酒店不同房型在酒店详情页和填单页的价格是否一致）。基于已有的测试需求或目标，自动补全或生成“每一步”的操作及测试目标，同时测试同学可以随时地调节其中的每一步骤，进行步骤增添或删除。</li>
+<li>
+<ol start="2">
+<li>自我修复机制。在Agent执行过程当中，自我去发现交互步骤中不合理的点，进行自我更新，但最终决策权归属于测试同学。</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>在case失败的位置给予提示并表明原因 - <a href="https://help.rainforestqa.com/docs/ai-generated-description-of-failures">https://help.rainforestqa.com/docs/ai-generated-description-of-failures</a></li>
+</ol>
+</li>
+<li><img src="/images/Pasted%20image%2020250106201201.png" alt=""></li>
+</ul>
+<p>其本身在文档中也提到：
+The more specific and descriptive the prompt, the more accurate the result.</p>
+<h3 id="213-ai-assertion">2.1.3 AI Assertion</h3>
+<p><a href="https://help.rainforestqa.com/docs/how-to-use-ai-assertions">https://help.rainforestqa.com/docs/how-to-use-ai-assertions</a>
+类似于AUITestAgent的校验功能，提供一段校验点描述，AI进行断言。举例：
+<img src="/images/Pasted%20image%2020250106202033.png" alt=""></p>
+<h3 id="214-探索性测试">2.1.4 探索性测试</h3>
+<p><a href="https://help.rainforestqa.com/docs/how-to-create-an-exploratory-run">https://help.rainforestqa.com/docs/how-to-create-an-exploratory-run</a></p>
+<p><img src="/images/Pasted%20image%2020250106202506.png" alt="">
+启发：</p>
+<ul>
+<li>What to test: 这一点可以加入遍历测试当中，给予测试一定的目标，指导遍历测试进行探索性测试。</li>
+<li>两种检测出来的问题：1.功能 bug 是应用程序未按预期响应的问题。2.可用性问题是测试人员感觉不直观的应用程序区域。</li>
+</ul>
+<h2 id="22-applitools">2.2 Applitools</h2>
+<p><a href="https://applitools.com/">https://applitools.com/</a></p>
+<p>做的事情与Rainfor依旧是 nocode-recorder + self-healing tests</p>
+<p><a href="https://applitools.com/platform/create/">https://applitools.com/platform/create/</a>
+<img src="/images/Pasted%20image%2020250107192055.png" alt="">
+Automaticlly create tests for your full websites.</p>
+<p>启发</p>
+<ul>
+<li>更下一个阶段的目标，输入页面，自动生成各种各样的测试用例，每个用例测试同学可以自定义增删改测试目标与每一步交互。</li>
+</ul>
+<h2 id="23-midscene">2.3 MidScene</h2>
+<p><a href="https://midscenejs.com/zh/">https://midscenejs.com/zh/</a>
+<img src="/images/Pasted%20image%2020250107191530.png" alt=""></p>
+<p>Web端，通过自然语言构建测试自动化用例，相较于Rainforest QA与Applitools使用成本更高一些。
+核心能力：</p>
+<ul>
+<li>用 <code>.ai</code>方法描述步骤并执行交互</li>
+<li>用 <code>.aiQuery</code> 从 UI 中“理解”并提取数据，返回值是 JSON 格式，你可以尽情描述想要的数据结构</li>
+<li>用 <code>.aiAssert</code> 来执行断言</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">// 👀 输入关键字，执行搜索 // 尽管这是一个英文页面，你也可以用中文指令控制它 
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">ai</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#39;在搜索框输入 &#34;Headphones&#34; ，敲回车&#39;</span><span style="color:#000;font-weight:bold">);</span> 
+</span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">// 👀 找到列表里耳机相关的信息 
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic"></span><span style="color:#204a87;font-weight:bold">const</span> <span style="color:#000">items</span> <span style="color:#ce5c00;font-weight:bold">=</span> <span style="color:#204a87;font-weight:bold">await</span> <span style="color:#000">aiQuery</span><span style="color:#000;font-weight:bold">(</span> <span style="color:#4e9a06">&#39;{itemTitle: string, price: Number}[], 找到列表里的商品标题和价格&#39;</span> <span style="color:#000;font-weight:bold">);</span> <span style="color:#000">console</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000">log</span><span style="color:#000;font-weight:bold">(</span><span style="color:#4e9a06">&#34;headphones in stock&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#000">items</span><span style="color:#000;font-weight:bold">);</span>
+</span></span></code></pre></div><p>启发：</p>
+<ul>
+<li>针对AUITestAgent的校验能力，<strong>抽取信息</strong>这个步骤也可以抽离出来，作为action的一种，让测试同学自己指定。</li>
+</ul>
+<h1 id="三思考">三、思考</h1>
+<p>针对测试需求，大致可以分为四象限：</p>
+<ul>
+<li>横坐标：固定路径 -&gt; 非固定数据</li>
+<li>纵坐标：通识知识 -&gt; 专业业务领域知识</li>
+</ul>
+<p>针对不同的测试需求，适合使用不同类型的自动化工具：针对固定路径与专业业务领域知识的，适合使用功能上贴切“录制回放”类型的工具。针对通识知识与非固定数据的，适合使用自然语言驱动的GUIAgents。当然，在GUIAgents足够强大时，所能负责覆盖的需求会逐渐扩展。</p>
+<p>整体上是一个trade-off的问题，在当前阶段，录制回放更稳定但所需测试同学更细致地配置case，GUIAgents不稳定但case编写成本更低。</p>
+<p>期望在不远的将来，GUIAgents可以解决GUI Grounding + Plan 问题，叠加对测试需求的处理，能够更好地满足测试同学需求。</p>
+<h1 id="四guiagents调研">四、GUIAgents调研</h1>
+<p>贴一下近期的几个GUIAgents调研，下一篇博客介绍其中部分较新的GUIAgents。</p>
+<ul>
+<li>
+<p><a href="https://github.com/OS-Agent-Survey/OS-Agent-Survey">OS Agents: A Survey on MLLM-based Agents for General Computing Devices Use</a> (Dec. 2024)</p>
+<p><a href="https://github.com/OS-Agent-Survey/OS-Agent-Survey"><img src="https://img.shields.io/github/stars/OS-Agent-Survey/OS-Agent-Survey.svg?style=social&amp;label=Star" alt="Star"></a>
+<a href="https://github.com/OS-Agent-Survey/OS-Agent-Survey/blob/main/paper.pdf"><img src="https://img.shields.io/badge/arXiv-b31b1b.svg" alt="arXiv"></a>
+<a href="https://os-agent-survey.github.io/"><img src="https://img.shields.io/badge/Website-9cf" alt="Website"></a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2411.04890">GUI Agents with Foundation Models: A Comprehensive Survey</a> (Nov. 2024)</p>
+<p><a href="https://arxiv.org/abs/2411.04890"><img src="https://img.shields.io/badge/arXiv-b31b1b.svg" alt="arXiv"></a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2411.18279">Large Language Model-Brained GUI Agents: A Survey</a> (Nov. 2024)</p>
+<p><a href="https://vyokky.github.io/LLM-Brained-GUI-Agents-Survey/"><img src="https://img.shields.io/badge/Website-9cf" alt="Website"></a>
+<a href="https://arxiv.org/abs/2411.18279"><img src="https://img.shields.io/badge/arXiv-b31b1b.svg" alt="arXiv"></a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2412.13501">GUI Agents: A Survey</a> (Dec. 2024)</p>
+<p><a href="https://arxiv.org/abs/2412.13501"><img src="https://img.shields.io/badge/arXiv-b31b1b.svg" alt="arXiv"></a></p>
+</li>
+</ul>
+
+
+	</div>
+	
+      </div>
+	  	<div class="disqus markdown">
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    
+    
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'rainpot';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+		</div>
+      <div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+      2025
+    RainPot
+  </span>
+  <script defer src="/js/custom.js"></script>
+  
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>
