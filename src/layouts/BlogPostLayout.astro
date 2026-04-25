@@ -1,0 +1,38 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { estimateReadingMinutes } from "../lib/blog";
+
+type Props = {
+  frontmatter: {
+    title: string;
+    description: string;
+    date: Date;
+    tags: string[];
+    readingTime?: number;
+  };
+};
+
+const { frontmatter } = Astro.props;
+const readingTime = frontmatter.readingTime ?? estimateReadingMinutes(Astro.slots.default ? "" : "");
+const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+---
+
+<BaseLayout title={`${frontmatter.title} - RainPot 2026 Blog`} description={frontmatter.description}>
+  <main class="post-shell">
+    <a class="back-link" href={link("/blog/")}>← Articles</a>
+    <article class="post-article">
+      <div class="post-meta">
+        <span>{frontmatter.date.toISOString().slice(0, 10)}</span>
+        <span>{readingTime} min read</span>
+      </div>
+      <h1>{frontmatter.title}</h1>
+      <p class="post-description">{frontmatter.description}</p>
+      <div class="tag-row">
+        {frontmatter.tags.map((tag) => <span>#{tag}</span>)}
+      </div>
+      <div class="markdown-content">
+        <slot />
+      </div>
+    </article>
+  </main>
+</BaseLayout>

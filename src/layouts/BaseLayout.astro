@@ -1,0 +1,42 @@
+---
+import CosmicBackground from "../components/CosmicBackground.astro";
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const {
+  title = "RainPot 2026 Blog",
+  description = "RainPot 的宇宙极客代码笔记：AI Agent、工程实践、计算机视觉与长期学习。"
+} = Astro.props;
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050814" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <CosmicBackground />
+    <div class="page-shell">
+      <Header />
+      <slot />
+      <footer class="footer">
+        <span>Copyright © 2026 RainPot</span>
+        <a href="#top">Back to top</a>
+      </footer>
+    </div>
+    <script src={asset("/scripts/cosmos.js")} defer></script>
+  </body>
+</html>

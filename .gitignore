@@ -1,0 +1,7 @@
+.DS_Store
+.hugo_build.lock
+resources/
+dist/
+node_modules/
+.astro/
+.npm-cache/

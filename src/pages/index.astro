@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPostSlug, getPublishedPosts } from "../lib/blog";
+
+const posts = getPublishedPosts(await getCollection("blog"));
+const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+---
+
+<BaseLayout>
+  <main>
+    <section class="hero home-hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span> ~/rainpot/blog</p>
+        <h1>不吃夜宵不熬夜，从我做起。</h1>
+      </div>
+    </section>
+
+    <section class="home-article-list" id="articles" aria-label="Articles">
+      {posts.slice(0, 3).map((post) => (
+        <article class="home-article-item">
+          <a href={link(`/blog/${getPostSlug(post)}/`)}>
+            <span class="home-article-title">{post.data.title}</span>
+            <time datetime={post.data.date.toISOString()}>{post.data.date.toISOString().slice(0, 10)}</time>
+          </a>
+        </article>
+      ))}
+    </section>
+
+    <section class="about-panel">
+      <div>
+        <p class="eyebrow"><span class="dot"></span> about rainpot</p>
+        <h2>light by day, fire by night.</h2>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

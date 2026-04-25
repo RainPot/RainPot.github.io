@@ -1,0 +1,25 @@
+---
+import type { BlogPostLike } from "../lib/blog";
+
+type Props = {
+  post: BlogPostLike;
+  href: string;
+  large?: boolean;
+};
+
+const { post, href, large = false } = Astro.props;
+const date = post.data.date.toISOString().slice(0, 10);
+const tags = post.data.tags ?? [];
+---
+
+<a class:list={["article-card", { featured: large }]} href={href}>
+  <div class="article-card-main">
+    <div class="card-meta">
+      <span>{date}</span>
+      {tags.slice(0, 2).map((tag) => <span>{tag}</span>)}
+    </div>
+    <h3>{post.data.title}</h3>
+    <p>{post.data.description}</p>
+  </div>
+  <span class="card-arrow" aria-hidden="true">→</span>
+</a>

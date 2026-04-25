@@ -1,0 +1,26 @@
+---
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/blog/", label: "Articles" },
+  { href: "/about/", label: "About" },
+  { href: "https://github.com/RainPot", label: "GitHub", external: true }
+];
+const link = (href: string, external?: boolean) => external ? href : `${import.meta.env.BASE_URL}${href.replace(/^\//, "")}`;
+---
+
+<header class="site-header" id="top">
+  <a class="brand" href={link("/")} aria-label="RainPot 2026 Blog home">
+    <span class="brand-mark">R</span>
+    <span>
+      <strong>RainPot</strong>
+      <small>2026 Blog</small>
+    </span>
+  </a>
+  <nav class="nav-links" aria-label="Primary navigation">
+    {nav.map((item) => (
+      <a href={link(item.href, item.external)} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</header>
