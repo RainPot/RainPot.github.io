@@ -1,37 +1,30 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getPostSlug, getPublishedPosts } from "../lib/blog";
-
-const posts = getPublishedPosts(await getCollection("blog"));
-const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
 <BaseLayout>
   <main>
-    <section class="hero home-hero">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="dot"></span> ~/rainpot/blog</p>
-        <h1>不吃夜宵不熬夜，从我做起。</h1>
-      </div>
-    </section>
-
-    <section class="home-article-list" id="articles" aria-label="Articles">
-      {posts.slice(0, 3).map((post) => (
-        <article class="home-article-item">
-          <a href={link(`/blog/${getPostSlug(post)}/`)}>
-            <span class="home-article-title">{post.data.title}</span>
-            <time datetime={post.data.date.toISOString()}>{post.data.date.toISOString().slice(0, 10)}</time>
-          </a>
-        </article>
-      ))}
-    </section>
-
-    <section class="about-panel">
-      <div>
-        <p class="eyebrow"><span class="dot"></span> about rainpot</p>
-        <h2>light by day, fire by night.</h2>
+    <section class="solar-system-section" id="articles" aria-label="当前太阳系">
+      <div class="solar-system" id="solar-system" data-solar-system>
+        <div class="solar-stage" data-solar-stage></div>
+        <div class="solar-panel">
+          <p class="eyebrow"><span class="dot"></span> solar clock</p>
+          <time class="solar-time" data-solar-time></time>
+          <ol class="solar-readout" aria-label="行星当前位置">
+            <li data-planet-row="mercury"><span>水星</span><b>0°</b></li>
+            <li data-planet-row="venus"><span>金星</span><b>0°</b></li>
+            <li data-planet-row="earth"><span>地球</span><b>0°</b></li>
+            <li data-planet-row="mars"><span>火星</span><b>0°</b></li>
+            <li data-planet-row="jupiter"><span>木星</span><b>0°</b></li>
+            <li data-planet-row="saturn"><span>土星</span><b>0°</b></li>
+            <li data-planet-row="uranus"><span>天王星</span><b>0°</b></li>
+            <li data-planet-row="neptune"><span>海王星</span><b>0°</b></li>
+          </ol>
+        </div>
       </div>
     </section>
   </main>
+  <script>
+    import "../scripts/solar-system";
+  </script>
 </BaseLayout>

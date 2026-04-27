@@ -17,7 +17,7 @@ const readingTime = frontmatter.readingTime ?? estimateReadingMinutes(Astro.slot
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
-<BaseLayout title={`${frontmatter.title} - RainPot 2026 Blog`} description={frontmatter.description}>
+<BaseLayout title={`${frontmatter.title} - RainPot`} description={frontmatter.description}>
   <main class="post-shell">
     <a class="back-link" href={link("/blog/")}>← Articles</a>
     <article class="post-article">
