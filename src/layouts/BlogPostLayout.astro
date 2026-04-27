@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { estimateReadingMinutes } from "../lib/blog";
+import { estimateReadingMinutes, getTableOfContents, type MarkdownHeading } from "../lib/blog";
 
 type Props = {
   frontmatter: {
@@ -10,29 +10,45 @@ type Props = {
     tags: string[];
     readingTime?: number;
   };
+  headings?: MarkdownHeading[];
 };
 
-const { frontmatter } = Astro.props;
+const { frontmatter, headings = [] } = Astro.props;
 const readingTime = frontmatter.readingTime ?? estimateReadingMinutes(Astro.slots.default ? "" : "");
+const tableOfContents = getTableOfContents(headings);
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
 <BaseLayout title={`${frontmatter.title} - RainPot`} description={frontmatter.description}>
-  <main class="post-shell">
+  <main class="post-shell post-shell--article">
     <a class="back-link" href={link("/blog/")}>← Articles</a>
-    <article class="post-article">
-      <div class="post-meta">
-        <span>{frontmatter.date.toISOString().slice(0, 10)}</span>
-        <span>{readingTime} min read</span>
-      </div>
-      <h1>{frontmatter.title}</h1>
-      <p class="post-description">{frontmatter.description}</p>
-      <div class="tag-row">
-        {frontmatter.tags.map((tag) => <span>#{tag}</span>)}
-      </div>
-      <div class="markdown-content">
-        <slot />
-      </div>
-    </article>
+    <div class="post-layout">
+      <article class="post-article">
+        <div class="post-meta">
+          <span>{frontmatter.date.toISOString().slice(0, 10)}</span>
+          <span>{readingTime} min read</span>
+        </div>
+        <h1>{frontmatter.title}</h1>
+        <p class="post-description">{frontmatter.description}</p>
+        <div class="tag-row">
+          {frontmatter.tags.map((tag) => <span>#{tag}</span>)}
+        </div>
+        <div class="markdown-content">
+          <slot />
+        </div>
+      </article>
+      {tableOfContents.length > 0 && (
+        <nav class="article-toc" aria-label="Article table of contents">
+          <p class="article-toc-title">目录</p>
+          <ol>
+            {tableOfContents.map((item) => (
+              <li class={`toc-depth-${item.depth}`}>
+                <a class="toc-link" href={`#${item.slug}`}>{item.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+    </div>
   </main>
 </BaseLayout>

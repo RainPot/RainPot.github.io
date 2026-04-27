@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { estimateReadingMinutes, getPublishedPosts, sortPosts } from "../src/lib/blog";
+import { estimateReadingMinutes, getPublishedPosts, getTableOfContents, sortPosts } from "../src/lib/blog";
 
 const posts = [
   {
@@ -51,5 +51,44 @@ describe("blog helpers", () => {
   it("estimates reading time with a minimum of one minute", () => {
     expect(estimateReadingMinutes("短文")).toBe(1);
     expect(estimateReadingMinutes("word ".repeat(620))).toBe(3);
+  });
+
+  it("builds a table of contents from markdown headings", () => {
+    const headings = [
+      { depth: 1, slug: "article-title", text: "Article Title" },
+      { depth: 2, slug: "setup", text: "Setup" },
+      { depth: 3, slug: "install", text: "Install" },
+      { depth: 4, slug: "details", text: "Details" }
+    ];
+
+    expect(getTableOfContents(headings)).toEqual([
+      { depth: 2, slug: "setup", text: "Setup" },
+      { depth: 3, slug: "install", text: "Install" },
+      { depth: 4, slug: "details", text: "Details" }
+    ]);
+  });
+
+  it("ignores empty and top-level headings in the table of contents", () => {
+    const headings = [
+      { depth: 1, slug: "title", text: "Title" },
+      { depth: 2, slug: "", text: "Missing slug" },
+      { depth: 3, slug: "missing-text", text: "" }
+    ];
+
+    expect(getTableOfContents(headings)).toEqual([]);
+  });
+
+  it("ignores existing markdown table-of-contents headings", () => {
+    const headings = [
+      { depth: 2, slug: "目录", text: "目录" },
+      { depth: 2, slug: "overview", text: "Overview" },
+      { depth: 2, slug: "toc", text: "TOC" },
+      { depth: 2, slug: "details", text: "Details" }
+    ];
+
+    expect(getTableOfContents(headings)).toEqual([
+      { depth: 2, slug: "overview", text: "Overview" },
+      { depth: 2, slug: "details", text: "Details" }
+    ]);
   });
 });

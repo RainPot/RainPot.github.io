@@ -26,6 +26,7 @@ import {
   WebGLRenderer
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { getSolarRenderSize, INITIAL_SOLAR_CAMERA_POSITION, SOLAR_CAMERA_FOV } from "../lib/solar-system";
 
 const root = document.querySelector<HTMLElement>("[data-solar-system]");
 const stage = document.querySelector<HTMLElement>("[data-solar-stage]");
@@ -180,7 +181,7 @@ if (root && stage && timeNode) {
   });
 
   const scene = new Scene();
-  const camera = new PerspectiveCamera(46, 1, 0.1, 120);
+  const camera = new PerspectiveCamera(SOLAR_CAMERA_FOV, 1, 0.1, 120);
   const renderer = new WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
   const controls = new OrbitControls(camera, renderer.domElement);
   const solarGroup = new Group();
@@ -196,11 +197,11 @@ if (root && stage && timeNode) {
   renderer.setClearColor(0x000000, 0);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   stage.append(renderer.domElement);
-  camera.position.set(0, 18, 26);
+  camera.position.set(INITIAL_SOLAR_CAMERA_POSITION.x, INITIAL_SOLAR_CAMERA_POSITION.y, INITIAL_SOLAR_CAMERA_POSITION.z);
   controls.enableDamping = true;
   controls.enablePan = false;
   controls.minDistance = 16;
-  controls.maxDistance = 42;
+  controls.maxDistance = 64;
 
   scene.add(new AmbientLight(0x8fb4ff, 0.35));
   const sunLight = new PointLight(0xffd166, 860, 60, 1.4);
@@ -365,8 +366,7 @@ if (root && stage && timeNode) {
   }
 
   function resize() {
-    const width = Math.max(1, stage.clientWidth);
-    const height = Math.max(1, stage.clientHeight);
+    const { width, height } = getSolarRenderSize(stage.clientWidth, stage.clientHeight);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
@@ -385,5 +385,9 @@ if (root && stage && timeNode) {
 
   new ResizeObserver(resize).observe(stage);
   resize();
+  requestAnimationFrame(resize);
+  window.addEventListener("load", resize, { once: true });
+  window.addEventListener("resize", resize, { passive: true });
+  document.fonts?.ready.then(resize).catch(() => {});
   render();
 }

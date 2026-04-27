@@ -98,6 +98,7 @@ a {
   gap: 24px;
   padding: 22px 0;
   backdrop-filter: blur(18px);
+  transition: padding 220ms ease;
 }
 
 .brand {
@@ -105,6 +106,7 @@ a {
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  transition: gap 220ms ease, transform 220ms ease;
 }
 
 .brand-mark {
@@ -119,11 +121,16 @@ a {
   color: var(--cyan);
   font-family: "JetBrains Mono", monospace;
   font-weight: 800;
+  transition: width 220ms ease, height 220ms ease, border-radius 220ms ease, box-shadow 220ms ease;
 }
 
 .brand strong,
 .brand small {
   display: block;
+  overflow: hidden;
+  max-width: 80px;
+  white-space: nowrap;
+  transition: max-width 220ms ease, opacity 180ms ease, transform 220ms ease;
 }
 
 .brand strong {
@@ -145,20 +152,125 @@ a {
   border: 1px solid var(--line);
   border-radius: 999px;
   background: rgba(5, 8, 20, 0.58);
+  transition: gap 220ms ease, padding 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
 .nav-links a {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
   padding: 8px 13px;
   border-radius: 999px;
   color: var(--muted);
   font-size: 0.9rem;
   text-decoration: none;
-  transition: color 180ms ease, background 180ms ease;
+  transition: width 220ms ease, padding 220ms ease, color 180ms ease, background 180ms ease;
 }
 
 .nav-links a:hover {
   background: rgba(82, 229, 255, 0.12);
   color: var(--text);
+}
+
+.nav-icon {
+  display: grid;
+  width: 0;
+  height: 18px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  opacity: 0;
+  transition: width 220ms ease, opacity 180ms ease;
+}
+
+.nav-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.nav-label {
+  overflow: hidden;
+  max-width: 80px;
+  white-space: nowrap;
+  transition: max-width 220ms ease, opacity 180ms ease, transform 220ms ease;
+}
+
+.nav-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 10;
+  padding: 6px 8px;
+  border: 1px solid rgba(157, 190, 255, 0.2);
+  border-radius: 7px;
+  background: rgba(5, 8, 20, 0.92);
+  color: var(--text);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  font: 700 0.72rem/1 "JetBrains Mono", monospace;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  white-space: nowrap;
+}
+
+body.header-condensed .site-header {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+body.header-condensed .brand {
+  display: none;
+}
+
+body.header-condensed .nav-links {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  gap: 6px;
+  margin-left: auto;
+  padding: 6px;
+  border-color: rgba(82, 229, 255, 0.22);
+  background: rgba(5, 8, 20, 0.74);
+  overflow: visible;
+}
+
+body.header-condensed .nav-links a {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+body.header-condensed .nav-icon {
+  width: 18px;
+  opacity: 1;
+}
+
+body.header-condensed .nav-label {
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(4px);
+}
+
+body.header-condensed .nav-links a:hover .nav-tooltip,
+body.header-condensed .nav-links a:focus-visible .nav-tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+body.header-condensed .nav-links a:last-child .nav-tooltip {
+  right: 0;
+  left: auto;
+  transform: translate(0, -4px);
+}
+
+body.header-condensed .nav-links a:last-child:hover .nav-tooltip,
+body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
+  transform: translate(0, 0);
 }
 
 .hero {
@@ -709,6 +821,10 @@ a {
   padding: 44px 0 86px;
 }
 
+.post-shell--article {
+  max-width: 1180px;
+}
+
 .back-link {
   display: inline-flex;
   margin-bottom: 18px;
@@ -716,10 +832,78 @@ a {
   text-decoration: none;
 }
 
+.post-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 900px) minmax(180px, 240px);
+  gap: 22px;
+  align-items: start;
+}
+
 .post-article {
+  min-width: 0;
   padding: clamp(22px, 5vw, 46px);
   border-radius: 14px;
   background: rgba(10, 16, 34, 0.62);
+}
+
+.article-toc {
+  position: sticky;
+  top: 96px;
+  max-height: calc(100vh - 124px);
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid rgba(157, 190, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(5, 8, 20, 0.52);
+  backdrop-filter: blur(18px);
+}
+
+.article-toc-title {
+  margin: 0 0 12px;
+  color: var(--green);
+  font: 800 0.76rem/1 "JetBrains Mono", monospace;
+  text-transform: uppercase;
+}
+
+.article-toc ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-toc li {
+  min-width: 0;
+}
+
+.toc-link {
+  display: block;
+  overflow: hidden;
+  padding: 7px 8px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.toc-link:hover {
+  background: rgba(82, 229, 255, 0.1);
+  color: var(--text);
+}
+
+.toc-depth-3 .toc-link {
+  padding-left: 18px;
+}
+
+.toc-depth-4 .toc-link,
+.toc-depth-5 .toc-link,
+.toc-depth-6 .toc-link {
+  padding-left: 28px;
+  color: var(--dim);
 }
 
 .post-meta,
@@ -741,6 +925,10 @@ a {
   line-height: 1.86;
 }
 
+.markdown-content :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: 104px;
+}
+
 .markdown-content h1 {
   margin: 34px 0 16px;
   color: var(--text);
@@ -760,6 +948,13 @@ a {
   color: #edf6ff;
   font-size: 1.15rem;
   line-height: 1.4;
+}
+
+.markdown-content h4 {
+  margin: 24px 0 8px;
+  color: #e4eefc;
+  font-size: 1.02rem;
+  line-height: 1.45;
 }
 
 .markdown-content p {
@@ -857,15 +1052,25 @@ a {
   }
 
   .site-header {
-    position: relative;
+    position: sticky;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  body.header-condensed .site-header {
+    flex-direction: row;
+    align-items: center;
   }
 
   .nav-links {
     width: 100%;
     justify-content: space-between;
     overflow-x: auto;
+  }
+
+  body.header-condensed .nav-links {
+    width: auto;
+    margin-left: auto;
   }
 
   .hero {
@@ -878,8 +1083,16 @@ a {
   .articles,
   .lab-grid,
   .about-panel,
-  .solar-system {
+  .solar-system,
+  .post-layout {
     grid-template-columns: 1fr;
+  }
+
+  .article-toc {
+    position: relative;
+    top: auto;
+    order: -1;
+    max-height: none;
   }
 
   .solar-stage {
@@ -950,7 +1163,16 @@ a {
 
   .button,
   .read-link,
-  .nav-links a {
+  .nav-links a,
+  .site-header,
+  .brand,
+  .brand-mark,
+  .brand strong,
+  .brand small,
+  .nav-links,
+  .nav-icon,
+  .nav-label,
+  .nav-tooltip {
     transition: none;
   }
 }
