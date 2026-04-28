@@ -2,7 +2,7 @@
 const nav = [
   {
     href: "/",
-    label: "Home",
+    label: "首页",
     paths: [
       "M3 10.8 12 3.6l9 7.2",
       "M5.5 9.7V20h13V9.7",
@@ -11,7 +11,7 @@ const nav = [
   },
   {
     href: "/blog/",
-    label: "Articles",
+    label: "文章",
     paths: [
       "M5 4h14v16H5z",
       "M8 8h8",
@@ -21,7 +21,7 @@ const nav = [
   },
   {
     href: "/about/",
-    label: "About",
+    label: "关于",
     paths: [
       "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z",
       "M12 11v6",
@@ -40,23 +40,33 @@ const nav = [
   }
 ];
 const link = (href: string, external?: boolean) => external ? href : `${import.meta.env.BASE_URL}${href.replace(/^\//, "")}`;
+const normalizePath = (path: string) => path.endsWith("/") ? path : `${path}/`;
+const currentPath = normalizePath(Astro.url.pathname);
+const isActive = (href: string, external?: boolean) => {
+  if (external) return false;
+
+  const target = normalizePath(link(href));
+  return href === "/" ? currentPath === target : currentPath.startsWith(target);
+};
 ---
 
 <header class="site-header" id="top">
-  <a class="brand" href={link("/")} aria-label="RainPot Blog home">
+  <a class="brand" href={link("/")} aria-label="RainPot 首页">
     <span class="brand-mark">R</span>
     <span>
       <strong>RainPot</strong>
       <small>Blog</small>
     </span>
   </a>
-  <nav class="nav-links" aria-label="Primary navigation">
+  <nav class="nav-links" aria-label="主导航">
     {nav.map((item) => (
       <a
+        class:list={{ "is-active": isActive(item.href, item.external) }}
         href={link(item.href, item.external)}
         target={item.external ? "_blank" : undefined}
         rel={item.external ? "noreferrer" : undefined}
         aria-label={item.label}
+        aria-current={isActive(item.href, item.external) ? "page" : undefined}
       >
         <span class="nav-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">

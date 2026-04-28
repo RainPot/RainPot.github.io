@@ -21,13 +21,14 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#050814" />
+    <meta name="theme-color" content="#08110d" />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=M+PLUS+1+Code:wght@400;500;600;700&family=M+PLUS+Rounded+1c:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
     <CosmicBackground />
     <div class="page-shell">
       <Header />
@@ -35,7 +36,7 @@ const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//
       <footer class="footer">
         <div class="footer-meta">
           <span>Copyright © 2026 RainPot</span>
-          <a href="#top">Back to top</a>
+          <a href="#top">回到顶部</a>
         </div>
       </footer>
     </div>

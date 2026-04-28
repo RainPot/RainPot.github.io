@@ -1,17 +1,17 @@
 :root {
   color-scheme: dark;
-  --bg: #050814;
-  --panel: rgba(14, 22, 45, 0.74);
-  --panel-strong: rgba(17, 29, 58, 0.9);
-  --text: #eff6ff;
-  --muted: #9fb2ca;
-  --dim: #6f829c;
-  --line: rgba(157, 190, 255, 0.18);
-  --cyan: #52e5ff;
-  --green: #75ffb4;
-  --pink: #ff6bd6;
+  --bg: #09090b;
+  --panel: rgba(18, 18, 22, 0.76);
+  --panel-strong: rgba(24, 24, 29, 0.92);
+  --text: #f7f7f8;
+  --muted: #b6bcc8;
+  --dim: #7b8291;
+  --line: rgba(255, 255, 255, 0.1);
+  --cyan: #72d4ff;
+  --green: #62f3ad;
+  --accent-soft: #c9ffe2;
   --yellow: #ffd166;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  --shadow: 0 28px 72px rgba(0, 0, 0, 0.34);
 }
 
 * {
@@ -20,6 +20,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--bg);
 }
 
 body {
@@ -27,12 +28,14 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 18% 18%, rgba(82, 229, 255, 0.16), transparent 28rem),
-    radial-gradient(circle at 82% 8%, rgba(255, 107, 214, 0.13), transparent 28rem),
-    radial-gradient(circle at 58% 80%, rgba(117, 255, 180, 0.1), transparent 32rem),
+    radial-gradient(circle at 12% 14%, rgba(98, 243, 173, 0.12), transparent 26rem),
+    radial-gradient(circle at 85% 10%, rgba(114, 212, 255, 0.1), transparent 28rem),
+    radial-gradient(circle at 55% 78%, rgba(98, 243, 173, 0.08), transparent 30rem),
     var(--bg);
   color: var(--text);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
   letter-spacing: 0;
 }
 
@@ -43,14 +46,49 @@ body::before {
   pointer-events: none;
   content: "";
   background-image:
-    linear-gradient(rgba(82, 229, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(82, 229, 255, 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), transparent 82%);
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 84%);
 }
 
 a {
   color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+img {
+  max-width: 100%;
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+  font-family: "Newsreader", "Songti SC", "STSong", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(98, 243, 173, 0.9);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 30;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #09090b;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 180ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 #cosmos {
@@ -69,9 +107,9 @@ a {
   pointer-events: none;
   background:
     linear-gradient(rgba(255, 255, 255, 0.025) 50%, rgba(0, 0, 0, 0) 50%),
-    radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 40%), rgba(82, 229, 255, 0.1), transparent 18rem);
+    radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 40%), rgba(98, 243, 173, 0.08), transparent 18rem);
   background-size: 100% 4px, auto;
-  mix-blend-mode: screen;
+  mix-blend-mode: soft-light;
 }
 
 .page-shell {
@@ -80,7 +118,7 @@ a {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  width: min(1180px, calc(100% - 40px));
+  width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
 }
 
@@ -96,29 +134,29 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 22px 0;
-  backdrop-filter: blur(18px);
-  transition: padding 220ms ease;
+  padding: 26px 0 18px;
+  backdrop-filter: blur(16px);
+  transition: padding 220ms ease, transform 220ms ease;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
   transition: gap 220ms ease, transform 220ms ease;
 }
 
 .brand-mark {
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   place-items: center;
-  border: 1px solid rgba(82, 229, 255, 0.58);
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(82, 229, 255, 0.18), rgba(255, 107, 214, 0.12));
-  box-shadow: 0 0 28px rgba(82, 229, 255, 0.22), inset 0 0 18px rgba(255, 255, 255, 0.08);
-  color: var(--cyan);
+  border: 1px solid rgba(98, 243, 173, 0.42);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(98, 243, 173, 0.18), rgba(114, 212, 255, 0.12));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), inset 0 0 24px rgba(255, 255, 255, 0.06);
+  color: #ecfff5;
   font-family: "JetBrains Mono", monospace;
   font-weight: 800;
   transition: width 220ms ease, height 220ms ease, border-radius 220ms ease, box-shadow 220ms ease;
@@ -134,24 +172,27 @@ a {
 }
 
 .brand strong {
-  font-size: 1rem;
+  font-size: 1.04rem;
   line-height: 1.1;
 }
 
 .brand small {
   color: var(--muted);
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px;
+  padding: 8px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(5, 8, 20, 0.58);
+  background: rgba(16, 16, 20, 0.72);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   transition: gap 220ms ease, padding 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
@@ -162,16 +203,22 @@ a {
   align-items: center;
   justify-content: center;
   gap: 0;
-  padding: 8px 13px;
+  padding: 9px 14px;
   border-radius: 999px;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
+  font-weight: 500;
   text-decoration: none;
-  transition: width 220ms ease, padding 220ms ease, color 180ms ease, background 180ms ease;
+  transition: width 220ms ease, padding 220ms ease, color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
 .nav-links a:hover {
-  background: rgba(82, 229, 255, 0.12);
+  background: rgba(98, 243, 173, 0.12);
+  color: var(--text);
+}
+
+.nav-links a.is-active {
+  background: rgba(98, 243, 173, 0.16);
   color: var(--text);
 }
 
@@ -205,9 +252,9 @@ a {
   left: 50%;
   z-index: 10;
   padding: 6px 8px;
-  border: 1px solid rgba(157, 190, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 7px;
-  background: rgba(5, 8, 20, 0.92);
+  background: rgba(16, 16, 20, 0.96);
   color: var(--text);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
   font: 700 0.72rem/1 "JetBrains Mono", monospace;
@@ -229,13 +276,13 @@ body.header-condensed .brand {
 
 body.header-condensed .nav-links {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   gap: 6px;
   margin-left: auto;
   padding: 6px;
-  border-color: rgba(82, 229, 255, 0.22);
-  background: rgba(5, 8, 20, 0.74);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(16, 16, 20, 0.8);
   overflow: visible;
 }
 
@@ -276,10 +323,10 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.7fr);
-  gap: 32px;
-  min-height: 620px;
+  gap: 28px;
+  min-height: 540px;
   align-items: center;
-  padding: 72px 0 56px;
+  padding: 48px 0 36px;
 }
 
 .home-hero {
@@ -291,10 +338,9 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .hero-copy h1 {
   max-width: 680px;
   margin: 0;
-  font-size: clamp(1.75rem, 3.6vw, 3rem);
-  line-height: 1.18;
-  font-weight: 750;
-  letter-spacing: 0;
+  font-size: clamp(2.6rem, 5vw, 4.8rem);
+  line-height: 0.98;
+  font-weight: 600;
   text-wrap: balance;
 }
 
@@ -309,7 +355,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .hero-text {
   max-width: 720px;
-  margin: 28px 0 0;
+  margin: 24px 0 0;
 }
 
 .eyebrow {
@@ -317,10 +363,11 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   align-items: center;
   gap: 9px;
   margin: 0 0 18px;
-  color: var(--green);
+  color: var(--accent-soft);
   font-family: "JetBrains Mono", monospace;
   font-size: 0.78rem;
   font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -329,14 +376,14 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   height: 8px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 18px var(--green);
+  box-shadow: 0 0 18px rgba(98, 243, 173, 0.72);
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  margin-top: 34px;
+  margin-top: 30px;
 }
 
 .button,
@@ -346,15 +393,15 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   cursor: pointer;
-  font: 700 0.92rem/1 Inter, sans-serif;
+  font: 700 0.94rem/1 Roboto, sans-serif;
   text-decoration: none;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 .button {
-  padding: 0 18px;
+  padding: 0 20px;
 }
 
 .button:hover,
@@ -363,10 +410,10 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .button.primary {
-  border-color: rgba(82, 229, 255, 0.72);
-  background: linear-gradient(135deg, rgba(82, 229, 255, 0.94), rgba(117, 255, 180, 0.86));
-  color: #04111e;
-  box-shadow: 0 16px 36px rgba(82, 229, 255, 0.18);
+  border-color: rgba(98, 243, 173, 0.72);
+  background: linear-gradient(135deg, rgba(98, 243, 173, 0.96), rgba(114, 212, 255, 0.9));
+  color: #04110b;
+  box-shadow: 0 16px 36px rgba(98, 243, 173, 0.22);
 }
 
 .button.ghost,
@@ -378,26 +425,26 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .terminal-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(82, 229, 255, 0.26);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(14, 22, 45, 0.82), rgba(5, 8, 20, 0.78));
-  box-shadow: var(--shadow), inset 0 0 42px rgba(82, 229, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(22, 22, 28, 0.9), rgba(10, 10, 14, 0.82));
+  box-shadow: var(--shadow), inset 0 0 42px rgba(255, 255, 255, 0.03);
 }
 
 .terminal-card::before {
   position: absolute;
   inset: -40%;
   content: "";
-  background: conic-gradient(from 120deg, transparent, rgba(82, 229, 255, 0.24), transparent, rgba(255, 107, 214, 0.16), transparent);
-  animation: orbit 10s linear infinite;
+  background: conic-gradient(from 120deg, transparent, rgba(98, 243, 173, 0.24), transparent, rgba(114, 212, 255, 0.16), transparent);
+  animation: orbit 14s linear infinite;
 }
 
 .terminal-card::after {
   position: absolute;
   inset: 1px;
   content: "";
-  border-radius: 17px;
-  background: rgba(5, 8, 20, 0.86);
+  border-radius: 23px;
+  background: rgba(10, 10, 14, 0.92);
 }
 
 .terminal-bar,
@@ -425,10 +472,10 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .terminal-card pre {
   margin: 0;
-  padding: 22px;
+  padding: 22px 24px 24px;
   overflow: auto;
-  color: #d8f6ff;
-  font: 500 0.92rem/1.85 "JetBrains Mono", monospace;
+  color: #f5f7fb;
+  font: 500 0.9rem/1.85 "JetBrains Mono", monospace;
 }
 
 .muted {
@@ -449,7 +496,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .signal-grid {
   grid-template-columns: repeat(3, 1fr);
-  margin: 8px 0 112px;
+  margin: 0 0 96px;
 }
 
 .signal-grid div,
@@ -459,13 +506,13 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .post-article {
   border: 1px solid var(--line);
   background: var(--panel);
-  box-shadow: 0 16px 52px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(18px);
 }
 
 .signal-grid div {
-  padding: 22px;
-  border-radius: 16px;
+  padding: 24px;
+  border-radius: 22px;
 }
 
 .metric,
@@ -475,7 +522,8 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .metric {
   font-family: "JetBrains Mono", monospace;
-  font-size: 1.35rem;
+  color: #ecfff5;
+  font-size: 1.5rem;
   font-weight: 800;
 }
 
@@ -488,11 +536,25 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .section-heading,
 .archive-hero {
   max-width: 760px;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 
 .archive-hero {
-  padding: 58px 0 22px;
+  padding: 42px 0 18px;
+}
+
+.archive-hero h1 {
+  font-family: "M PLUS 1 Code", "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace;
+  font-size: clamp(1.28rem, 1.9vw, 1.68rem);
+  line-height: 1.18;
+  letter-spacing: -0.04em;
+}
+
+.archive-hero p {
+  max-width: 32rem;
+  font-family: "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 0.92rem;
+  line-height: 1.72;
 }
 
 .section-heading h2,
@@ -500,25 +562,30 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .about-panel h2,
 .post-article h1 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3.7rem);
-  line-height: 1.04;
-  letter-spacing: 0;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  line-height: 0.98;
 }
 
 .post-article .about-title {
-  font-size: clamp(1.75rem, 3vw, 2.55rem);
+  font-size: clamp(2.3rem, 4vw, 3.4rem);
 }
 
 .articles {
   grid-template-columns: repeat(3, 1fr);
-  margin-bottom: 112px;
+  margin-bottom: 96px;
+}
+
+.articles--spotlight {
+  grid-template-columns: 1fr;
 }
 
 .home-article-list {
   display: grid;
   gap: 0;
   max-width: 760px;
+  padding: 0;
   margin: 0 0 80px;
+  list-style: none;
 }
 
 .home-article-item {
@@ -535,15 +602,16 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .home-article-item a:hover .home-article-title {
-  color: var(--cyan);
+  color: #ffffff;
 }
 
 .home-article-title {
   color: var(--text);
   font-size: clamp(1rem, 1.6vw, 1.18rem);
-  font-weight: 620;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 500;
   line-height: 1.45;
-  transition: color 180ms ease;
+  transition: color 180ms ease, transform 180ms ease;
 }
 
 .home-article-item time {
@@ -554,8 +622,8 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .solar-system-section {
-  margin: 0 0 96px;
-  padding-top: 42px;
+  margin: 0 0 92px;
+  padding-top: 8px;
 }
 
 .solar-system {
@@ -571,11 +639,12 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   aspect-ratio: 1;
   min-height: 360px;
   overflow: hidden;
-  border: 1px solid rgba(157, 190, 255, 0.16);
-  border-radius: 8px;
-  background: rgba(5, 8, 20, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(10, 10, 14, 0.32);
   cursor: grab;
   touch-action: none;
+  box-shadow: var(--shadow);
 }
 
 .solar-stage:active {
@@ -594,13 +663,13 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   left: 0;
   z-index: 2;
   padding: 4px 8px;
-  border: 1px solid rgba(157, 190, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  background: rgba(5, 8, 20, 0.68);
+  background: rgba(10, 10, 14, 0.76);
   color: var(--text);
   font: 700 0.72rem/1 "JetBrains Mono", sans-serif;
   pointer-events: none;
-  text-shadow: 0 0 12px rgba(82, 229, 255, 0.4);
+  text-shadow: 0 0 12px rgba(98, 243, 173, 0.32);
   transition: opacity 160ms ease;
   white-space: nowrap;
 }
@@ -631,7 +700,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   gap: 14px;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(157, 190, 255, 0.12);
+  border-bottom: 1px solid rgba(98, 243, 173, 0.12);
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -649,6 +718,28 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   margin-top: 12px;
 }
 
+.archive-list .article-card {
+  padding: 18px 20px;
+}
+
+.archive-list .card-meta span {
+  font-size: 0.66rem;
+}
+
+.archive-list .article-card h3 {
+  font-family: "M PLUS 1 Code", "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace;
+  font-size: clamp(1rem, 1.45vw, 1.26rem);
+  line-height: 1.34;
+  letter-spacing: -0.03em;
+}
+
+.archive-list .article-card p {
+  font-family: "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  margin-top: 6px;
+}
+
 .article-card {
   position: relative;
   display: grid;
@@ -657,8 +748,8 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   gap: 20px;
   align-items: center;
   overflow: hidden;
-  padding: 20px 22px;
-  border-radius: 12px;
+  padding: 22px 24px;
+  border-radius: 22px;
   color: inherit;
   text-decoration: none;
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
@@ -669,7 +760,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   inset: 0;
   content: "";
   background:
-    radial-gradient(circle at var(--tilt-x, 50%) var(--tilt-y, 30%), rgba(82, 229, 255, 0.18), transparent 16rem),
+    radial-gradient(circle at var(--tilt-x, 50%) var(--tilt-y, 30%), rgba(98, 243, 173, 0.16), transparent 16rem),
     linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 40%);
   opacity: 0;
   transition: opacity 180ms ease;
@@ -680,9 +771,9 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .article-card:hover {
-  border-color: rgba(82, 229, 255, 0.38);
-  background: rgba(17, 29, 58, 0.82);
-  transform: translateY(-1px);
+  border-color: rgba(98, 243, 173, 0.26);
+  background: rgba(22, 22, 28, 0.9);
+  transform: translateY(-3px);
 }
 
 .article-card.featured {
@@ -708,11 +799,11 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .card-meta span,
 .tag-row span,
 .post-meta span {
-  padding: 5px 9px;
-  border: 1px solid rgba(117, 255, 180, 0.22);
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-  color: var(--green);
-  background: rgba(117, 255, 180, 0.07);
+  color: #c9ffe2;
+  background: rgba(98, 243, 173, 0.08);
   font: 700 0.72rem/1 "JetBrains Mono", monospace;
 }
 
@@ -722,40 +813,39 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .article-card h3 {
   margin: 0;
-  font-size: clamp(1.08rem, 2vw, 1.35rem);
-  line-height: 1.35;
-  letter-spacing: 0;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.1;
 }
 
 .article-card.featured h3 {
   max-width: 760px;
-  font-size: clamp(1.08rem, 2vw, 1.35rem);
-  line-height: 1.35;
+  font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+  line-height: 1.04;
 }
 
 .article-card p {
   max-width: 720px;
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   color: var(--muted);
-  line-height: 1.65;
-  font-size: 0.95rem;
+  line-height: 1.72;
+  font-size: 1rem;
 }
 
 .card-arrow {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   place-items: center;
-  border: 1px solid rgba(82, 229, 255, 0.24);
-  border-radius: 10px;
-  color: var(--cyan);
-  background: rgba(82, 229, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
   font-family: "JetBrains Mono", monospace;
   transition: transform 180ms ease, border-color 180ms ease;
 }
 
 .article-card:hover .card-arrow {
-  border-color: rgba(82, 229, 255, 0.54);
+  border-color: rgba(98, 243, 173, 0.28);
   transform: translateX(2px);
 }
 
@@ -774,7 +864,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .lab-item span {
-  color: var(--pink);
+  color: var(--green);
   font: 800 0.9rem/1 "JetBrains Mono", monospace;
 }
 
@@ -792,13 +882,8 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .about-panel {
   display: block;
   margin-bottom: 76px;
-  padding: 28px 0;
-  border-right: 0;
-  border-left: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  padding: 30px 32px;
+  border-radius: 24px;
 }
 
 .about-panel .eyebrow {
@@ -815,10 +900,41 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   margin: 0;
 }
 
+.about-shell {
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 220px);
+  background: transparent;
+}
+
+.about-copy {
+  width: min(100%, 680px);
+  padding: 0;
+  background: transparent;
+  text-align: center;
+}
+
+.about-copy .eyebrow {
+  justify-content: center;
+}
+
+.about-body {
+  margin-top: 16px;
+  font-family: "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 0.96rem;
+  line-height: 1.8;
+  background: transparent;
+}
+
+.about-body p {
+  margin: 0;
+  color: var(--accent-soft);
+}
+
 .post-shell {
   max-width: 920px;
   margin: 0 auto;
-  padding: 44px 0 86px;
+  padding: 28px 0 86px;
 }
 
 .post-shell--article {
@@ -834,16 +950,16 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .post-layout {
   display: grid;
-  grid-template-columns: minmax(0, 900px) minmax(180px, 240px);
-  gap: 22px;
+  grid-template-columns: minmax(0, 900px) minmax(200px, 250px);
+  gap: 24px;
   align-items: start;
 }
 
 .post-article {
   min-width: 0;
-  padding: clamp(22px, 5vw, 46px);
-  border-radius: 14px;
-  background: rgba(10, 16, 34, 0.62);
+  padding: clamp(24px, 5vw, 48px);
+  border-radius: 28px;
+  background: rgba(16, 16, 20, 0.8);
 }
 
 .article-toc {
@@ -851,16 +967,18 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   top: 96px;
   max-height: calc(100vh - 124px);
   overflow: auto;
-  padding: 16px;
-  border: 1px solid rgba(157, 190, 255, 0.16);
-  border-radius: 12px;
-  background: rgba(5, 8, 20, 0.52);
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: rgba(16, 16, 20, 0.72);
   backdrop-filter: blur(18px);
+  scroll-behavior: smooth;
+  scroll-padding-block: 50%;
 }
 
 .article-toc-title {
   margin: 0 0 12px;
-  color: var(--green);
+  color: var(--accent-soft);
   font: 800 0.76rem/1 "JetBrains Mono", monospace;
   text-transform: uppercase;
 }
@@ -880,19 +998,25 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .toc-link {
   display: block;
   overflow: hidden;
-  padding: 7px 8px;
+  padding: 7px 9px;
   border-radius: 8px;
   color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.35;
+  font-size: 0.76rem;
+  line-height: 1.45;
   text-decoration: none;
   text-overflow: ellipsis;
-  transition: color 180ms ease, background 180ms ease;
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
 .toc-link:hover {
-  background: rgba(82, 229, 255, 0.1);
+  background: rgba(98, 243, 173, 0.1);
   color: var(--text);
+}
+
+.toc-link.is-current {
+  background: rgba(98, 243, 173, 0.14);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(98, 243, 173, 0.18);
 }
 
 .toc-depth-3 .toc-link {
@@ -914,15 +1038,32 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .post-description {
   margin: 16px 0 18px;
   color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 0.88rem;
+  line-height: 1.72;
+}
+
+.post-shell--article .post-article,
+.post-shell--article .article-toc {
+  font-family: "M PLUS 1 Code", "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace;
+}
+
+.post-shell--article .post-article :is(h1, h2, h3, h4) {
+  font-family: "M PLUS 1 Code", "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.post-shell--article .post-article > h1 {
+  font-size: clamp(1.42rem, 2vw, 1.78rem);
+  line-height: 1.22;
 }
 
 .markdown-content {
   margin-top: 30px;
-  color: #d9e6f5;
-  font-size: 1rem;
-  line-height: 1.86;
+  color: #e7e9ee;
+  font-family: "M PLUS 1 Code", "M PLUS Rounded 1c", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace;
+  font-size: 0.88rem;
+  line-height: 1.76;
 }
 
 .markdown-content :is(h1, h2, h3, h4, h5, h6) {
@@ -932,29 +1073,29 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .markdown-content h1 {
   margin: 34px 0 16px;
   color: var(--text);
-  font-size: clamp(1.55rem, 3vw, 2.1rem);
-  line-height: 1.25;
+  font-size: clamp(1.26rem, 1.9vw, 1.58rem);
+  line-height: 1.24;
 }
 
 .markdown-content h2 {
   margin: 36px 0 14px;
   color: var(--text);
-  font-size: clamp(1.28rem, 2.2vw, 1.62rem);
-  line-height: 1.35;
+  font-size: clamp(1.08rem, 1.55vw, 1.28rem);
+  line-height: 1.34;
 }
 
 .markdown-content h3 {
   margin: 28px 0 10px;
-  color: #edf6ff;
-  font-size: 1.15rem;
-  line-height: 1.4;
+  color: #f4f6fb;
+  font-size: 0.96rem;
+  line-height: 1.44;
 }
 
 .markdown-content h4 {
   margin: 24px 0 8px;
   color: #e4eefc;
-  font-size: 1.02rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.54;
 }
 
 .markdown-content p {
@@ -971,22 +1112,22 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .markdown-content code {
-  border: 1px solid rgba(82, 229, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   padding: 0.08rem 0.32rem;
-  background: rgba(82, 229, 255, 0.08);
-  color: var(--cyan);
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.92em;
+  background: rgba(255, 255, 255, 0.05);
+  color: #c9ffe2;
+  font-family: "M PLUS 1 Code", monospace;
+  font-size: 0.9em;
 }
 
 .markdown-content pre {
   overflow-x: auto;
   margin: 22px 0;
-  padding: 16px;
-  border: 1px solid rgba(157, 190, 255, 0.16);
-  border-radius: 10px;
-  background: rgba(2, 6, 18, 0.7);
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(8, 8, 12, 0.82);
 }
 
 .markdown-content pre code {
@@ -998,7 +1139,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 .markdown-content blockquote {
   margin: 22px 0;
   padding: 2px 0 2px 18px;
-  border-left: 3px solid var(--cyan);
+  border-left: 3px solid var(--green);
   color: var(--muted);
 }
 
@@ -1007,8 +1148,8 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   max-width: 100%;
   height: auto;
   margin: 24px auto;
-  border-radius: 10px;
-  border: 1px solid rgba(157, 190, 255, 0.14);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -1023,7 +1164,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   display: grid;
   gap: 22px;
   margin-top: auto;
-  padding: 28px 0 42px;
+  padding: 18px 0 42px;
   color: var(--dim);
   font-size: 0.92rem;
 }
@@ -1076,7 +1217,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 34px;
+    padding-top: 24px;
   }
 
   .signal-grid,
@@ -1115,7 +1256,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   }
 
   .hero-copy h1 {
-    font-size: clamp(1.6rem, 9vw, 2.4rem);
+    font-size: clamp(2.1rem, 11vw, 3.2rem);
   }
 
   .signal-grid,
@@ -1127,6 +1268,20 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   .article-card,
   .about-panel {
     padding: 22px;
+  }
+
+  .about-copy {
+    width: min(100%, 420px);
+    padding: 0;
+  }
+
+  .article-card {
+    grid-template-columns: 1fr;
+  }
+
+  .card-arrow {
+    width: 38px;
+    height: 38px;
   }
 
   .footer {
@@ -1155,6 +1310,11 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  #cosmos,
+  .scanline {
+    display: none;
   }
 
   .terminal-card::before {

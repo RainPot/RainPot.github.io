@@ -20,30 +20,32 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
 ---
 
 <BaseLayout title={`${frontmatter.title} - RainPot`} description={frontmatter.description}>
-  <main class="post-shell post-shell--article">
-    <a class="back-link" href={link("/blog/")}>← Articles</a>
+  <main class="post-shell post-shell--article" id="main-content">
+    <a class="back-link" href={link("/blog/")}>← 返回文章归档</a>
     <div class="post-layout">
       <article class="post-article">
         <div class="post-meta">
           <span>{frontmatter.date.toISOString().slice(0, 10)}</span>
-          <span>{readingTime} min read</span>
+          <span>{readingTime} 分钟阅读</span>
         </div>
         <h1>{frontmatter.title}</h1>
         <p class="post-description">{frontmatter.description}</p>
-        <div class="tag-row">
-          {frontmatter.tags.map((tag) => <span>#{tag}</span>)}
-        </div>
+        {frontmatter.tags.length > 0 && (
+          <div class="tag-row">
+            {frontmatter.tags.map((tag) => <span>#{tag}</span>)}
+          </div>
+        )}
         <div class="markdown-content">
           <slot />
         </div>
       </article>
       {tableOfContents.length > 0 && (
-        <nav class="article-toc" aria-label="Article table of contents">
-          <p class="article-toc-title">目录</p>
+        <nav class="article-toc" aria-label="文章目录" data-article-toc>
+          <p class="article-toc-title">本文目录</p>
           <ol>
             {tableOfContents.map((item) => (
               <li class={`toc-depth-${item.depth}`}>
-                <a class="toc-link" href={`#${item.slug}`}>{item.text}</a>
+                <a class="toc-link" href={`#${item.slug}`} data-toc-link>{item.text}</a>
               </li>
             ))}
           </ol>
@@ -51,4 +53,7 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
       )}
     </div>
   </main>
+  <script>
+    import "../scripts/article-toc";
+  </script>
 </BaseLayout>

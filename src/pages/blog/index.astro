@@ -8,12 +8,12 @@ const posts = getPublishedPosts(await getCollection("blog"));
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
-<BaseLayout title="Articles - RainPot" description="RainPot 的文章归档。">
-  <main>
+<BaseLayout title="文章归档 - RainPot" description="RainPot 的文章归档。">
+  <main id="main-content">
     <section class="archive-hero">
       <p class="eyebrow"><span class="dot"></span> archive index</p>
-      <h1>Articles</h1>
-      <p>按发布时间整理 AI Agent、视觉算法、工具链和工程实践笔记。</p>
+      <h1>文章归档</h1>
+      <p>按时间整理所有文章。</p>
     </section>
     <section class="articles archive-list">
       {posts.map((post) => (
