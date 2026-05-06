@@ -570,27 +570,27 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
 .solar-system-section {
   display: flex;
+  flex: 1;
   align-items: stretch;
   min-height: 0;
   margin: 0;
-  padding-top: 2px;
+  padding: clamp(8px, 2.5svh, 32px) 0;
 }
 
 .solar-system {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.45fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  gap: clamp(18px, 4vw, 56px);
   align-items: center;
-  min-height: min(540px, calc(100svh - 156px));
+  min-height: min(760px, calc(100svh - 132px));
   width: 100%;
 }
 
 .solar-stage {
   position: relative;
-  width: min(100%, min(50vw, 500px));
+  justify-self: center;
+  width: min(100%, 64vw, 72svh, 760px);
   aspect-ratio: 1;
-  min-height: min(280px, calc(100svh - 250px));
-  max-height: calc(100svh - 230px);
   overflow: hidden;
   border: 1px solid rgba(157, 190, 255, 0.16);
   border-radius: 18px;
@@ -629,8 +629,10 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 }
 
 .solar-panel {
-  align-self: stretch;
+  align-self: center;
+  justify-self: start;
   display: flex;
+  width: min(100%, 320px);
   flex-direction: column;
   justify-content: center;
   padding: 0;
@@ -641,7 +643,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   margin-top: 0;
   color: var(--muted);
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.76rem;
+  font-size: clamp(0.76rem, 0.62vw, 0.9rem);
 }
 
 .solar-readout {
@@ -660,13 +662,13 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   padding: 4px 0;
   border-bottom: 1px solid rgba(157, 190, 255, 0.12);
   color: var(--muted);
-  font-size: 0.81rem;
+  font-size: clamp(0.81rem, 0.72vw, 0.96rem);
 }
 
 .solar-readout b {
   color: var(--green);
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.74rem;
+  font-size: clamp(0.74rem, 0.64vw, 0.88rem);
 }
 
 .archive-list {
@@ -1151,7 +1153,24 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   }
 
   .solar-stage {
+    width: min(100%, 70svh, 680px);
     margin: 0 auto;
+  }
+
+  .solar-system {
+    gap: clamp(14px, 2.6svh, 24px);
+    justify-items: center;
+    min-height: auto;
+  }
+
+  .solar-panel {
+    justify-self: center;
+    width: min(100%, 560px);
+  }
+
+  .solar-readout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
   }
 
   .article-card.featured {
@@ -1208,11 +1227,20 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   }
 
   .solar-system-section {
-    margin-bottom: 72px;
+    margin-bottom: 56px;
+    padding-top: 8px;
+  }
+
+  .solar-stage {
+    width: min(100%, calc(100svh - 340px));
   }
 
   .solar-panel {
     padding-top: 0;
+  }
+
+  .solar-readout {
+    column-gap: 12px;
   }
 
   .footer-meta {
