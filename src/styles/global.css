@@ -107,12 +107,14 @@ a {
   top: 0;
   z-index: 5;
   display: flex;
+  min-height: 66px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   padding: 14px 0 10px;
   background: transparent;
   backdrop-filter: blur(18px);
+  pointer-events: none;
   transition: padding 220ms ease;
 }
 
@@ -121,7 +123,8 @@ a {
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  transition: gap 220ms ease, transform 220ms ease;
+  pointer-events: auto;
+  transition: gap 220ms ease, opacity 180ms ease, transform 220ms ease, visibility 180ms ease;
 }
 
 .brand-mark {
@@ -167,6 +170,7 @@ a {
   border: 1px solid var(--line);
   border-radius: 999px;
   background: transparent;
+  pointer-events: auto;
   transition: gap 220ms ease, padding 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
@@ -239,7 +243,10 @@ body.header-condensed .site-header {
 }
 
 body.header-condensed .brand {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  visibility: hidden;
 }
 
 body.header-condensed .nav-links {
@@ -1110,6 +1117,7 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
 
   .site-header {
     position: sticky;
+    min-height: 136px;
     flex-direction: column;
     align-items: flex-start;
   }

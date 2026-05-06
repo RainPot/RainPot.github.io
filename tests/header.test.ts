@@ -12,10 +12,15 @@ describe("header scroll state", () => {
 
   it("keeps the condensed header shell in the document flow", () => {
     const css = readFileSync("src/styles/global.css", "utf8");
+    const headerRules = css.match(/\.site-header \{(?<rules>[^}]+)\}/)?.groups?.rules ?? "";
     const condensedHeader = css.match(/body\.header-condensed \.site-header \{(?<rules>[^}]+)\}/)?.groups?.rules ?? "";
+    const condensedBrand = css.match(/body\.header-condensed \.brand \{(?<rules>[^}]+)\}/)?.groups?.rules ?? "";
     const condensedNav = css.match(/body\.header-condensed \.nav-links \{(?<rules>[^}]+)\}/)?.groups?.rules ?? "";
 
+    expect(headerRules).toContain("min-height: 66px");
     expect(condensedHeader).not.toContain("position: fixed");
+    expect(condensedBrand).not.toContain("display: none");
+    expect(condensedBrand).toContain("visibility: hidden");
     expect(condensedNav).toContain("position: fixed");
   });
 
