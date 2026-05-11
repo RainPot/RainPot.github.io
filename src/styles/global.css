@@ -631,8 +631,97 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   font: 700 0.72rem/1 "JetBrains Mono", sans-serif;
   pointer-events: none;
   text-shadow: 0 0 12px rgba(82, 229, 255, 0.4);
-  transition: opacity 160ms ease;
+  transition: opacity 200ms ease, transform 220ms ease, border-color 200ms ease;
   white-space: nowrap;
+}
+
+.planet-label.is-focus {
+  border-color: rgba(140, 220, 255, 0.6);
+  background: rgba(15, 28, 56, 0.85);
+  box-shadow: 0 0 18px rgba(82, 229, 255, 0.32);
+}
+
+.solar-back {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  padding: 7px 14px;
+  border: 1px solid rgba(157, 190, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(8, 12, 24, 0.78);
+  color: var(--text);
+  font: 600 0.78rem/1 "JetBrains Mono", sans-serif;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: opacity 200ms ease, transform 200ms ease, border-color 200ms ease;
+}
+
+.solar-back:hover {
+  border-color: rgba(140, 220, 255, 0.6);
+  transform: translateX(-2px);
+}
+
+.solar-focus-card {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
+  width: min(260px, 60%);
+  padding: 14px 16px;
+  border: 1px solid rgba(157, 190, 255, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(12, 18, 36, 0.82), rgba(6, 10, 22, 0.78));
+  color: var(--text);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.solar-focus-name {
+  margin: 0;
+  font: 700 1rem/1.2 "JetBrains Mono", sans-serif;
+  letter-spacing: 0.04em;
+  color: #e7efff;
+}
+
+.solar-focus-tagline {
+  margin: 4px 0 12px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.solar-focus-stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+  row-gap: 4px;
+  margin: 0;
+  font: 500 0.76rem/1.4 "JetBrains Mono", sans-serif;
+}
+
+.solar-focus-stats dt {
+  color: var(--muted);
+}
+
+.solar-focus-stats dd {
+  margin: 0;
+  color: var(--green);
+  text-align: right;
+}
+
+.solar-readout li.is-focused {
+  color: #e7efff;
+  background: linear-gradient(90deg, rgba(82, 229, 255, 0.14), transparent);
+  border-bottom-color: rgba(140, 220, 255, 0.45);
+  padding-left: 8px;
+  border-radius: 6px 0 0 6px;
+}
+
+.solar-readout li.is-focused b {
+  color: #b8f0ff;
 }
 
 .solar-panel {
