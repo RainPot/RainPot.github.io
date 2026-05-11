@@ -724,6 +724,22 @@ body.header-condensed .nav-links a:last-child:focus-visible .nav-tooltip {
   color: #b8f0ff;
 }
 
+.solar-credit {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  z-index: 2;
+  color: rgba(180, 200, 230, 0.5);
+  font: 500 0.66rem/1 "JetBrains Mono", sans-serif;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.solar-credit:hover {
+  color: rgba(220, 235, 255, 0.85);
+}
+
 .solar-panel {
   align-self: center;
   justify-self: start;

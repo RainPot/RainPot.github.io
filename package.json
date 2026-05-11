@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "vitest"
+    "test": "vitest",
+    "fetch-textures": "node scripts/fetch-solar-textures.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.1",
