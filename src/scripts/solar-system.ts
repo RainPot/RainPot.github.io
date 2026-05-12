@@ -705,37 +705,80 @@ if (root && stage && timeNode) {
   // ---------- camera tween (cinematic cubic ease) ----------
   type Tween = {
     fromCam: Vector3;
-    toCam: Vector3;
     fromTarget: Vector3;
-    toTarget: Vector3;
     start: number;
     duration: number;
+    // when followPlanet is set, toCam/toTarget are recomputed each frame from
+    // the planet's current world position so we never tween to a stale spot.
+    followPlanet?: Planet;
+    toCam?: Vector3;
+    toTarget?: Vector3;
   };
   let activeTween: Tween | null = null;
+  let followedPlanet: Planet | null = null;
   function easeInOutCubic(t: number) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
-  function startTween(toCam: Vector3, toTarget: Vector3, duration = 1100) {
+  const tmpWorld = new Vector3();
+  function computeFocusCamPos(planet: Planet, out: Vector3) {
+    planet.group.getWorldPosition(out);
+    const dir = out.clone().normalize();
+    if (dir.lengthSq() < 1e-6) dir.set(1, 0, 0);
+    const lateral = new Vector3(-dir.z, 0, dir.x).multiplyScalar(planet.baseSize * 4 + 0.6);
+    const approach = out.clone().add(lateral).add(new Vector3(0, planet.baseSize * 4 + 0.8, 0));
+    const camOffset = out.clone().sub(approach).normalize().multiplyScalar(-(planet.baseSize * 7 + 2.6));
+    return out.clone().add(camOffset).add(new Vector3(0, planet.baseSize * 2.4, 0));
+  }
+  function startTweenToPlanet(planet: Planet, duration = 1100) {
     activeTween = {
       fromCam: camera.position.clone(),
-      toCam: toCam.clone(),
       fromTarget: controls.target.clone(),
-      toTarget: toTarget.clone(),
       start: performance.now(),
-      duration
+      duration,
+      followPlanet: planet
+    };
+  }
+  function startTweenToFixed(toCam: Vector3, toTarget: Vector3, duration = 1100) {
+    activeTween = {
+      fromCam: camera.position.clone(),
+      fromTarget: controls.target.clone(),
+      start: performance.now(),
+      duration,
+      toCam: toCam.clone(),
+      toTarget: toTarget.clone()
     };
   }
   function tickTween(now: number) {
-    if (!activeTween) return;
-    const t = Math.min(1, (now - activeTween.start) / activeTween.duration);
-    const e = easeInOutCubic(t);
-    camera.position.lerpVectors(activeTween.fromCam, activeTween.toCam, e);
-    controls.target.lerpVectors(activeTween.fromTarget, activeTween.toTarget, e);
-    if (t >= 1) activeTween = null;
+    if (activeTween) {
+      const tw = activeTween;
+      const t = Math.min(1, (now - tw.start) / tw.duration);
+      const e = easeInOutCubic(t);
+      let camDest: Vector3;
+      let targetDest: Vector3;
+      if (tw.followPlanet) {
+        tw.followPlanet.group.getWorldPosition(tmpWorld);
+        targetDest = tmpWorld.clone();
+        camDest = computeFocusCamPos(tw.followPlanet, new Vector3());
+      } else {
+        camDest = tw.toCam!;
+        targetDest = tw.toTarget!;
+      }
+      camera.position.lerpVectors(tw.fromCam, camDest, e);
+      controls.target.lerpVectors(tw.fromTarget, targetDest, e);
+      if (t >= 1) activeTween = null;
+      return;
+    }
+    // tween done — keep glued to the focused planet so it stays centered as it orbits
+    if (followedPlanet) {
+      followedPlanet.group.getWorldPosition(tmpWorld);
+      controls.target.copy(tmpWorld);
+      camera.position.copy(computeFocusCamPos(followedPlanet, new Vector3()));
+    }
   }
 
   function setFocus(planet: Planet | null) {
     focused = planet;
+    followedPlanet = planet;
     focusTarget = planet ? 1 : 0;
     if (planet) {
       controls.enabled = false;
@@ -753,18 +796,7 @@ if (root && stage && timeNode) {
       for (const row of rootEl.querySelectorAll<HTMLElement>("[data-planet-row]")) {
         row.classList.toggle("is-focused", row.dataset.planetRow === planet.key);
       }
-      // start cinematic camera arrival aimed at planet's *current* world position
-      const world = new Vector3();
-      planet.group.getWorldPosition(world);
-      // approach offset: above & beside, keeps the sun in frame
-      const approach = world.clone();
-      const dir = world.clone().normalize();
-      const lateral = new Vector3(-dir.z, 0, dir.x).multiplyScalar(planet.baseSize * 4 + 0.6);
-      approach.add(lateral).add(new Vector3(0, planet.baseSize * 4 + 0.8, 0));
-      // distance from target
-      const camOffset = world.clone().sub(approach).normalize().multiplyScalar(-(planet.baseSize * 7 + 2.6));
-      const camPos = world.clone().add(camOffset).add(new Vector3(0, planet.baseSize * 2.4, 0));
-      startTween(camPos, world, 1100);
+      startTweenToPlanet(planet, 1100);
     } else {
       controls.enabled = true;
       backButton.style.opacity = "0";
@@ -773,8 +805,7 @@ if (root && stage && timeNode) {
       for (const row of rootEl.querySelectorAll<HTMLElement>("[data-planet-row]")) {
         row.classList.remove("is-focused");
       }
-      // tween back to base view
-      startTween(
+      startTweenToFixed(
         new Vector3(
           INITIAL_SOLAR_CAMERA_POSITION.x,
           INITIAL_SOLAR_CAMERA_POSITION.y,
@@ -919,8 +950,7 @@ if (root && stage && timeNode) {
       const angle = normalizeAngle(planet.l0 + (days / planet.period) * 360);
       planet.angle = angle;
       const radians = (angle * Math.PI) / 180;
-      const focusOnThis = focused?.key === planet.key ? focusBlend : 0;
-      const radius = planet.baseOrbit * (1 - focusOnThis);
+      const radius = planet.baseOrbit;
       planet.group.position.set(Math.cos(radians) * radius, 0, Math.sin(radians) * radius);
       planet.mesh.rotation.y += planet.spin;
       if (planet.cloudMesh) planet.cloudMesh.rotation.y += planet.spin * 0.3;
