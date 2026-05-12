@@ -716,6 +716,9 @@ if (root && stage && timeNode) {
   };
   let activeTween: Tween | null = null;
   let followedPlanet: Planet | null = null;
+  // last known planet world position; used to translate camera + target each
+  // frame so the user can still orbit around the focused planet via OrbitControls.
+  const lastFollowPos = new Vector3();
   function easeInOutCubic(t: number) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
@@ -765,14 +768,32 @@ if (root && stage && timeNode) {
       }
       camera.position.lerpVectors(tw.fromCam, camDest, e);
       controls.target.lerpVectors(tw.fromTarget, targetDest, e);
-      if (t >= 1) activeTween = null;
+      if (t >= 1) {
+        activeTween = null;
+        if (tw.followPlanet) {
+          tw.followPlanet.group.getWorldPosition(lastFollowPos);
+          controls.enabled = true;
+        }
+      }
       return;
     }
-    // tween done — keep glued to the focused planet so it stays centered as it orbits
+    // tween done — translate both camera and target by the planet's per-frame
+    // delta. This keeps the planet centered while preserving any user-driven
+    // rotation/zoom done via OrbitControls.
     if (followedPlanet) {
       followedPlanet.group.getWorldPosition(tmpWorld);
-      controls.target.copy(tmpWorld);
-      camera.position.copy(computeFocusCamPos(followedPlanet, new Vector3()));
+      const dx = tmpWorld.x - lastFollowPos.x;
+      const dy = tmpWorld.y - lastFollowPos.y;
+      const dz = tmpWorld.z - lastFollowPos.z;
+      if (dx !== 0 || dy !== 0 || dz !== 0) {
+        camera.position.x += dx;
+        camera.position.y += dy;
+        camera.position.z += dz;
+        controls.target.x += dx;
+        controls.target.y += dy;
+        controls.target.z += dz;
+        lastFollowPos.copy(tmpWorld);
+      }
     }
   }
 
