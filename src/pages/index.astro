@@ -1,30 +1,33 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPostSlug, getPublishedPosts } from "../lib/blog";
+
+const posts = getPublishedPosts(await getCollection("blog"));
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
 <BaseLayout>
   <main id="main-content" class="home-main">
-    <section class="solar-system-section" id="articles" aria-label="当前太阳系">
-      <div class="solar-system" id="solar-system" data-solar-system>
-        <div class="solar-stage" data-solar-stage></div>
-        <div class="solar-panel">
-          <p class="eyebrow"><span class="dot"></span> solar clock</p>
-          <time class="solar-time" data-solar-time></time>
-          <ol class="solar-readout" aria-label="行星当前位置">
-            <li data-planet-row="mercury"><span>水星</span><b>0°</b></li>
-            <li data-planet-row="venus"><span>金星</span><b>0°</b></li>
-            <li data-planet-row="earth"><span>地球</span><b>0°</b></li>
-            <li data-planet-row="mars"><span>火星</span><b>0°</b></li>
-            <li data-planet-row="jupiter"><span>木星</span><b>0°</b></li>
-            <li data-planet-row="saturn"><span>土星</span><b>0°</b></li>
-            <li data-planet-row="uranus"><span>天王星</span><b>0°</b></li>
-            <li data-planet-row="neptune"><span>海王星</span><b>0°</b></li>
-          </ol>
+    <section class="hero code-hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span> ~/rainpot.dev</p>
+        <h1>Simplicity is the ultimate sophistication.</h1>
+        <div class="hero-actions">
+          {featuredPost && <a class="button primary" href={link(`/blog/${getPostSlug(featuredPost)}/`)}>读最新笔记</a>}
+          <a class="button ghost" href={link("/blog/")}>文章归档</a>
         </div>
+      </div>
+      <div class="terminal-card" aria-label="RainPot 代码摘要">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <b>notes.ts</b>
+        </div>
+        <pre><code><span class="muted">const principle =</span> ["simple", "pure", "real"];
+<span class="muted">const latest =</span> await read("latest-note");
+ship(notes.filter(Boolean));</code></pre>
       </div>
     </section>
   </main>
-  <script>
-    import "../scripts/solar-system";
-  </script>
 </BaseLayout>

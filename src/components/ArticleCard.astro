@@ -1,5 +1,5 @@
 ---
-import type { BlogPostLike } from "../lib/blog";
+import { getPostSlug, type BlogPostLike } from "../lib/blog";
 
 type Props = {
   post: BlogPostLike;
@@ -10,16 +10,21 @@ type Props = {
 const { post, href, large = false } = Astro.props;
 const date = post.data.date.toISOString().slice(0, 10);
 const tags = post.data.tags ?? [];
+const title = post.data.title;
+const description = post.data.description ?? "";
+const slug = getPostSlug(post);
+const body = post.body ?? "";
+const filterText = [title, description, slug, ...tags, body].join(" ");
 ---
 
-<a class:list={["article-card", { featured: large }]} href={href}>
+<a class:list={["article-card", { featured: large }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
   <div class="article-card-main">
     <div class="card-meta">
       <span>{date}</span>
       {tags.slice(0, 2).map((tag) => <span>{tag}</span>)}
     </div>
-    <h3>{post.data.title}</h3>
-    <p>{post.data.description}</p>
+    <h3>{title}</h3>
+    <p>{description}</p>
   </div>
   <span class="card-arrow" aria-hidden="true">→</span>
 </a>

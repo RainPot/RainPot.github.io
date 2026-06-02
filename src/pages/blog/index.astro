@@ -13,12 +13,21 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     <section class="archive-hero">
       <p class="eyebrow"><span class="dot"></span> archive index</p>
       <h1>文章归档</h1>
-      <p>按时间整理所有文章。</p>
     </section>
+    <label class="filter-shell archive-filter">
+      <span>$ grep</span>
+      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="过滤文章" data-article-filter />
+      <b data-filter-count>{posts.length}/{posts.length}</b>
+    </label>
     <section class="articles archive-list">
       {posts.map((post) => (
         <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} />
       ))}
     </section>
+    <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
   </main>
+  <script>
+    import "../../scripts/article-card";
+    import "../../scripts/article-filter";
+  </script>
 </BaseLayout>
