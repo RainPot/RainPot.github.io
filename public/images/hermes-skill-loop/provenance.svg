@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">foreground create 与 background review create 的区别</title>
+  <desc id="desc">只有 background review 创建的 skill 会被标记 created_by agent。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#9bdcff"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="560" rx="28" fill="#0f141d"/>
+  <text x="60" y="64" fill="#f6f8fb" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700">同样是 skill_manage(create)，来源不同，后果不同</text>
+  <text x="60" y="102" fill="#aeb8c8" font-family="Arial, 'PingFang SC', sans-serif" font-size="18">Hermes 用一个 ContextVar 区分：这是用户让它写的，还是后台复盘自己沉淀出来的。</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif" filter="url(#shadow)">
+    <rect x="72" y="160" width="480" height="320" rx="24" fill="#172033" stroke="#60a5fa" stroke-width="2"/>
+    <text x="112" y="214" fill="#e8f1ff" font-size="26" font-weight="700">前台对话里创建</text>
+    <text x="112" y="252" fill="#b9c7db" font-size="17">用户说：“帮我写一个 skill”</text>
+    <rect x="112" y="286" width="400" height="58" rx="14" fill="#24324b"/>
+    <text x="138" y="322" fill="#dbeafe" font-size="18" font-weight="700">skill_manage(action="create")</text>
+    <text x="112" y="380" fill="#b9c7db" font-size="17">写入 ~/.hermes/skills/</text>
+    <text x="112" y="414" fill="#fca5a5" font-size="17" font-weight="700">不会自动写 created_by: agent</text>
+    <text x="112" y="444" fill="#b9c7db" font-size="16">更像用户资产，不默认交给 curator 自动整理</text>
+
+    <rect x="648" y="160" width="480" height="320" rx="24" fill="#241c2f" stroke="#a78bfa" stroke-width="2"/>
+    <text x="688" y="214" fill="#f0ebff" font-size="26" font-weight="700">后台复盘里创建</text>
+    <text x="688" y="252" fill="#d5ccfb" font-size="17">review fork 认为这次经验值得保存</text>
+    <rect x="688" y="286" width="400" height="58" rx="14" fill="#33284a"/>
+    <text x="714" y="322" fill="#efe7ff" font-size="18" font-weight="700">skill_manage(action="create")</text>
+    <text x="688" y="380" fill="#d5ccfb" font-size="17">写入 ~/.hermes/skills/</text>
+    <text x="688" y="414" fill="#86efac" font-size="17" font-weight="700">会写入 created_by: "agent"</text>
+    <text x="688" y="444" fill="#d5ccfb" font-size="16">进入 curator 候选，后续可 stale、archive、合并</text>
+  </g>
+
+  <path d="M552 318 H638" stroke="#9bdcff" stroke-width="4" fill="none" marker-end="url(#arrow)" stroke-dasharray="8 8"/>
+  <text x="568" y="286" fill="#ccecff" font-family="Arial, 'PingFang SC', sans-serif" font-size="17" font-weight="700">区别在来源</text>
+</svg>

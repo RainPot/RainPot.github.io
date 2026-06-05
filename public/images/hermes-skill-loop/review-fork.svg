@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540" role="img" aria-labelledby="title desc">
+  <title id="title">后台 review fork 工作方式</title>
+  <desc id="desc">主对话先结束，后台 review fork 继承运行时，但只允许记忆和技能工具。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#8ed7ff"/>
+    </marker>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="540" rx="28" fill="#10141f"/>
+  <text x="60" y="64" fill="#f5f7fb" font-family="Arial, 'PingFang SC', sans-serif" font-size="34" font-weight="700">后台复盘和主任务分开跑</text>
+  <text x="60" y="102" fill="#aeb8ca" font-family="Arial, 'PingFang SC', sans-serif" font-size="18">主对话不被打断；复盘线程只负责判断“这次有没有东西值得写进 skill”。</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif" filter="url(#soft)">
+    <rect x="80" y="160" width="320" height="280" rx="22" fill="#172033" stroke="#60a5fa" stroke-width="2"/>
+    <text x="116" y="212" fill="#e7f0ff" font-size="26" font-weight="700">主对话 Agent</text>
+    <text x="116" y="254" fill="#b9c7dc" font-size="17">1. 处理用户任务</text>
+    <text x="116" y="286" fill="#b9c7dc" font-size="17">2. 调工具、修问题、产出结果</text>
+    <text x="116" y="318" fill="#b9c7dc" font-size="17">3. 先把最终回复返回给用户</text>
+    <rect x="116" y="352" width="248" height="54" rx="12" fill="#24324b"/>
+    <text x="140" y="386" fill="#dbeafe" font-size="18" font-weight="700">用户不会等复盘结束</text>
+
+    <rect x="720" y="160" width="360" height="280" rx="22" fill="#201c30" stroke="#a78bfa" stroke-width="2"/>
+    <text x="756" y="212" fill="#f0ebff" font-size="26" font-weight="700">Background Review Fork</text>
+    <text x="756" y="254" fill="#d5ccfb" font-size="17">继承父 agent 的模型、provider、缓存提示词</text>
+    <text x="756" y="286" fill="#d5ccfb" font-size="17">但真正执行工具前会被白名单卡住</text>
+    <rect x="756" y="324" width="130" height="46" rx="12" fill="#2d6a4f"/>
+    <text x="784" y="354" fill="#e4fff1" font-size="18" font-weight="700">memory</text>
+    <rect x="904" y="324" width="130" height="46" rx="12" fill="#b45309"/>
+    <text x="940" y="354" fill="#fff2d8" font-size="18" font-weight="700">skills</text>
+    <text x="756" y="408" fill="#fca5a5" font-size="17">terminal、web_search、delegate_task 等会被拒绝</text>
+  </g>
+
+  <g stroke="#8ed7ff" stroke-width="4" fill="none" marker-end="url(#arrow)">
+    <path d="M412 274 C516 208 602 208 708 274"/>
+  </g>
+  <text x="468" y="198" fill="#ccecff" font-family="Arial, 'PingFang SC', sans-serif" font-size="18" font-weight="700">messages_snapshot</text>
+
+  <g font-family="Arial, 'PingFang SC', sans-serif">
+    <rect x="455" y="314" width="270" height="86" rx="18" fill="#1a2430" stroke="#34d399" stroke-width="2"/>
+    <text x="492" y="350" fill="#dcfff1" font-size="20" font-weight="700">只输出很短的结果提示</text>
+    <text x="492" y="378" fill="#b8ead6" font-size="16">例如：Self-improvement review: Skill updated</text>
+  </g>
+</svg>
