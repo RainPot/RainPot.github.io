@@ -8,13 +8,22 @@ featured: false
 readingTime: 16
 ---
 
-这篇按源码讲，不先讲概念。
+本文介绍 Hermes Agent 的 Skill 自动沉淀机制。
 
-Hermes Agent 的“自动沉淀 Skill”不是“任务结束后自动写一篇经验总结”。更准确地说，它是一个后台复盘机制：主任务先结束，用户先拿到回复；如果这轮足够复杂，Hermes 再 fork 一个后台 review agent，让它只用 memory 和 skill 工具，判断这次有没有东西应该写回 Skill 库。
+这个机制要解决的问题很具体：Agent 做完一个复杂任务后，怎么把过程中出现的可复用经验，转成下次能被检索、加载和继续改进的 Skill，而不是把所有内容都塞进短期对话或长期记忆里。
 
-本文基于本地 `hermes-agent` 仓库 `main@ff5652d0f`。图是为了看结构，代码和 prompt 是为了确认它真实这么跑。
+Hermes 的做法不是在主任务里边干活边写经验总结，而是把“交付”和“复盘”拆开：主 Agent 先完成用户任务；如果这轮工具调用足够复杂，再 fork 一个后台 review agent，让它只使用 memory 和 skills 相关工具，判断是否需要创建或更新 Skill。
 
-## 先看总览
+下面会按四个问题展开：
+
+- 什么时候触发后台复盘？
+- review fork 为什么能读上下文，却不能乱用工具？
+- `skill_manage` 如何写入 Skill，并区分前台创建和后台自动沉淀？
+- Skill 越积越多以后，Curator 如何做整理和归档？
+
+文中结论基于本地 `hermes-agent` 仓库 `main@ff5652d0f`，关键位置会直接引用源码或 prompt 摘录。
+
+## 机制总览：一次任务如何变成 Skill
 
 ![Hermes Agent 自动沉淀 Skill 总览](/images/hermes-skill-loop/loop-overview.svg)
 
