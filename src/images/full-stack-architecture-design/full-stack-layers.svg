@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">全栈架构分层与数据流</title>
+  <desc id="desc">前端、边界层、后端和基础设施之间的数据流、契约和观测关系。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#101820"/>
+    </linearGradient>
+    <filter id="shadow" x="-12%" y="-18%" width="124%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000000" flood-opacity="0.24"/>
+    </filter>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L14,8 L2,14 Z" fill="#58a6ff"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L14,8 L2,14 Z" fill="#3fb950"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .title { fill: #f0f6fc; font-size: 50px; font-weight: 800; }
+      .subtitle { fill: #8b949e; font-size: 25px; }
+      .lane-label { fill: #f0f6fc; font-size: 28px; font-weight: 800; }
+      .node-title { fill: #f0f6fc; font-size: 27px; font-weight: 800; }
+      .node-text { fill: #c9d1d9; font-size: 21px; }
+      .small { fill: #8b949e; font-size: 20px; }
+      .node { filter: url(#shadow); }
+      .arrow { fill: none; stroke: #58a6ff; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .green { fill: none; stroke: #3fb950; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#greenArrow); }
+      .soft { fill: none; stroke: #8b949e; stroke-width: 3; stroke-dasharray: 9 9; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <text x="90" y="92" class="title">全栈架构要同时看见“体验链路”和“数据链路”</text>
+  <text x="92" y="140" class="subtitle">前端不是页面拼装，后端也不是接口堆叠；中间的契约、状态、缓存、权限和观测共同决定系统质量。</text>
+
+  <rect x="70" y="190" width="1460" height="160" rx="18" fill="#121820" stroke="#30363d" stroke-width="2"/>
+  <rect x="70" y="370" width="1460" height="160" rx="18" fill="#111c2b" stroke="#365b8c" stroke-width="2"/>
+  <rect x="70" y="550" width="1460" height="160" rx="18" fill="#121820" stroke="#30363d" stroke-width="2"/>
+  <rect x="70" y="730" width="1460" height="160" rx="18" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+
+  <text x="118" y="245" class="lane-label">前端体验层</text>
+  <text x="118" y="425" class="lane-label">系统边界层</text>
+  <text x="118" y="605" class="lane-label">后端领域层</text>
+  <text x="118" y="785" class="lane-label">基础设施层</text>
+
+  <g class="node" transform="translate(320 220)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">路由页面</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">入口与权限</text>
+  </g>
+  <g class="node" transform="translate(590 220)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">组件状态</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">最小可变状态</text>
+  </g>
+  <g class="node" transform="translate(860 220)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">请求缓存</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">加载与回源</text>
+  </g>
+  <g class="node" transform="translate(1130 220)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">性能体验</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">LCP INP CLS</text>
+  </g>
+
+  <g class="node" transform="translate(320 400)">
+    <rect width="205" height="100" rx="14" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">CDN SSR</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">首屏与静态化</text>
+  </g>
+  <g class="node" transform="translate(590 400)">
+    <rect width="205" height="100" rx="14" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">BFF 网关</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">聚合与裁剪</text>
+  </g>
+  <g class="node" transform="translate(860 400)">
+    <rect width="205" height="100" rx="14" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">鉴权会话</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">身份与租户</text>
+  </g>
+  <g class="node" transform="translate(1130 400)">
+    <rect width="205" height="100" rx="14" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">契约 Schema</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">类型与错误码</text>
+  </g>
+
+  <g class="node" transform="translate(320 580)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">Controller</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">协议适配</text>
+  </g>
+  <g class="node" transform="translate(590 580)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">Application</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">用例编排</text>
+  </g>
+  <g class="node" transform="translate(860 580)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">Domain</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">规则与不变量</text>
+  </g>
+  <g class="node" transform="translate(1130 580)">
+    <rect width="205" height="100" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">Repository</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">数据访问</text>
+  </g>
+
+  <g class="node" transform="translate(320 760)">
+    <rect width="205" height="100" rx="14" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">数据库</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">事务与索引</text>
+  </g>
+  <g class="node" transform="translate(590 760)">
+    <rect width="205" height="100" rx="14" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">缓存</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">读路径加速</text>
+  </g>
+  <g class="node" transform="translate(860 760)">
+    <rect width="205" height="100" rx="14" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">队列任务</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">削峰与异步</text>
+  </g>
+  <g class="node" transform="translate(1130 760)">
+    <rect width="205" height="100" rx="14" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="102" y="41" text-anchor="middle" class="node-title">观测系统</text>
+    <text x="102" y="72" text-anchor="middle" class="node-text">日志指标链路</text>
+  </g>
+
+  <path class="arrow" d="M525 270 H575"/>
+  <path class="arrow" d="M795 270 H845"/>
+  <path class="arrow" d="M1065 270 H1115"/>
+  <path class="arrow" d="M962 320 V385"/>
+  <path class="arrow" d="M795 450 H845"/>
+  <path class="arrow" d="M1065 450 H1115"/>
+  <path class="arrow" d="M692 500 V565"/>
+  <path class="arrow" d="M525 630 H575"/>
+  <path class="arrow" d="M795 630 H845"/>
+  <path class="arrow" d="M1065 630 H1115"/>
+  <path class="green" d="M1232 680 V745"/>
+  <path class="green" d="M962 680 V745"/>
+  <path class="green" d="M692 680 V745"/>
+  <path class="green" d="M1232 760 C1450 725,1450 360,1340 310"/>
+
+  <path class="soft" d="M260 190 V890"/>
+  <text x="1440" y="365" text-anchor="middle" class="small">体验指标回传</text>
+  <text x="1440" y="396" text-anchor="middle" class="small">驱动容量与体验优化</text>
+</svg>

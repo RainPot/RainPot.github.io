@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">架构设计闭环</title>
+  <desc id="desc">从业务目标、质量属性、方案取舍、实现切分到运行验证的架构设计闭环。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="shadow" x="-12%" y="-18%" width="124%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+    <marker id="arrow" markerWidth="18" markerHeight="18" refX="14" refY="9" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L16,9 L2,16 Z" fill="#58a6ff"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="18" markerHeight="18" refX="14" refY="9" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L16,9 L2,16 Z" fill="#3fb950"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .title { fill: #f0f6fc; font-size: 52px; font-weight: 800; }
+      .subtitle { fill: #8b949e; font-size: 26px; }
+      .card { filter: url(#shadow); }
+      .card-title { fill: #f0f6fc; font-size: 34px; font-weight: 800; }
+      .card-text { fill: #c9d1d9; font-size: 24px; }
+      .label { fill: #3fb950; font-size: 26px; font-weight: 800; }
+      .chip { fill: #c9d1d9; font-size: 23px; font-weight: 700; }
+      .arrow { fill: none; stroke: #58a6ff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #3fb950; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#greenArrow); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1350" cy="150" r="210" fill="#58a6ff" opacity="0.07"/>
+  <circle cx="230" cy="780" r="260" fill="#3fb950" opacity="0.06"/>
+
+  <text x="100" y="105" class="title">架构设计不是一次画图，而是一轮持续校准</text>
+  <text x="102" y="154" class="subtitle">合格的全栈工程师要把业务、体验、数据、交付和运行风险放在同一张桌面上讨论。</text>
+
+  <g class="card" transform="translate(100 260)">
+    <rect width="230" height="150" rx="18" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="115" y="54" text-anchor="middle" class="card-title">业务目标</text>
+    <text x="115" y="96" text-anchor="middle" class="card-text">谁在用</text>
+    <text x="115" y="130" text-anchor="middle" class="card-text">价值是什么</text>
+  </g>
+
+  <g class="card" transform="translate(385 260)">
+    <rect width="230" height="150" rx="18" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="115" y="54" text-anchor="middle" class="card-title">质量属性</text>
+    <text x="115" y="96" text-anchor="middle" class="card-text">性能 可靠</text>
+    <text x="115" y="130" text-anchor="middle" class="card-text">安全 成本</text>
+  </g>
+
+  <g class="card" transform="translate(670 260)">
+    <rect width="230" height="150" rx="18" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="115" y="54" text-anchor="middle" class="card-title">方案取舍</text>
+    <text x="115" y="96" text-anchor="middle" class="card-text">选型边界</text>
+    <text x="115" y="130" text-anchor="middle" class="card-text">风险清单</text>
+  </g>
+
+  <g class="card" transform="translate(955 260)">
+    <rect width="230" height="150" rx="18" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="115" y="54" text-anchor="middle" class="card-title">实现切分</text>
+    <text x="115" y="96" text-anchor="middle" class="card-text">前后端契约</text>
+    <text x="115" y="130" text-anchor="middle" class="card-text">模块和数据</text>
+  </g>
+
+  <g class="card" transform="translate(1240 260)">
+    <rect width="230" height="150" rx="18" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="115" y="54" text-anchor="middle" class="card-title">运行验证</text>
+    <text x="115" y="96" text-anchor="middle" class="card-text">指标 告警</text>
+    <text x="115" y="130" text-anchor="middle" class="card-text">复盘 演进</text>
+  </g>
+
+  <path class="arrow" d="M330 335 H370"/>
+  <path class="arrow" d="M615 335 H655"/>
+  <path class="arrow" d="M900 335 H940"/>
+  <path class="arrow" d="M1185 335 H1225"/>
+
+  <path class="loop" d="M1355 430 C1355 650, 215 650, 215 430"/>
+  <text x="785" y="690" text-anchor="middle" class="label">上线后的数据会反过来修正目标、SLO 和方案边界</text>
+
+  <g transform="translate(180 755)">
+    <rect width="250" height="58" rx="29" fill="#21262d" stroke="#30363d" stroke-width="2"/>
+    <text x="125" y="38" text-anchor="middle" class="chip">团队能力</text>
+  </g>
+  <g transform="translate(495 755)">
+    <rect width="250" height="58" rx="29" fill="#21262d" stroke="#30363d" stroke-width="2"/>
+    <text x="125" y="38" text-anchor="middle" class="chip">成本预算</text>
+  </g>
+  <g transform="translate(810 755)">
+    <rect width="250" height="58" rx="29" fill="#21262d" stroke="#30363d" stroke-width="2"/>
+    <text x="125" y="38" text-anchor="middle" class="chip">交付节奏</text>
+  </g>
+  <g transform="translate(1125 755)">
+    <rect width="250" height="58" rx="29" fill="#21262d" stroke="#30363d" stroke-width="2"/>
+    <text x="125" y="38" text-anchor="middle" class="chip">合规风险</text>
+  </g>
+</svg>

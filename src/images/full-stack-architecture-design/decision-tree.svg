@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">架构方案决策树</title>
+  <desc id="desc">围绕边界稳定性、读写压力和失败代价选择架构策略。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="shadow" x="-12%" y="-18%" width="124%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="13" flood-color="#000000" flood-opacity="0.26"/>
+    </filter>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L14,8 L2,14 Z" fill="#58a6ff"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+      .title { fill: #f0f6fc; font-size: 50px; font-weight: 800; }
+      .subtitle { fill: #8b949e; font-size: 25px; }
+      .node-title { fill: #f0f6fc; font-size: 31px; font-weight: 800; }
+      .node-text { fill: #c9d1d9; font-size: 23px; }
+      .hint { fill: #8b949e; font-size: 21px; }
+      .node { filter: url(#shadow); }
+      .arrow { fill: none; stroke: #58a6ff; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .tag { fill: #3fb950; font-size: 22px; font-weight: 800; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="230" cy="180" r="190" fill="#3fb950" opacity="0.06"/>
+  <circle cx="1320" cy="710" r="230" fill="#58a6ff" opacity="0.07"/>
+  <text x="100" y="92" class="title">架构选型先做决策题，不做信仰题</text>
+  <text x="102" y="140" class="subtitle">方案没有绝对高级，只有是否匹配当前边界、流量、风险和团队能力。</text>
+
+  <g class="node" transform="translate(590 205)">
+    <rect width="420" height="118" rx="18" fill="#162033" stroke="#365b8c" stroke-width="2"/>
+    <text x="210" y="50" text-anchor="middle" class="node-title">先写清问题</text>
+    <text x="210" y="85" text-anchor="middle" class="node-text">目标 用户 约束 SLO</text>
+  </g>
+
+  <g class="node" transform="translate(120 430)">
+    <rect width="355" height="118" rx="18" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="178" y="50" text-anchor="middle" class="node-title">边界稳定吗</text>
+    <text x="178" y="85" text-anchor="middle" class="node-text">领域是否还在变化</text>
+  </g>
+  <g class="node" transform="translate(622 430)">
+    <rect width="355" height="118" rx="18" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="178" y="50" text-anchor="middle" class="node-title">压力在哪里</text>
+    <text x="178" y="85" text-anchor="middle" class="node-text">首屏 读 写 计算</text>
+  </g>
+  <g class="node" transform="translate(1125 430)">
+    <rect width="355" height="118" rx="18" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+    <text x="178" y="50" text-anchor="middle" class="node-title">失败代价多大</text>
+    <text x="178" y="85" text-anchor="middle" class="node-text">资金 数据 合规 品牌</text>
+  </g>
+
+  <g class="node" transform="translate(110 660)">
+    <rect width="180" height="112" rx="16" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">优先</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">模块化单体</text>
+  </g>
+  <g class="node" transform="translate(320 660)">
+    <rect width="180" height="112" rx="16" fill="#1f2328" stroke="#30363d" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">再考虑</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">服务拆分</text>
+  </g>
+
+  <g class="node" transform="translate(613 660)">
+    <rect width="180" height="112" rx="16" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">读多</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">缓存 CDN</text>
+  </g>
+  <g class="node" transform="translate(823 660)">
+    <rect width="180" height="112" rx="16" fill="#1f2328" stroke="#30363d" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">写重</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">队列 幂等</text>
+  </g>
+
+  <g class="node" transform="translate(1115 660)">
+    <rect width="180" height="112" rx="16" fill="#10251a" stroke="#2ea043" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">先补</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">权限审计</text>
+  </g>
+  <g class="node" transform="translate(1325 660)">
+    <rect width="180" height="112" rx="16" fill="#1f2328" stroke="#30363d" stroke-width="2"/>
+    <text x="90" y="44" text-anchor="middle" class="tag">再扩</text>
+    <text x="90" y="78" text-anchor="middle" class="node-text">演练回滚</text>
+  </g>
+
+  <path class="arrow" d="M680 323 C520 365,420 390,298 430"/>
+  <path class="arrow" d="M800 323 V415"/>
+  <path class="arrow" d="M920 323 C1080 365,1180 390,1302 430"/>
+  <path class="arrow" d="M242 548 C225 590,210 615,200 645"/>
+  <path class="arrow" d="M352 548 C380 590,395 615,410 645"/>
+  <path class="arrow" d="M740 548 C720 590,710 615,703 645"/>
+  <path class="arrow" d="M860 548 C890 590,905 615,913 645"/>
+  <path class="arrow" d="M1242 548 C1225 590,1215 615,1205 645"/>
+  <path class="arrow" d="M1352 548 C1385 590,1400 615,1415 645"/>
+
+  <text x="300" y="825" text-anchor="middle" class="hint">边界没稳定时，先让模块边界清楚</text>
+  <text x="800" y="825" text-anchor="middle" class="hint">瓶颈在哪里，优化就落在哪里</text>
+  <text x="1300" y="825" text-anchor="middle" class="hint">失败代价越高，越要先设计保护栏</text>
+</svg>
