@@ -1,7 +1,4 @@
 ---
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { getPostSlug, type BlogPostLike } from "../lib/blog";
 
 type Props = {
@@ -18,7 +15,6 @@ const description = post.data.description ?? "";
 const slug = getPostSlug(post);
 const body = post.body ?? "";
 const filterText = [title, description, slug, ...tags, body].join(" ");
-const publicDir = fileURLToPath(new URL("../../public", import.meta.url));
 const sourceImages = import.meta.glob<{ default: { src?: string } | string }>("../images/**/*.{png,jpg,jpeg,webp,svg}");
 const thumbnailSrc = await getThumbnailSrc(body);
 
@@ -42,13 +38,13 @@ async function normalizeImageSrc(src: string): Promise<string> {
     .replace(/\s+["'][^"']*["']$/, "");
 
   if (/^(https?:|data:|blob:)/i.test(value)) return value;
+  if (value.startsWith("/")) return value;
   const sourceSrc = await sourceImageSrc(value);
   if (sourceSrc) return sourceSrc;
-  if (value.startsWith("/")) return publicImageSrc(value);
-  if (value.startsWith("../../images/")) return publicImageSrc(`/images/${value.slice("../../images/".length)}`);
-  if (value.startsWith("../images/")) return publicImageSrc(`/images/${value.slice("../images/".length)}`);
-  if (value.startsWith("./images/")) return publicImageSrc(`/images/${value.slice("./images/".length)}`);
-  if (value.startsWith("images/")) return publicImageSrc(`/${value}`);
+  if (value.startsWith("../../images/")) return `/images/${value.slice("../../images/".length)}`;
+  if (value.startsWith("../images/")) return `/images/${value.slice("../images/".length)}`;
+  if (value.startsWith("./images/")) return `/images/${value.slice("./images/".length)}`;
+  if (value.startsWith("images/")) return `/${value}`;
   return "";
 }
 
@@ -71,16 +67,6 @@ async function sourceImageSrc(src: string): Promise<string> {
     const loadImage = sourceImages[`../images/${decodeURIComponent(relativePath)}`];
     const image = loadImage ? (await loadImage()).default : undefined;
     return typeof image === "string" ? image : image?.src ?? "";
-  } catch {
-    return "";
-  }
-}
-
-function publicImageSrc(src: string): string {
-  const pathname = src.split(/[?#]/)[0];
-  if (!pathname.startsWith("/images/")) return src;
-  try {
-    return existsSync(join(publicDir, decodeURIComponent(pathname.slice(1)))) ? src : "";
   } catch {
     return "";
   }
