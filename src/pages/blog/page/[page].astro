@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import ArticleCard from "../../../components/ArticleCard.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPagePosts, getPostSlug, getPublishedPosts, POSTS_PER_PAGE } from "../../../lib/blog";
+
+export async function getStaticPaths() {
+  const posts = getPublishedPosts(await getCollection("blog"));
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const page = index + 2;
+    return {
+      params: { page: String(page) },
+      props: {
+        page,
+        pagePosts: getPagePosts(posts, page),
+        totalPages
+      }
+    };
+  });
+}
+
+const { page, pagePosts, totalPages } = Astro.props;
+const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+---
+
+<BaseLayout title={`文章归档 第 ${page} 页 - RainPot`} description="RainPot 的文章归档。">
+  <main id="main-content">
+    <section class="archive-hero">
+      <p class="eyebrow"><span class="dot"></span> archive index</p>
+      <h1>文章归档</h1>
+    </section>
+    <label class="filter-shell archive-filter">
+      <span>$ grep</span>
+      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="过滤当前页文章" data-article-filter />
+      <b data-filter-count>{pagePosts.length}/{pagePosts.length}</b>
+    </label>
+    <section class="articles archive-list">
+      {pagePosts.map((post) => (
+        <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} />
+      ))}
+    </section>
+    <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
+    <nav class="archive-pagination" aria-label="文章分页">
+      <a class="button ghost" href={page === 2 ? link("/blog/") : link(`/blog/page/${page - 1}/`)}>上一页</a>
+      <span>第 {page} / {totalPages} 页</span>
+      {page < totalPages && <a class="button ghost" href={link(`/blog/page/${page + 1}/`)}>下一页</a>}
+    </nav>
+  </main>
+  <script>
+    import "../../../scripts/article-card";
+    import "../../../scripts/article-filter";
+  </script>
+</BaseLayout>

@@ -2,9 +2,11 @@
 import { getCollection } from "astro:content";
 import ArticleCard from "../../components/ArticleCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getPostSlug, getPublishedPosts } from "../../lib/blog";
+import { getPagePosts, getPostSlug, getPublishedPosts, POSTS_PER_PAGE } from "../../lib/blog";
 
 const posts = getPublishedPosts(await getCollection("blog"));
+const pagePosts = getPagePosts(posts, 1);
+const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
@@ -16,15 +18,21 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     </section>
     <label class="filter-shell archive-filter">
       <span>$ grep</span>
-      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="过滤文章" data-article-filter />
-      <b data-filter-count>{posts.length}/{posts.length}</b>
+      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="过滤当前页文章" data-article-filter />
+      <b data-filter-count>{pagePosts.length}/{pagePosts.length}</b>
     </label>
     <section class="articles archive-list">
-      {posts.map((post) => (
+      {pagePosts.map((post) => (
         <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} />
       ))}
     </section>
     <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
+    {totalPages > 1 && (
+      <nav class="archive-pagination" aria-label="文章分页">
+        <span>第 1 / {totalPages} 页</span>
+        <a class="button ghost" href={link("/blog/page/2/")}>下一页</a>
+      </nav>
+    )}
   </main>
   <script>
     import "../../scripts/article-card";

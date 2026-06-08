@@ -20,6 +20,8 @@ export type MarkdownHeading = {
 
 export type TableOfContentsItem = MarkdownHeading;
 
+export const POSTS_PER_PAGE = 20;
+
 export function sortPosts<T extends BlogPostLike>(posts: readonly T[]): T[] {
   return [...posts].sort((left, right) => {
     return right.data.date.getTime() - left.data.date.getTime();
@@ -28,6 +30,14 @@ export function sortPosts<T extends BlogPostLike>(posts: readonly T[]): T[] {
 
 export function getPublishedPosts<T extends BlogPostLike>(posts: readonly T[]): T[] {
   return sortPosts(posts).filter((post) => !post.data.draft);
+}
+
+export function getPagePosts<T extends BlogPostLike>(
+  posts: readonly T[],
+  page: number,
+  pageSize = POSTS_PER_PAGE
+): T[] {
+  return posts.slice((page - 1) * pageSize, page * pageSize);
 }
 
 export function estimateReadingMinutes(text: string, wordsPerMinute = 240): number {
