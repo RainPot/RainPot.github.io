@@ -1,4 +1,7 @@
 ---
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { getPostSlug, type BlogPostLike } from "../lib/blog";
 
 type Props = {
@@ -15,9 +18,81 @@ const description = post.data.description ?? "";
 const slug = getPostSlug(post);
 const body = post.body ?? "";
 const filterText = [title, description, slug, ...tags, body].join(" ");
+const publicDir = fileURLToPath(new URL("../../public", import.meta.url));
+const sourceImages = import.meta.glob<{ default: { src?: string } | string }>("../images/**/*.{png,jpg,jpeg,webp,svg}");
+const thumbnailSrc = await getThumbnailSrc(body);
+
+async function getThumbnailSrc(markdown: string): Promise<string> {
+  const matches = [
+    ...markdown.matchAll(/!\[[^\]]*]\(([^)\n]+)\)/g),
+    ...markdown.matchAll(/<img\b[^>]*\bsrc=["']([^"']+)["']/gi)
+  ].sort((left, right) => (left.index ?? 0) - (right.index ?? 0));
+
+  for (const match of matches) {
+    const src = await normalizeImageSrc(match[1]);
+    if (src) return src;
+  }
+  return "";
+}
+
+async function normalizeImageSrc(src: string): Promise<string> {
+  const value = src
+    .trim()
+    .replace(/^<|>$/g, "")
+    .replace(/\s+["'][^"']*["']$/, "");
+
+  if (/^(https?:|data:|blob:)/i.test(value)) return value;
+  const sourceSrc = await sourceImageSrc(value);
+  if (sourceSrc) return sourceSrc;
+  if (value.startsWith("/")) return publicImageSrc(value);
+  if (value.startsWith("../../images/")) return publicImageSrc(`/images/${value.slice("../../images/".length)}`);
+  if (value.startsWith("../images/")) return publicImageSrc(`/images/${value.slice("../images/".length)}`);
+  if (value.startsWith("./images/")) return publicImageSrc(`/images/${value.slice("./images/".length)}`);
+  if (value.startsWith("images/")) return publicImageSrc(`/${value}`);
+  return "";
+}
+
+async function sourceImageSrc(src: string): Promise<string> {
+  const pathname = src.split(/[?#]/)[0];
+  const relativePath = pathname.startsWith("/images/")
+    ? pathname.slice("/images/".length)
+    : pathname.startsWith("../../images/")
+      ? pathname.slice("../../images/".length)
+      : pathname.startsWith("../images/")
+        ? pathname.slice("../images/".length)
+        : pathname.startsWith("./images/")
+          ? pathname.slice("./images/".length)
+          : pathname.startsWith("images/")
+            ? pathname.slice("images/".length)
+            : "";
+
+  if (!relativePath) return "";
+  try {
+    const loadImage = sourceImages[`../images/${decodeURIComponent(relativePath)}`];
+    const image = loadImage ? (await loadImage()).default : undefined;
+    return typeof image === "string" ? image : image?.src ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function publicImageSrc(src: string): string {
+  const pathname = src.split(/[?#]/)[0];
+  if (!pathname.startsWith("/images/")) return src;
+  try {
+    return existsSync(join(publicDir, decodeURIComponent(pathname.slice(1)))) ? src : "";
+  } catch {
+    return "";
+  }
+}
 ---
 
-<a class:list={["article-card", { featured: large }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
+<a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc) }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
+  {thumbnailSrc && (
+    <span class="article-card-thumb" aria-hidden="true">
+      <img src={thumbnailSrc} alt="" loading="lazy" decoding="async" />
+    </span>
+  )}
   <div class="article-card-main">
     <div class="card-meta">
       <span>{date}</span>
