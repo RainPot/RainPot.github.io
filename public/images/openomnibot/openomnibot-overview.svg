@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">OpenOmniBot 端侧 Agent 运行时总览</title>
+  <desc id="desc">图中展示 OpenOmniBot 从 Flutter UI、WebChat 和 MCP 入口进入 Agent 编排层，再通过工具注册表和路由器调用 VLM、终端、文件、记忆、Skill、远端 MCP 和 OmniFlow Function，最终落到 Android 无障碍、Shizuku、Alpine 工作区和 Ktor 服务。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#344054"/>
+    </marker>
+    <style>
+      .bg{fill:#fffdf9}
+      .panel{fill:#ffffff;stroke:#d7dee8;stroke-width:1.4}
+      .entry{fill:#eaf7f2;stroke:#2b8a6e;stroke-width:1.3}
+      .agent{fill:#fff3df;stroke:#c77716;stroke-width:1.3}
+      .tool{fill:#eef2ff;stroke:#5267c6;stroke-width:1.3}
+      .base{fill:#f5f7fb;stroke:#7c8aa3;stroke-width:1.3}
+      .cap{fill:#ffffff;stroke:#aab4c3;stroke-width:1.2}
+      .title{font:700 26px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#182230}
+      .h{font:700 18px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#182230}
+      .t{font:600 15px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#243447}
+      .s{font:400 13px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#5d6b82}
+      .mini{font:500 12px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#4d5b70}
+      .line{fill:none;stroke:#344054;stroke-width:1.8;marker-end:url(#arrow)}
+      .dash{fill:none;stroke:#667085;stroke-width:1.5;stroke-dasharray:6 5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="760"/>
+  <text class="title" x="600" y="48" text-anchor="middle">OpenOmniBot：把 Android 手机做成端侧 Agent 运行时</text>
+  <text class="s" x="600" y="74" text-anchor="middle">入口、Agent 编排、动态工具目录和 Android 执行底座共享同一个工作区</text>
+
+  <rect class="panel" x="50" y="105" width="300" height="470" rx="8"/>
+  <rect class="panel" x="450" y="105" width="300" height="470" rx="8"/>
+  <rect class="panel" x="850" y="105" width="300" height="470" rx="8"/>
+
+  <text class="h" x="200" y="137" text-anchor="middle">入口层</text>
+  <text class="h" x="600" y="137" text-anchor="middle">Agent 编排层</text>
+  <text class="h" x="1000" y="137" text-anchor="middle">工具与外部能力</text>
+
+  <rect class="entry" x="80" y="160" width="240" height="72" rx="8"/>
+  <text class="t" x="200" y="188" text-anchor="middle">Flutter App UI</text>
+  <text class="s" x="200" y="211" text-anchor="middle">聊天 / 设置 / 任务 / 浮层</text>
+
+  <rect class="entry" x="80" y="265" width="240" height="72" rx="8"/>
+  <text class="t" x="200" y="293" text-anchor="middle">WebChat</text>
+  <text class="s" x="200" y="316" text-anchor="middle">Flutter Web 静态包 /webchat</text>
+
+  <rect class="entry" x="80" y="370" width="240" height="72" rx="8"/>
+  <text class="t" x="200" y="398" text-anchor="middle">MCP / 外部客户端</text>
+  <text class="s" x="200" y="421" text-anchor="middle">JSON-RPC / list_tools / call_tool</text>
+
+  <rect class="entry" x="80" y="475" width="240" height="60" rx="8"/>
+  <text class="t" x="200" y="501" text-anchor="middle">MethodChannel</text>
+  <text class="s" x="200" y="523" text-anchor="middle">UI 接入 Android 服务</text>
+
+  <rect class="agent" x="485" y="160" width="230" height="62" rx="8"/>
+  <text class="t" x="600" y="186" text-anchor="middle">OmniAgentExecutor</text>
+  <text class="s" x="600" y="207" text-anchor="middle">每轮请求的总入口</text>
+
+  <rect class="agent" x="485" y="255" width="230" height="86" rx="8"/>
+  <text class="t" x="600" y="281" text-anchor="middle">上下文拼装</text>
+  <text class="s" x="600" y="304" text-anchor="middle">System Prompt / 时间 / 历史</text>
+  <text class="s" x="600" y="326" text-anchor="middle">记忆 / Skill / Function 候选</text>
+
+  <rect class="agent" x="485" y="374" width="230" height="62" rx="8"/>
+  <text class="t" x="600" y="400" text-anchor="middle">LLM 流式一轮</text>
+  <text class="s" x="600" y="421" text-anchor="middle">OpenAI 风格 tool calling</text>
+
+  <rect class="agent" x="485" y="469" width="230" height="62" rx="8"/>
+  <text class="t" x="600" y="495" text-anchor="middle">AgentOrchestrator</text>
+  <text class="s" x="600" y="516" text-anchor="middle">校验 / 分批 / 写回结果</text>
+
+  <rect class="tool" x="880" y="160" width="240" height="74" rx="8"/>
+  <text class="t" x="1000" y="188" text-anchor="middle">AgentToolRegistry</text>
+  <text class="s" x="1000" y="211" text-anchor="middle">静态工具 + MCP + OOB Function</text>
+
+  <rect class="tool" x="880" y="268" width="240" height="66" rx="8"/>
+  <text class="t" x="1000" y="295" text-anchor="middle">AgentToolRouter</text>
+  <text class="s" x="1000" y="317" text-anchor="middle">按 handler 顺序分发工具调用</text>
+
+  <rect class="cap" x="880" y="372" width="108" height="50" rx="8"/>
+  <text class="mini" x="934" y="395" text-anchor="middle">vlm_task</text>
+  <text class="mini" x="934" y="413" text-anchor="middle">手机执行</text>
+  <rect class="cap" x="1012" y="372" width="108" height="50" rx="8"/>
+  <text class="mini" x="1066" y="395" text-anchor="middle">terminal</text>
+  <text class="mini" x="1066" y="413" text-anchor="middle">Alpine</text>
+
+  <rect class="cap" x="880" y="438" width="108" height="50" rx="8"/>
+  <text class="mini" x="934" y="461" text-anchor="middle">文件 / 浏览器</text>
+  <text class="mini" x="934" y="479" text-anchor="middle">工作区工具</text>
+  <rect class="cap" x="1012" y="438" width="108" height="50" rx="8"/>
+  <text class="mini" x="1066" y="461" text-anchor="middle">Memory / Skill</text>
+  <text class="mini" x="1066" y="479" text-anchor="middle">上下文工具</text>
+
+  <rect class="cap" x="880" y="504" width="108" height="50" rx="8"/>
+  <text class="mini" x="934" y="527" text-anchor="middle">远端 MCP</text>
+  <text class="mini" x="934" y="545" text-anchor="middle">动态发现</text>
+  <rect class="cap" x="1012" y="504" width="108" height="50" rx="8"/>
+  <text class="mini" x="1066" y="527" text-anchor="middle">Subagent</text>
+  <text class="mini" x="1066" y="545" text-anchor="middle">OOB Function</text>
+
+  <rect class="base" x="50" y="620" width="1100" height="92" rx="8"/>
+  <text class="h" x="600" y="649" text-anchor="middle">设备与工作区底座</text>
+  <rect class="cap" x="100" y="667" width="225" height="32" rx="8"/>
+  <text class="mini" x="212" y="688" text-anchor="middle">共享 /workspace 与 app data</text>
+  <rect class="cap" x="360" y="667" width="225" height="32" rx="8"/>
+  <text class="mini" x="472" y="688" text-anchor="middle">Accessibility / 截图 / 前台窗口</text>
+  <rect class="cap" x="620" y="667" width="225" height="32" rx="8"/>
+  <text class="mini" x="732" y="688" text-anchor="middle">Shizuku / shell / 前台服务</text>
+  <rect class="cap" x="880" y="667" width="225" height="32" rx="8"/>
+  <text class="mini" x="992" y="688" text-anchor="middle">Ktor MCP / WebChat / RunLog</text>
+
+  <path class="line" d="M320 196 C375 196 420 191 485 191"/>
+  <path class="line" d="M320 301 C380 301 420 282 485 288"/>
+  <path class="line" d="M320 406 C380 406 420 410 485 405"/>
+  <path class="dash" d="M320 505 C375 505 420 500 485 500"/>
+
+  <path class="line" d="M600 222 L600 255"/>
+  <path class="line" d="M600 341 L600 374"/>
+  <path class="line" d="M600 436 L600 469"/>
+  <path class="line" d="M715 500 C770 500 815 302 880 302"/>
+  <path class="dash" d="M715 191 C775 191 820 194 880 197"/>
+  <path class="line" d="M1000 334 L1000 372"/>
+  <path class="line" d="M1000 554 C1000 585 920 606 770 620"/>
+  <path class="dash" d="M600 531 C600 570 520 603 360 620"/>
+</svg>

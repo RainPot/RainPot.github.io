@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
+  <title id="title">OpenOmniBot VLM 手机操作闭环</title>
+  <desc id="desc">图中展示 vlm_task 从外层 Agent 进入 VlmToolCoordinator，再进入 VLMOperationService 的逐步循环：每步重新观测屏幕，补充页面和 OmniFlow 召回上下文，模型输出原生工具调用，经过 grounding 和 preflight 后交给 ActionExecutor 与 AndroidDeviceOperator 执行，再回到下一次观测。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#344054"/>
+    </marker>
+    <style>
+      .bg{fill:#fffdf9}
+      .box{fill:#ffffff;stroke:#d7dee8;stroke-width:1.4}
+      .agent{fill:#eef2ff;stroke:#5267c6;stroke-width:1.3}
+      .coord{fill:#fff3df;stroke:#c77716;stroke-width:1.3}
+      .loop{fill:#f8fbff;stroke:#9aa8bd;stroke-width:1.4}
+      .observe{fill:#eaf7f2;stroke:#2b8a6e;stroke-width:1.3}
+      .think{fill:#fff7ed;stroke:#d17722;stroke-width:1.3}
+      .act{fill:#fdf2f8;stroke:#be477f;stroke-width:1.3}
+      .device{fill:#f2f4f7;stroke:#667085;stroke-width:1.3}
+      .title{font:700 26px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#182230}
+      .h{font:700 18px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#182230}
+      .t{font:600 15px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#243447}
+      .s{font:400 13px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#5d6b82}
+      .mini{font:500 12px -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#4d5b70}
+      .line{fill:none;stroke:#344054;stroke-width:1.8;marker-end:url(#arrow)}
+      .dash{fill:none;stroke:#667085;stroke-width:1.5;stroke-dasharray:6 5;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="780"/>
+  <text class="title" x="600" y="48" text-anchor="middle">vlm_task 不是一次看图点坐标，而是一个手机操作内循环</text>
+  <text class="s" x="600" y="74" text-anchor="middle">外层 Agent 只下发目标，屏幕理解、动作 grounding、执行与反馈都在 VLM loop 内完成</text>
+
+  <rect class="agent" x="70" y="112" width="210" height="70" rx="8"/>
+  <text class="t" x="175" y="141" text-anchor="middle">Agent tool</text>
+  <text class="s" x="175" y="163" text-anchor="middle">vlm_task(goal, package)</text>
+
+  <rect class="coord" x="360" y="112" width="210" height="70" rx="8"/>
+  <text class="t" x="465" y="141" text-anchor="middle">VlmToolCoordinator</text>
+  <text class="s" x="465" y="163" text-anchor="middle">权限 / 锁屏 / 任务状态</text>
+
+  <rect class="coord" x="650" y="112" width="210" height="70" rx="8"/>
+  <text class="t" x="755" y="141" text-anchor="middle">McpTaskManager</text>
+  <text class="s" x="755" y="163" text-anchor="middle">等待输入 / 取消 / 回复</text>
+
+  <rect class="coord" x="920" y="112" width="210" height="70" rx="8"/>
+  <text class="t" x="1025" y="141" text-anchor="middle">VLMOperationService</text>
+  <text class="s" x="1025" y="163" text-anchor="middle">step loop / maxSteps</text>
+
+  <path class="line" d="M280 147 L360 147"/>
+  <path class="line" d="M570 147 L650 147"/>
+  <path class="line" d="M860 147 L920 147"/>
+
+  <rect class="loop" x="60" y="230" width="1080" height="410" rx="8"/>
+  <text class="h" x="600" y="262" text-anchor="middle">每一步都重新观察当前手机屏幕，再决定下一步</text>
+
+  <rect class="observe" x="90" y="295" width="210" height="82" rx="8"/>
+  <text class="t" x="195" y="322" text-anchor="middle">fresh observe</text>
+  <text class="s" x="195" y="344" text-anchor="middle">截图 / XML / 前台包名</text>
+  <text class="s" x="195" y="364" text-anchor="middle">过滤浮层与系统噪声</text>
+
+  <rect class="think" x="350" y="295" width="220" height="82" rx="8"/>
+  <text class="t" x="460" y="322" text-anchor="middle">上下文增强</text>
+  <text class="s" x="460" y="344" text-anchor="middle">page skill / indexed evidence</text>
+  <text class="s" x="460" y="364" text-anchor="middle">OmniFlow Function recall</text>
+
+  <rect class="think" x="620" y="295" width="210" height="82" rx="8"/>
+  <text class="t" x="725" y="322" text-anchor="middle">VLM 原生 tool_call</text>
+  <text class="s" x="725" y="344" text-anchor="middle">click / input / swipe</text>
+  <text class="s" x="725" y="364" text-anchor="middle">call_tool / finished / ask</text>
+
+  <rect class="act" x="890" y="295" width="210" height="82" rx="8"/>
+  <text class="t" x="995" y="322" text-anchor="middle">grounding + preflight</text>
+  <text class="s" x="995" y="344" text-anchor="middle">element_index 优先</text>
+  <text class="s" x="995" y="364" text-anchor="middle">坐标只是兜底</text>
+
+  <rect class="act" x="890" y="462" width="210" height="82" rx="8"/>
+  <text class="t" x="995" y="489" text-anchor="middle">ActionExecutor</text>
+  <text class="s" x="995" y="511" text-anchor="middle">把 UIAction 转为设备动作</text>
+  <text class="s" x="995" y="531" text-anchor="middle">失败可重试或返回诊断</text>
+
+  <rect class="device" x="620" y="462" width="210" height="82" rx="8"/>
+  <text class="t" x="725" y="489" text-anchor="middle">AndroidDeviceOperator</text>
+  <text class="s" x="725" y="511" text-anchor="middle">Accessibility 优先</text>
+  <text class="s" x="725" y="531" text-anchor="middle">必要时 Shizuku / shell</text>
+
+  <rect class="observe" x="350" y="462" width="220" height="82" rx="8"/>
+  <text class="t" x="460" y="489" text-anchor="middle">post action observe</text>
+  <text class="s" x="460" y="511" text-anchor="middle">确认页面变化</text>
+  <text class="s" x="460" y="531" text-anchor="middle">写入 step 事件与诊断</text>
+
+  <rect class="agent" x="90" y="462" width="210" height="96" rx="8"/>
+  <text class="t" x="195" y="489" text-anchor="middle">tool result</text>
+  <text class="s" x="195" y="511" text-anchor="middle">FINISHED / WAITING_INPUT</text>
+  <text class="s" x="195" y="531" text-anchor="middle">ERROR / TIMEOUT</text>
+  <text class="s" x="195" y="551" text-anchor="middle">CANCELLED</text>
+
+  <path class="line" d="M1025 182 C1025 216 195 205 195 295"/>
+  <path class="line" d="M300 336 L350 336"/>
+  <path class="line" d="M570 336 L620 336"/>
+  <path class="line" d="M830 336 L890 336"/>
+  <path class="line" d="M995 377 L995 462"/>
+  <path class="line" d="M890 503 L830 503"/>
+  <path class="line" d="M620 503 L570 503"/>
+  <path class="line" d="M350 503 L300 503"/>
+  <path class="dash" d="M195 462 C145 430 145 385 195 377"/>
+
+  <rect class="box" x="90" y="675" width="310" height="52" rx="8"/>
+  <text class="mini" x="245" y="696" text-anchor="middle">上传图片识别不走 vlm_task</text>
+  <text class="mini" x="245" y="716" text-anchor="middle">vlm_task 只用于当前手机屏幕自动化</text>
+
+  <rect class="box" x="445" y="675" width="310" height="52" rx="8"/>
+  <text class="mini" x="600" y="696" text-anchor="middle">Function recall 是候选，不是盲 replay</text>
+  <text class="mini" x="600" y="716" text-anchor="middle">执行后仍回到 fresh observe</text>
+
+  <rect class="box" x="800" y="675" width="310" height="52" rx="8"/>
+  <text class="mini" x="955" y="696" text-anchor="middle">锁屏、权限、确认类动作会中断</text>
+  <text class="mini" x="955" y="716" text-anchor="middle">外层 Agent 再向用户澄清或报错</text>
+</svg>
