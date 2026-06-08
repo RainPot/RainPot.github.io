@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f4156"/>
+    </marker>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #1f2937; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 24px; fill: #5b6472; }
+      .card-title { font-size: 28px; font-weight: 800; }
+      .card-text { font-size: 23px; fill: #4b5563; }
+      .small { font-size: 20px; fill: #5f6b7a; }
+      .card { fill: #ffffff; stroke: #c9d4e2; stroke-width: 2; rx: 8; }
+      .focus { fill: #f0fdfa; stroke: #5eead4; stroke-width: 2; rx: 8; }
+      .warn { fill: #fff7ed; stroke: #fdba74; stroke-width: 2; rx: 8; }
+      .arrow { fill: none; stroke: #2f4156; stroke-width: 4; marker-end: url(#arrow); }
+      .thin { fill: none; stroke: #718096; stroke-width: 3; marker-end: url(#arrow); }
+      .fail { fill: none; stroke: #b45309; stroke-width: 3; marker-end: url(#arrow); stroke-dasharray: 9 8; }
+      .label { font-size: 19px; font-weight: 700; fill: #92400e; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="860" fill="#f8fafc"/>
+  <text x="60" y="70" class="title">评论定位：把模型意见钉到真实行号</text>
+  <text x="60" y="112" class="subtitle">模型只提供内容和 existing_code；行号由 diff 匹配、全文兜底和 re-location 共同确定。</text>
+
+  <rect x="60" y="190" width="290" height="160" class="card"/>
+  <text x="88" y="244" class="card-title">code_comment</text>
+  <text x="88" y="290" class="card-text">content</text>
+  <text x="88" y="324" class="card-text">existing_code</text>
+
+  <rect x="430" y="190" width="290" height="160" class="focus"/>
+  <text x="458" y="244" class="card-title">ParseComments</text>
+  <text x="458" y="290" class="card-text">补默认 path</text>
+  <text x="458" y="324" class="card-text">生成 LlmComment</text>
+
+  <rect x="800" y="190" width="290" height="160" class="card"/>
+  <text x="828" y="244" class="card-title">Hunk 新侧匹配</text>
+  <text x="828" y="290" class="card-text">context + added</text>
+  <text x="828" y="324" class="card-text">连续行滑窗</text>
+
+  <rect x="800" y="445" width="290" height="160" class="card"/>
+  <text x="828" y="499" class="card-title">Hunk 旧侧匹配</text>
+  <text x="828" y="545" class="card-text">context + deleted</text>
+  <text x="828" y="579" class="card-text">仍然只做行号解析</text>
+
+  <rect x="430" y="445" width="290" height="160" class="card"/>
+  <text x="458" y="499" class="card-title">全文兜底</text>
+  <text x="458" y="545" class="card-text">扫描 NewFileContent</text>
+  <text x="458" y="579" class="card-text">匹配连续代码片段</text>
+
+  <rect x="60" y="445" width="290" height="160" class="warn"/>
+  <text x="88" y="499" class="card-title">Re-location</text>
+  <text x="88" y="545" class="card-text">LLM 重抽最小片段</text>
+  <text x="88" y="579" class="card-text">再跑一次匹配</text>
+
+  <rect x="1160" y="300" width="230" height="185" class="focus"/>
+  <text x="1188" y="354" class="card-title">Collector</text>
+  <text x="1188" y="400" class="card-text">保存评论</text>
+  <text x="1188" y="434" class="card-text">输出前再兜底</text>
+
+  <rect x="1160" y="600" width="230" height="110" class="card"/>
+  <text x="1188" y="650" class="card-title">最终输出</text>
+  <text x="1188" y="694" class="card-text">path:start-end</text>
+
+  <path class="arrow" d="M 350 270 H 420"/>
+  <path class="arrow" d="M 720 270 H 790"/>
+  <path class="arrow" d="M 1090 270 H 1150 V 365"/>
+  <path class="fail" d="M 945 350 V 435"/>
+  <text x="965" y="402" class="label">失败</text>
+  <path class="fail" d="M 800 525 H 730"/>
+  <text x="742" y="504" class="label">失败</text>
+  <path class="fail" d="M 430 525 H 360"/>
+  <text x="372" y="504" class="label">失败</text>
+  <path class="thin" d="M 350 525 H 420"/>
+  <path class="thin" d="M 720 525 H 790"/>
+  <path class="thin" d="M 1090 525 H 1150 V 410"/>
+  <path class="arrow" d="M 1275 485 V 590"/>
+
+  <rect x="60" y="755" width="1330" height="58" class="card"/>
+  <text x="88" y="792" class="small">定位策略的意义：模型不直接决定行号，行号来自可重复的文本匹配；只有匹配失败时才让 LLM 辅助重写定位片段。</text>
+</svg>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f4156"/>
+    </marker>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #1f2937; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 24px; fill: #5b6472; }
+      .card-title { font-size: 28px; font-weight: 800; }
+      .card-text { font-size: 23px; fill: #4b5563; }
+      .note { font-size: 20px; fill: #5f6b7a; }
+      .card { fill: #ffffff; stroke: #c9d4e2; stroke-width: 2; rx: 8; }
+      .decision { fill: #fff7ed; stroke: #fdba74; stroke-width: 2; }
+      .side { fill: #eef7ff; stroke: #b6d9f6; stroke-width: 2; rx: 8; }
+      .arrow { fill: none; stroke: #2f4156; stroke-width: 4; marker-end: url(#arrow); }
+      .thin { fill: none; stroke: #718096; stroke-width: 3; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #0f766e; stroke-width: 4; marker-end: url(#arrow); }
+      .label { font-size: 19px; font-weight: 700; fill: #0f5132; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="900" fill="#f8fafc"/>
+  <text x="60" y="70" class="title">单文件审查：Plan + Main Tool Loop</text>
+  <text x="60" y="112" class="subtitle">每个变更文件独立跑一条流水线，并受并发数、超时、工具次数和 token 阈值约束。</text>
+
+  <rect x="60" y="195" width="250" height="150" class="card"/>
+  <text x="88" y="248" class="card-title">Diff + Rule</text>
+  <text x="88" y="294" class="card-text">注入当前文件 diff</text>
+  <text x="88" y="328" class="card-text">匹配审查规则</text>
+
+  <polygon points="475,180 625,270 475,360 325,270" class="decision"/>
+  <text x="416" y="250" class="card-title">是否需要</text>
+  <text x="415" y="288" class="card-title">计划阶段</text>
+  <text x="404" y="326" class="note">默认阈值 50 行</text>
+
+  <rect x="660" y="195" width="270" height="150" class="card"/>
+  <text x="688" y="248" class="card-title">Plan Task</text>
+  <text x="688" y="294" class="card-text">输出风险点 JSON</text>
+  <text x="688" y="328" class="card-text">只描述工具意图</text>
+
+  <rect x="1010" y="195" width="310" height="150" class="card"/>
+  <text x="1038" y="248" class="card-title">Main Prompt</text>
+  <text x="1038" y="294" class="card-text">diff / 规则 / 计划</text>
+  <text x="1038" y="328" class="card-text">一起进入审查循环</text>
+
+  <rect x="1010" y="465" width="310" height="170" class="card"/>
+  <text x="1038" y="518" class="card-title">LLM 请求</text>
+  <text x="1038" y="564" class="card-text">携带主阶段工具定义</text>
+  <text x="1038" y="598" class="card-text">最多 30 轮工具请求</text>
+
+  <rect x="640" y="465" width="300" height="170" class="card"/>
+  <text x="668" y="518" class="card-title">执行工具</text>
+  <text x="668" y="564" class="card-text">读文件 / 搜索 / 读 diff</text>
+  <text x="668" y="598" class="card-text">评论 / task_done</text>
+
+  <rect x="290" y="465" width="270" height="170" class="card"/>
+  <text x="318" y="518" class="card-title">追加消息</text>
+  <text x="318" y="564" class="card-text">assistant + tool_result</text>
+  <text x="318" y="598" class="card-text">60% 异步压缩</text>
+
+  <rect x="640" y="710" width="300" height="120" class="side"/>
+  <text x="668" y="760" class="card-title">code_comment</text>
+  <text x="668" y="804" class="card-text">异步进入定位池</text>
+
+  <rect x="1010" y="710" width="310" height="120" class="card"/>
+  <text x="1038" y="760" class="card-title">收集结果</text>
+  <text x="1038" y="804" class="card-text">CommentCollector 汇总</text>
+
+  <path class="arrow" d="M 310 270 H 325"/>
+  <path class="arrow" d="M 625 270 H 650"/>
+  <text x="636" y="250" class="label">是</text>
+  <path class="arrow" d="M 930 270 H 1000"/>
+  <path class="arrow" d="M 1320 270 H 1360 V 550 H 1330"/>
+  <path class="arrow" d="M 1010 550 H 950"/>
+  <path class="thin" d="M 790 635 V 700"/>
+  <path class="arrow" d="M 940 770 H 1000"/>
+  <path class="loop" d="M 640 550 H 570 V 420 H 1165 V 455"/>
+  <text x="352" y="444" class="label">需要更多上下文</text>
+  <path class="arrow" d="M 1165 635 V 700"/>
+
+  <rect x="60" y="710" width="430" height="120" class="side"/>
+  <text x="88" y="760" class="card-title">上下文压缩</text>
+  <text x="88" y="804" class="card-text">80% 同步压缩后才继续</text>
+
+  <path class="thin" d="M 425 635 V 700"/>
+</svg>

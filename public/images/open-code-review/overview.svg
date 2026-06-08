@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f4156"/>
+    </marker>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #1f2937; }
+      .title { font-size: 42px; font-weight: 800; }
+      .subtitle { font-size: 24px; fill: #5b6472; }
+      .lane { font-size: 24px; font-weight: 700; fill: #304156; }
+      .card-title { font-size: 30px; font-weight: 800; }
+      .card-text { font-size: 24px; fill: #4b5563; }
+      .small { font-size: 20px; fill: #5f6b7a; }
+      .card { fill: #ffffff; stroke: #c9d4e2; stroke-width: 2; rx: 8; }
+      .soft { fill: #f5f8fb; stroke: #d8e2ee; stroke-width: 2; rx: 8; }
+      .pill { font-size: 19px; font-weight: 700; fill: #ffffff; }
+      .arrow { fill: none; stroke: #2f4156; stroke-width: 4; marker-end: url(#arrow); }
+      .thin { fill: none; stroke: #718096; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1440" height="900" fill="#f8fafc"/>
+  <text x="60" y="70" class="title">Open Code Review 总览：确定性流水线托住 Agent</text>
+  <text x="60" y="112" class="subtitle">先用工程逻辑固定范围、规则和并发，再让 LLM 在受限工具集里审查每个文件。</text>
+
+  <text x="92" y="177" class="lane">输入</text>
+  <text x="415" y="177" class="lane">确定性工程</text>
+  <text x="775" y="177" class="lane">Agent 子任务</text>
+  <text x="1120" y="177" class="lane">输出与复盘</text>
+
+  <rect x="60" y="210" width="260" height="250" class="card"/>
+  <rect x="86" y="235" width="112" height="34" rx="8" fill="#2563eb"/>
+  <text x="108" y="258" class="pill">Git Diff</text>
+  <text x="86" y="312" class="card-title">三种审查入口</text>
+  <text x="86" y="358" class="card-text">workspace</text>
+  <text x="86" y="394" class="card-text">range</text>
+  <text x="86" y="430" class="card-text">commit</text>
+
+  <rect x="390" y="210" width="300" height="250" class="card"/>
+  <rect x="416" y="235" width="112" height="34" rx="8" fill="#0f766e"/>
+  <text x="443" y="258" class="pill">过滤</text>
+  <text x="416" y="312" class="card-title">文件筛选</text>
+  <text x="416" y="358" class="card-text">扩展名白名单</text>
+  <text x="416" y="394" class="card-text">默认路径排除</text>
+  <text x="416" y="430" class="card-text">用户 include / exclude</text>
+
+  <rect x="390" y="525" width="300" height="210" class="card"/>
+  <rect x="416" y="550" width="112" height="34" rx="8" fill="#7c3aed"/>
+  <text x="443" y="573" class="pill">规则</text>
+  <text x="416" y="627" class="card-title">规则解析</text>
+  <text x="416" y="673" class="card-text">自定义规则优先</text>
+  <text x="416" y="709" class="card-text">内置语言规则兜底</text>
+
+  <rect x="760" y="210" width="300" height="250" class="card"/>
+  <rect x="786" y="235" width="112" height="34" rx="8" fill="#ca8a04"/>
+  <text x="817" y="258" class="pill">分治</text>
+  <text x="786" y="312" class="card-title">文件级并发</text>
+  <text x="786" y="358" class="card-text">每个文件一个 subtask</text>
+  <text x="786" y="394" class="card-text">大 diff 先做计划</text>
+  <text x="786" y="430" class="card-text">上下文彼此隔离</text>
+
+  <rect x="760" y="525" width="300" height="210" class="card"/>
+  <rect x="786" y="550" width="112" height="34" rx="8" fill="#dc2626"/>
+  <text x="822" y="573" class="pill">Agent</text>
+  <text x="786" y="627" class="card-title">主审查循环</text>
+  <text x="786" y="673" class="card-text">专用工具调用</text>
+  <text x="786" y="709" class="card-text">评论或 task_done 收束</text>
+
+  <rect x="1120" y="210" width="260" height="250" class="card"/>
+  <rect x="1146" y="235" width="112" height="34" rx="8" fill="#0891b2"/>
+  <text x="1173" y="258" class="pill">定位</text>
+  <text x="1146" y="312" class="card-title">评论后处理</text>
+  <text x="1146" y="358" class="card-text">滑窗匹配行号</text>
+  <text x="1146" y="394" class="card-text">失败后 re-location</text>
+  <text x="1146" y="430" class="card-text">统一收集评论</text>
+
+  <rect x="1120" y="525" width="260" height="210" class="card"/>
+  <rect x="1146" y="550" width="112" height="34" rx="8" fill="#475569"/>
+  <text x="1173" y="573" class="pill">结果</text>
+  <text x="1146" y="627" class="card-title">输出与记录</text>
+  <text x="1146" y="673" class="card-text">text / json</text>
+  <text x="1146" y="709" class="card-text">JSONL 记录 / viewer</text>
+
+  <path class="arrow" d="M 320 335 H 380"/>
+  <path class="thin" d="M 540 460 V 515"/>
+  <path class="arrow" d="M 690 335 H 750"/>
+  <path class="thin" d="M 910 460 V 515"/>
+  <path class="arrow" d="M 1060 335 H 1110"/>
+  <path class="thin" d="M 1250 460 V 515"/>
+
+  <rect x="60" y="785" width="1320" height="58" class="soft"/>
+  <text x="88" y="822" class="small">核心取舍：文件范围、规则匹配、并发、行号定位由工程代码约束；模型只负责需要语义判断和上下文召回的部分。</text>
+</svg>
