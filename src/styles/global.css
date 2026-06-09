@@ -856,6 +856,13 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   padding-top: 14px;
 }
 
+.footer-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--muted);
+}
+
 .footer a {
   color: var(--muted);
   text-decoration: none;

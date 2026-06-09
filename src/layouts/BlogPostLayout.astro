@@ -27,6 +27,8 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
         <div class="post-meta">
           <span>{frontmatter.date.toISOString().slice(0, 10)}</span>
           <span>{readingTime} 分钟阅读</span>
+          <span>阅读 <span id="busuanzi_page_pv">加载中...</span> 次</span>
+          <span>访客 <span id="busuanzi_page_uv">加载中...</span> 人</span>
         </div>
         <h1>{frontmatter.title}</h1>
         <p class="post-description">{frontmatter.description}</p>
