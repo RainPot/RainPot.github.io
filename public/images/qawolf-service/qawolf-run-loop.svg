@@ -1,55 +1,79 @@
-<svg width="1440" height="820" viewBox="0 0 1440 820" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1440" height="820" fill="#F8FAFC"/>
-  <rect x="56" y="48" width="1328" height="724" rx="28" fill="#FFFFFF" stroke="#D8E0EA" stroke-width="2"/>
-  <text x="96" y="110" fill="#111827" font-family="Arial, sans-serif" font-size="42" font-weight="700">一次 QA Wolf 运行如何变成发布信号</text>
-  <text x="96" y="156" fill="#4B5563" font-family="Arial, sans-serif" font-size="28">它不是只跑脚本，而是把触发、隔离执行、失败调查和反馈串成闭环</text>
+<svg width="1600" height="1120" viewBox="0 0 1600 1120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1120" fill="#F8FAFC"/>
+  <rect x="56" y="48" width="1488" height="1016" rx="28" fill="#FFFFFF" stroke="#D8E0EA" stroke-width="2"/>
+  <text x="96" y="116" fill="#111827" font-family="Arial, sans-serif" font-size="56" font-weight="700">运行、重试、调查与清理</text>
+  <text x="96" y="170" fill="#4B5563" font-family="Arial, sans-serif" font-size="34">QA Wolf 的发布信号来自运行状态，而不是单次 pass/fail</text>
 
-  <rect x="112" y="238" width="230" height="128" rx="18" fill="#EEF2FF" stroke="#A5B4FC" stroke-width="2"/>
-  <text x="148" y="290" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">触发运行</text>
-  <text x="148" y="332" fill="#475569" font-family="Arial, sans-serif" font-size="25">CI / 定时 / 手动</text>
+  <text x="116" y="250" fill="#0F172A" font-family="Arial, sans-serif" font-size="40" font-weight="700">A. 运行触发与三轮尝试</text>
+  <rect x="116" y="292" width="252" height="110" rx="16" fill="#EEF2FF" stroke="#A5B4FC" stroke-width="2"/>
+  <text x="150" y="330" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">触发 run</text>
+  <text x="150" y="382" fill="#475569" font-family="Arial, sans-serif" font-size="28">手动 / 定时 / CI</text>
 
-  <rect x="426" y="238" width="230" height="128" rx="18" fill="#ECFEFF" stroke="#67E8F9" stroke-width="2"/>
-  <text x="462" y="290" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">准备环境</text>
-  <text x="462" y="332" fill="#475569" font-family="Arial, sans-serif" font-size="25">浏览器、设备、数据</text>
+  <rect x="436" y="292" width="252" height="110" rx="16" fill="#ECFEFF" stroke="#67E8F9" stroke-width="2"/>
+  <text x="470" y="330" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">第 1 次</text>
+  <text x="470" y="382" fill="#475569" font-family="Arial, sans-serif" font-size="28">默认并发执行</text>
 
-  <rect x="740" y="238" width="230" height="128" rx="18" fill="#F0FDF4" stroke="#86EFAC" stroke-width="2"/>
-  <text x="776" y="290" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">并行执行</text>
-  <text x="776" y="332" fill="#475569" font-family="Arial, sans-serif" font-size="25">每条用例隔离运行</text>
+  <rect x="756" y="292" width="252" height="110" rx="16" fill="#F0FDF4" stroke="#86EFAC" stroke-width="2"/>
+  <text x="790" y="330" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">第 2 次</text>
+  <text x="790" y="382" fill="#475569" font-family="Arial, sans-serif" font-size="28">失败项五个一批</text>
 
-  <rect x="1054" y="238" width="230" height="128" rx="18" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
-  <text x="1090" y="290" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">沉淀证据</text>
-  <text x="1090" y="332" fill="#475569" font-family="Arial, sans-serif" font-size="25">视频、日志、trace</text>
+  <rect x="1076" y="292" width="252" height="110" rx="16" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text x="1110" y="330" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">第 3 次</text>
+  <text x="1110" y="382" fill="#475569" font-family="Arial, sans-serif" font-size="28">仍失败则串行</text>
 
-  <path d="M354 302H406" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-  <path d="M406 302L392 288M406 302L392 316" stroke="#475569" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M668 302H720" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-  <path d="M720 302L706 288M720 302L706 316" stroke="#475569" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M982 302H1034" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-  <path d="M1034 302L1020 288M1034 302L1020 316" stroke="#475569" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M380 347H416" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M416 347L400 331M416 347L400 363" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M700 347H736" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M736 347L720 331M736 347L720 363" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1020 347H1056" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1056 347L1040 331M1056 347L1040 363" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <rect x="250" y="486" width="276" height="136" rx="18" fill="#FDF2F8" stroke="#F9A8D4" stroke-width="2"/>
-  <text x="286" y="540" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">失败调查</text>
-  <text x="286" y="582" fill="#475569" font-family="Arial, sans-serif" font-size="25">区分产品缺陷</text>
-  <text x="286" y="616" fill="#475569" font-family="Arial, sans-serif" font-size="25">还是测试维护问题</text>
+  <text x="116" y="502" fill="#0F172A" font-family="Arial, sans-serif" font-size="40" font-weight="700">B. 运行状态如何解释</text>
+  <rect x="116" y="544" width="360" height="122" rx="18" fill="#F0FDF4" stroke="#86EFAC" stroke-width="2"/>
+  <text x="154" y="584" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">Completed</text>
+  <text x="154" y="636" fill="#475569" font-family="Arial, sans-serif" font-size="28">全部通过或已标记</text>
 
-  <rect x="582" y="486" width="276" height="136" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-  <text x="618" y="540" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">输出结果</text>
-  <text x="618" y="582" fill="#475569" font-family="Arial, sans-serif" font-size="25">Bug 报告</text>
-  <text x="618" y="616" fill="#475569" font-family="Arial, sans-serif" font-size="25">维护报告或通过</text>
+  <rect x="620" y="544" width="360" height="122" rx="18" fill="#FEF3C7" stroke="#FBBF24" stroke-width="2"/>
+  <text x="658" y="584" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">Needs Investigation</text>
+  <text x="658" y="636" fill="#475569" font-family="Arial, sans-serif" font-size="28">仍有失败未处理</text>
 
-  <rect x="914" y="486" width="276" height="136" rx="18" fill="#F0F9FF" stroke="#7DD3FC" stroke-width="2"/>
-  <text x="950" y="540" fill="#0F172A" font-family="Arial, sans-serif" font-size="31" font-weight="700">反馈发布</text>
-  <text x="950" y="582" fill="#475569" font-family="Arial, sans-serif" font-size="25">状态检查</text>
-  <text x="950" y="616" fill="#475569" font-family="Arial, sans-serif" font-size="25">消息和工单同步</text>
+  <rect x="1124" y="544" width="360" height="122" rx="18" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="1162" y="584" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">Canceled</text>
+  <text x="1162" y="636" fill="#475569" font-family="Arial, sans-serif" font-size="28">同分支环境有新 run</text>
 
-  <path d="M1169 386V432C1169 454 1151 472 1129 472H388C366 472 348 490 348 512" stroke="#64748B" stroke-width="4" stroke-linecap="round"/>
-  <path d="M348 512L334 498M348 512L362 498" stroke="#64748B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M538 554H562" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-  <path d="M562 554L548 540M562 554L548 568" stroke="#475569" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M870 554H894" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
-  <path d="M894 554L880 540M894 554L880 568" stroke="#475569" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="650" y="438" width="300" height="64" rx="32" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="704" y="480" fill="#475569" font-family="Arial, sans-serif" font-size="30" font-weight="700">运行状态汇总</text>
+  <path d="M1202 420V470H972" stroke="#64748B" stroke-width="5" stroke-linecap="round"/>
+  <path d="M972 470L988 454M972 470L988 486" stroke="#64748B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <path d="M1052 642V680C1052 702 1034 720 1012 720H428C406 720 388 702 388 680V646" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 12"/>
-  <path d="M388 646L374 660M388 646L402 660" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="496" y="718" fill="#475569" font-family="Arial, sans-serif" font-size="26">应用变化和失败结论会反哺测试代码与覆盖策略</text>
+  <text x="116" y="766" fill="#0F172A" font-family="Arial, sans-serif" font-size="40" font-weight="700">C. 失败进入 Investigation 后的决策</text>
+  <rect x="116" y="808" width="276" height="154" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="150" y="852" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">收集证据</text>
+  <text x="150" y="902" fill="#475569" font-family="Arial, sans-serif" font-size="28">失败行 / attempt</text>
+  <text x="150" y="944" fill="#475569" font-family="Arial, sans-serif" font-size="28">视频 / 日志 / trace</text>
+
+  <rect x="492" y="808" width="276" height="154" rx="18" fill="#ECFEFF" stroke="#67E8F9" stroke-width="2"/>
+  <text x="526" y="852" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">Flake</text>
+  <text x="526" y="902" fill="#475569" font-family="Arial, sans-serif" font-size="28">重试最新版本</text>
+  <text x="526" y="944" fill="#475569" font-family="Arial, sans-serif" font-size="28">或复制完整 run</text>
+
+  <rect x="844" y="808" width="276" height="154" rx="18" fill="#FDF2F8" stroke="#F9A8D4" stroke-width="2"/>
+  <text x="878" y="852" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">产品 Bug</text>
+  <text x="878" y="902" fill="#475569" font-family="Arial, sans-serif" font-size="28">提交 bug report</text>
+  <text x="878" y="944" fill="#475569" font-family="Arial, sans-serif" font-size="28">优先级影响状态</text>
+
+  <rect x="1196" y="808" width="276" height="154" rx="18" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text x="1230" y="852" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">测试坏了</text>
+  <text x="1230" y="902" fill="#475569" font-family="Arial, sans-serif" font-size="28">修代码或建维护单</text>
+  <text x="1230" y="944" fill="#475569" font-family="Arial, sans-serif" font-size="28">维护期跳过调度</text>
+
+  <path d="M404 871H472" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M472 871L456 855M472 871L456 887" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M780 871H824" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M824 871L808 855M824 871L808 887" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1132 871H1176" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1176 871L1160 855M1176 871L1160 887" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="410" y="982" width="780" height="52" rx="26" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="452" y="1018" fill="#475569" font-family="Arial, sans-serif" font-size="30">所有失败项被重试、修复、绕过、挂 Bug 或维护后，run 才能回到 Completed</text>
 </svg>

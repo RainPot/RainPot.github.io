@@ -1,0 +1,74 @@
+<svg width="1600" height="960" viewBox="0 0 1600 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="960" fill="#F7FAFC"/>
+  <rect x="56" y="48" width="1488" height="844" rx="28" fill="#FFFFFF" stroke="#D7DEE8" stroke-width="2"/>
+  <text x="96" y="116" fill="#111827" font-family="Arial, sans-serif" font-size="56" font-weight="700">Mapping 到 Automate 的细节链路</text>
+  <text x="96" y="170" fill="#4B5563" font-family="Arial, sans-serif" font-size="34">官方文档里的动作可以拆成两个连续阶段：先产出覆盖地图，再补成可运行代码</text>
+
+  <rect x="104" y="236" width="642" height="520" rx="24" fill="#F0F9FF" stroke="#7DD3FC" stroke-width="2"/>
+  <text x="144" y="296" fill="#0F172A" font-family="Arial, sans-serif" font-size="44" font-weight="700">阶段 A：Mapping</text>
+
+  <rect x="150" y="340" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="2"/>
+  <text x="180" y="374" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">打开会话</text>
+  <text x="180" y="426" fill="#475569" font-family="Arial, sans-serif" font-size="28">Map → New Flows</text>
+
+  <rect x="462" y="340" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="2"/>
+  <text x="492" y="374" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">给目标</text>
+  <text x="492" y="426" fill="#475569" font-family="Arial, sans-serif" font-size="28">URL / 指令 / 文件</text>
+
+  <rect x="150" y="492" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="2"/>
+  <text x="180" y="526" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">实时引导</text>
+  <text x="180" y="578" fill="#475569" font-family="Arial, sans-serif" font-size="28">登录、范围、澄清</text>
+
+  <rect x="462" y="492" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="2"/>
+  <text x="492" y="526" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">审核新流</text>
+  <text x="492" y="578" fill="#475569" font-family="Arial, sans-serif" font-size="28">右侧 New 列表</text>
+
+  <rect x="306" y="644" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#BAE6FD" stroke-width="2"/>
+  <text x="336" y="678" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">发布 Stubs</text>
+  <text x="336" y="730" fill="#475569" font-family="Arial, sans-serif" font-size="28">创建目录和空 flow</text>
+
+  <rect x="854" y="236" width="642" height="520" rx="24" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text x="894" y="296" fill="#0F172A" font-family="Arial, sans-serif" font-size="44" font-weight="700">阶段 B：Automate</text>
+
+  <rect x="900" y="340" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="930" y="374" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">描述流程</text>
+  <text x="930" y="426" fill="#475569" font-family="Arial, sans-serif" font-size="28">文字或语音输入</text>
+
+  <rect x="1212" y="340" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="1242" y="374" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">生成代码</text>
+  <text x="1242" y="426" fill="#475569" font-family="Arial, sans-serif" font-size="28">Playwright/Appium</text>
+
+  <rect x="900" y="492" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="930" y="526" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">运行验证</text>
+  <text x="930" y="578" fill="#475569" font-family="Arial, sans-serif" font-size="28">浏览器面板执行</text>
+
+  <rect x="1212" y="492" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="1242" y="526" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">调试修复</text>
+  <text x="1242" y="578" fill="#475569" font-family="Arial, sans-serif" font-size="28">Logs / Elements / AI</text>
+
+  <rect x="1056" y="644" width="236" height="96" rx="16" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="1086" y="678" fill="#111827" font-family="Arial, sans-serif" font-size="34" font-weight="700">发布代码</text>
+  <text x="1086" y="730" fill="#475569" font-family="Arial, sans-serif" font-size="28">进入运行体系</text>
+
+  <path d="M398 388H442" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M442 388L426 372M442 388L426 404" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M580 452V472" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M580 472L564 456M580 472L596 456" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M450 540H406" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M406 540L422 524M406 540L422 556" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M268 604V624C268 656 274 692 286 692" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M286 692L270 676M286 692L270 708" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M554 692H834" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M834 692L818 676M834 692L818 708" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1148 388H1192" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1192 388L1176 372M1192 388L1176 404" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1330 452V472" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1330 472L1314 456M1330 472L1346 456" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1200 540H1156" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1156 540L1172 524M1156 540L1172 556" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1018 604V624C1018 656 1024 692 1036 692" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  <path d="M1036 692L1020 676M1036 692L1020 708" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="270" y="806" width="1060" height="52" rx="26" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="312" y="842" fill="#475569" font-family="Arial, sans-serif" font-size="30">关键分界：Mapping 产出“要测什么”，Automate 把它补成“能稳定运行的测试代码”</text>
+</svg>
