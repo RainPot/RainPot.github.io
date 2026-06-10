@@ -421,11 +421,12 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
 
 .archive-list {
   max-width: 920px;
+  margin: 0 auto;
 }
 
 .archive-hero {
   max-width: 760px;
-  margin-bottom: 22px;
+  margin: 0 auto 22px;
 }
 
 .archive-hero h1 {
@@ -443,7 +444,7 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   align-items: center;
   max-width: 920px;
   min-height: 46px;
-  margin-bottom: 14px;
+  margin: 0 auto 14px;
   padding: 0 14px;
   border-radius: 8px;
   color: var(--muted);
@@ -597,7 +598,8 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
 }
 
 .empty-state {
-  margin: 18px 0 84px;
+  max-width: 920px;
+  margin: 18px auto 84px;
   color: var(--muted);
   font-family: "JetBrains Mono", monospace;
 }
@@ -608,7 +610,7 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   gap: 10px;
   align-items: center;
   max-width: 920px;
-  margin: 22px 0 84px;
+  margin: 22px auto 84px;
   color: var(--muted);
   font: 700 0.84rem/1 "JetBrains Mono", monospace;
 }
@@ -856,11 +858,19 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   padding-top: 14px;
 }
 
+.footer-copy {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .footer-counts {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 6px;
   color: var(--muted);
+  font: 700 0.72rem/1 "JetBrains Mono", monospace;
 }
 
 .footer a {
