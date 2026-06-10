@@ -5,9 +5,10 @@ type Props = {
   post: BlogPostLike;
   href: string;
   large?: boolean;
+  pagedOut?: boolean;
 };
 
-const { post, href, large = false } = Astro.props;
+const { post, href, large = false, pagedOut = false } = Astro.props;
 const date = post.data.date.toISOString().slice(0, 10);
 const tags = post.data.tags ?? [];
 const title = post.data.title;
@@ -73,7 +74,7 @@ async function sourceImageSrc(src: string): Promise<string> {
 }
 ---
 
-<a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc) }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
+<a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc), "is-page-hidden": pagedOut }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
   {thumbnailSrc && (
     <span class="article-card-thumb" aria-hidden="true">
       <img src={thumbnailSrc} alt="" loading="lazy" decoding="async" />

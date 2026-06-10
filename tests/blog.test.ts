@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { estimateReadingMinutes, getPublishedPosts, getTableOfContents, sortPosts } from "../src/lib/blog";
-import { initArticleFilter, matchesArticleQuery, normalizeFilterText } from "../src/scripts/article-filter";
+import { getArticleFilterPage, initArticleFilter, matchesArticleQuery, normalizeFilterText } from "../src/scripts/article-filter";
 
 const posts = [
   {
@@ -99,6 +99,17 @@ describe("blog helpers", () => {
     expect(matchesArticleQuery("Frontend AI Agent Notes", "backend")).toBe(false);
   });
 
+  it("builds filter pages from all article texts", () => {
+    const state = getArticleFilterPage(["Agent one", "Tensorboard", "Agent two"], "agent", 2, 1);
+
+    expect(state).toEqual({
+      currentPage: 2,
+      matchedIndexes: [0, 2],
+      pageIndexes: [2],
+      totalPages: 2
+    });
+  });
+
   it("filters article cards and updates count text", () => {
     let listener = () => {};
     const input = {
@@ -132,18 +143,111 @@ describe("blog helpers", () => {
     expect(count.textContent).toBe("1/2");
     expect(empty.hidden).toBe(true);
   });
+
+  it("hides pagination when filtered results fit on one page", () => {
+    let listener = () => {};
+    const input = {
+      value: "agent",
+      addEventListener: (_event: string, handler: () => void) => {
+        listener = handler;
+      }
+    };
+    const cards = [
+      createFilterCard("AI Agent frontend note"),
+      createFilterCard("Tensorboard training")
+    ];
+    const pagination = {
+      dataset: { pageSize: "20", currentPage: "1" },
+      hidden: false,
+      innerHTML: "<button>下一页</button>",
+      querySelectorAll: () => []
+    };
+    const root = {
+      querySelector: (selector: string) => {
+        if (selector === "[data-article-filter]") return input;
+        if (selector === "[data-filter-pagination]") return pagination;
+        return null;
+      },
+      querySelectorAll: () => cards
+    };
+
+    initArticleFilter(root as unknown as ParentNode);
+    listener();
+
+    expect(pagination.hidden).toBe(true);
+    expect(pagination.innerHTML).toBe("");
+  });
+
+  it("changes filtered result pages from pagination buttons", () => {
+    const input = {
+      value: "agent",
+      addEventListener() {}
+    };
+    const cards = [
+      createFilterCard("Agent one"),
+      createFilterCard("Agent two")
+    ];
+    const pagination = createPagination("1");
+    const root = {
+      querySelector: (selector: string) => {
+        if (selector === "[data-article-filter]") return input;
+        if (selector === "[data-filter-pagination]") return pagination;
+        return null;
+      },
+      querySelectorAll: () => cards
+    };
+
+    initArticleFilter(root as unknown as ParentNode);
+    pagination.buttons.at(-1)?.click();
+
+    expect(cards[0].pageHidden).toBe(true);
+    expect(cards[1].pageHidden).toBe(false);
+    expect(pagination.innerHTML).toContain("第 2 / 2 页");
+  });
 });
 
 function createFilterCard(filterText: string) {
   const card = {
     filtered: false,
+    pageHidden: false,
     dataset: { filterText },
     classList: {
       toggle(className: string, enabled: boolean) {
         if (className === "is-filtered") card.filtered = enabled;
+        if (className === "is-page-hidden") card.pageHidden = enabled;
       }
     },
     setAttribute() {}
   };
   return card;
+}
+
+function createPagination(pageSize: string) {
+  const pagination = {
+    buttons: [] as Array<{ dataset: { filterPage: string }; click: () => void; addEventListener: (_event: string, handler: () => void) => void }>,
+    dataset: { pageSize, currentPage: "1" },
+    hidden: false,
+    value: "",
+    get innerHTML() {
+      return this.value;
+    },
+    set innerHTML(value: string) {
+      this.value = value;
+      this.buttons = [...value.matchAll(/data-filter-page="(\d+)"/g)].map((match) => {
+        let listener = () => {};
+        return {
+          dataset: { filterPage: match[1] },
+          click: () => listener(),
+          addEventListener: (_event: string, handler: () => void) => {
+            listener = handler;
+          }
+        };
+      });
+    },
+    querySelectorAll() {
+      return this.buttons;
+    }
+  };
+
+  return pagination;
 }

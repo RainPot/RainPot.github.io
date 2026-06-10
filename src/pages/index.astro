@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPostSlug, getPublishedPosts } from "../lib/blog";
 
 const posts = getPublishedPosts(await getCollection("blog"));
-const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const latestPost = posts[0];
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 
@@ -15,7 +15,7 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
         <p class="eyebrow"><span class="dot"></span> ~/rainpot.dev</p>
         <h1>Simplicity is the ultimate sophistication.</h1>
         <div class="hero-actions">
-          {featuredPost && <a class="button primary" href={link(`/blog/${getPostSlug(featuredPost)}/`)}>读最新笔记</a>}
+          {latestPost && <a class="button primary" href={link(`/blog/${getPostSlug(latestPost)}/`)}>读最新笔记</a>}
           <a class="button ghost" href={link("/blog/")}>文章归档</a>
         </div>
       </div>

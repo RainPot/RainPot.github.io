@@ -513,7 +513,8 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   transform: translateY(-1px);
 }
 
-.article-card.is-filtered {
+.article-card.is-filtered,
+.article-card.is-page-hidden {
   display: none;
 }
 
@@ -613,6 +614,10 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   margin: 22px auto 84px;
   color: var(--muted);
   font: 700 0.84rem/1 "JetBrains Mono", monospace;
+}
+
+.archive-pagination[hidden] {
+  display: none;
 }
 
 .archive-pagination span {

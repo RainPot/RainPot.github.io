@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import ArticleCard from "../../../components/ArticleCard.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getPagePosts, getPostSlug, getPublishedPosts, POSTS_PER_PAGE } from "../../../lib/blog";
+import { getPostSlug, getPublishedPosts, POSTS_PER_PAGE } from "../../../lib/blog";
 
 export async function getStaticPaths() {
   const posts = getPublishedPosts(await getCollection("blog"));
@@ -14,15 +14,16 @@ export async function getStaticPaths() {
       params: { page: String(page) },
       props: {
         page,
-        pagePosts: getPagePosts(posts, page),
+        posts,
         totalPages
       }
     };
   });
 }
 
-const { page, pagePosts, totalPages } = Astro.props;
+const { page, posts, totalPages } = Astro.props;
 const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+const pageStart = (page - 1) * POSTS_PER_PAGE;
 ---
 
 <BaseLayout title={`文章归档 第 ${page} 页 - RainPot`} description="RainPot 的文章归档。">
@@ -34,15 +35,19 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     <label class="filter-shell archive-filter">
       <span>$ grep</span>
       <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="过滤当前页文章" data-article-filter />
-      <b data-filter-count>{pagePosts.length}/{pagePosts.length}</b>
+      <b data-filter-count>{posts.length}/{posts.length}</b>
     </label>
     <section class="articles archive-list">
-      {pagePosts.map((post) => (
-        <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} />
+      {posts.map((post, index) => (
+        <ArticleCard
+          post={post}
+          href={link(`/blog/${getPostSlug(post)}/`)}
+          pagedOut={index < pageStart || index >= pageStart + POSTS_PER_PAGE}
+        />
       ))}
     </section>
     <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
-    <nav class="archive-pagination" aria-label="文章分页">
+    <nav class="archive-pagination" aria-label="文章分页" data-filter-pagination data-current-page={page} data-page-size={POSTS_PER_PAGE}>
       <a class="button ghost" href={page === 2 ? link("/blog/") : link(`/blog/page/${page - 1}/`)}>上一页</a>
       <span>第 {page} / {totalPages} 页</span>
       {page < totalPages && <a class="button ghost" href={link(`/blog/page/${page + 1}/`)}>下一页</a>}
