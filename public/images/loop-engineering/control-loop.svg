@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="820" viewBox="0 0 1500 820" role="img" aria-labelledby="title desc">
+  <title id="title">Loop Engineering 的闭环控制点</title>
+  <desc id="desc">图中展示一个 AI Agent 外层闭环从触发、目标、上下文、执行、结果、验证、状态、停止到人工关口的流转。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#c9d7e8"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <style>
+    text { font-family: "IBM Plex Sans", "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+    .title { fill: #f0f6fc; font-size: 44px; font-weight: 800; text-anchor: middle; }
+    .subtitle { fill: #aebbd0; font-size: 24px; text-anchor: middle; }
+    .card-title { fill: #f0f6fc; font-size: 29px; font-weight: 800; }
+    .card-body { fill: #c9d7e8; font-size: 22px; }
+    .card-note { fill: #8b949e; font-size: 20px; }
+    .arrow { fill: none; stroke: #c9d7e8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+    .thin { fill: none; stroke: #8b949e; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 9 10; marker-end: url(#arrow); }
+    .pill { fill: #f0f6fc; font-size: 20px; font-weight: 800; text-anchor: middle; }
+  </style>
+  <rect width="1500" height="820" fill="#0d1117"/>
+  <rect x="44" y="42" width="1412" height="736" rx="28" fill="#111820" stroke="#30363d" stroke-width="2"/>
+  <text class="title" x="750" y="96">Loop Engineering 的闭环控制点</text>
+  <text class="subtitle" x="750" y="134">外层系统反复决定“要不要跑、跑什么、怎么验、何时停”，Agent 只是其中的执行者</text>
+
+  <rect x="80" y="180" width="210" height="136" rx="18" fill="#16311f" stroke="#3fb950" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="112" y="224">触发器</text>
+  <text class="card-body" x="112" y="262">定时、事件</text>
+  <text class="card-note" x="112" y="294">或人工启动</text>
+
+  <rect x="330" y="180" width="240" height="136" rx="18" fill="#172c45" stroke="#58a6ff" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="364" y="224">目标规格</text>
+  <text class="card-body" x="364" y="262">把完成态写清楚</text>
+  <text class="card-note" x="364" y="294">最好能自动检查</text>
+
+  <rect x="620" y="180" width="260" height="136" rx="18" fill="#32271a" stroke="#d29922" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="654" y="224">上下文与记忆</text>
+  <text class="card-body" x="654" y="262">读取状态、约定</text>
+  <text class="card-note" x="654" y="294">避免每轮重猜</text>
+
+  <rect x="930" y="180" width="230" height="136" rx="18" fill="#331f2b" stroke="#ff7b72" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="964" y="224">Agent 执行</text>
+  <text class="card-body" x="964" y="262">调用工具、改文件</text>
+  <text class="card-note" x="964" y="294">保持权限边界</text>
+
+  <rect x="1210" y="180" width="220" height="136" rx="18" fill="#1c2c35" stroke="#76e3ea" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="1242" y="224">候选结果</text>
+  <text class="card-body" x="1242" y="262">代码、报告、PR</text>
+  <text class="card-note" x="1242" y="294">只是声明完成</text>
+
+  <path class="arrow" d="M 290 248 H 330"/>
+  <path class="arrow" d="M 570 248 H 620"/>
+  <path class="arrow" d="M 880 248 H 930"/>
+  <path class="arrow" d="M 1160 248 H 1210"/>
+
+  <rect x="930" y="500" width="230" height="136" rx="18" fill="#1d2430" stroke="#a371f7" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="964" y="544">验收器</text>
+  <text class="card-body" x="964" y="582">测试、lint、评审</text>
+  <text class="card-note" x="964" y="614">优先确定性信号</text>
+
+  <rect x="620" y="500" width="260" height="136" rx="18" fill="#1e2f27" stroke="#3fb950" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="654" y="544">状态账本</text>
+  <text class="card-body" x="654" y="582">记录做过什么</text>
+  <text class="card-note" x="654" y="614">给下一轮读取</text>
+
+  <rect x="330" y="500" width="240" height="136" rx="18" fill="#3a2b19" stroke="#d29922" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="364" y="544">停止器</text>
+  <text class="card-body" x="364" y="582">轮数、预算、超时</text>
+  <text class="card-note" x="364" y="614">无进展就退出</text>
+
+  <rect x="1210" y="500" width="220" height="136" rx="18" fill="#352229" stroke="#ff7b72" stroke-width="2" filter="url(#shadow)"/>
+  <text class="card-title" x="1242" y="544">人工关口</text>
+  <text class="card-body" x="1242" y="582">发布、删库、付费</text>
+  <text class="card-note" x="1242" y="614">必须人工确认</text>
+
+  <path class="arrow" d="M 1320 316 V 410 H 1045 V 500"/>
+  <path class="arrow" d="M 1160 568 H 1210"/>
+  <path class="arrow" d="M 930 568 H 880"/>
+  <path class="arrow" d="M 620 568 H 570"/>
+  <path class="thin" d="M 450 500 V 404 H 750 V 316"/>
+
+  <text class="pill" x="1200" y="390">送检</text>
+  <text class="pill" x="1186" y="554">通过</text>
+  <text class="pill" x="905" y="554">未通过</text>
+  <text class="pill" x="595" y="554">写入</text>
+  <text class="pill" x="578" y="390">继续下一轮</text>
+
+  <rect x="212" y="688" width="1076" height="48" rx="24" fill="#0b1016" stroke="#30363d" stroke-width="2"/>
+  <text class="card-note" x="266" y="720">一个可靠 loop 的核心不是“让模型多试几次”，而是每次尝试都有边界、证据、状态和退出路径。</text>
+</svg>

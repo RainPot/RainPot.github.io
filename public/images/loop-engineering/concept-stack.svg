@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Loop Engineering 在 AI Agent 工程栈中的位置</title>
+  <desc id="desc">图中展示 Prompt Engineering、Context Engineering、Harness Engineering 和 Loop Engineering 四层关系，以及每层优化的工作单位。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="55%" stop-color="#111821"/>
+      <stop offset="100%" stop-color="#14110d"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <style>
+    text { font-family: "IBM Plex Sans", "PingFang SC", "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+    .title { fill: #f0f6fc; font-size: 44px; font-weight: 800; text-anchor: middle; }
+    .subtitle { fill: #aebbd0; font-size: 24px; text-anchor: middle; }
+    .layer-title { fill: #f0f6fc; font-size: 32px; font-weight: 800; }
+    .layer-body { fill: #c9d7e8; font-size: 24px; }
+    .layer-note { fill: #8b949e; font-size: 20px; }
+    .unit-title { fill: #f0f6fc; font-size: 25px; font-weight: 800; }
+    .unit-body { fill: #c9d7e8; font-size: 21px; }
+    .small-title { fill: #e6edf3; font-size: 25px; font-weight: 800; }
+    .small-body { fill: #aebbd0; font-size: 20px; }
+  </style>
+  <rect width="1440" height="760" fill="url(#bg)"/>
+  <rect x="42" y="42" width="1356" height="676" rx="28" fill="rgba(255,255,255,0.03)" stroke="#30363d" stroke-width="2"/>
+
+  <text class="title" x="720" y="94">Loop Engineering 的位置</text>
+  <text class="subtitle" x="720" y="132">从写好一个提示词，升级到设计一个能自我推进、可验证、可停止的系统</text>
+
+  <rect x="120" y="170" width="860" height="102" rx="18" fill="#16311f" stroke="#3fb950" stroke-width="2" filter="url(#shadow)"/>
+  <text class="layer-title" x="156" y="210">Prompt Engineering</text>
+  <text class="layer-body" x="156" y="246">优化一次人工输入：怎么问、怎么约束输出格式</text>
+
+  <rect x="120" y="302" width="860" height="102" rx="18" fill="#172c45" stroke="#58a6ff" stroke-width="2" filter="url(#shadow)"/>
+  <text class="layer-title" x="156" y="342">Context Engineering</text>
+  <text class="layer-body" x="156" y="378">优化一次模型调用的环境：文档、历史、工具、记忆</text>
+
+  <rect x="120" y="434" width="860" height="102" rx="18" fill="#32271a" stroke="#d29922" stroke-width="2" filter="url(#shadow)"/>
+  <text class="layer-title" x="156" y="474">Harness Engineering</text>
+  <text class="layer-body" x="156" y="510">优化单个 Agent 的运行时：权限、工具、反馈传感器</text>
+
+  <rect x="120" y="566" width="860" height="102" rx="18" fill="#331f2b" stroke="#ff7b72" stroke-width="2" filter="url(#shadow)"/>
+  <text class="layer-title" x="156" y="606">Loop Engineering</text>
+  <text class="layer-body" x="156" y="642">优化跨回合控制：触发、目标、验证、状态、停止</text>
+
+  <rect x="1040" y="170" width="282" height="498" rx="22" fill="#0b1016" stroke="#30363d" stroke-width="2"/>
+  <text class="small-title" x="1078" y="214">优化单位</text>
+  <line x1="1078" y1="232" x2="1285" y2="232" stroke="#30363d" stroke-width="2"/>
+  <text class="unit-title" x="1078" y="276">一次回复</text>
+  <text class="unit-body" x="1078" y="309">人工输入后立即结束</text>
+  <text class="unit-title" x="1078" y="366">一个任务回合</text>
+  <text class="unit-body" x="1078" y="399">上下文决定表现上限</text>
+  <text class="unit-title" x="1078" y="456">单个运行时</text>
+  <text class="unit-body" x="1078" y="489">工具和反馈塑造行为</text>
+  <text class="unit-title" x="1078" y="546">自运行系统</text>
+  <text class="unit-body" x="1078" y="579">持续找事、做事、验事</text>
+
+  <rect x="250" y="688" width="940" height="44" rx="22" fill="#0b1016" stroke="#30363d" stroke-width="2"/>
+  <text class="layer-note" x="315" y="717">关键变化：杠杆点从“我下一句怎么提示”移动到“系统如何决定下一步，并证明它真的完成”。</text>
+</svg>
