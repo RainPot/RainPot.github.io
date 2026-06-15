@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="860" viewBox="0 0 1520 860" role="img" aria-labelledby="title desc">
+  <title id="title">CUA 模型 loop 三类适配方式</title>
+  <desc id="desc">OpenAI 和 Anthropic 使用原生工具协议，UI-TARS 和通用 VLM 使用 prompt 与解析器，OmniParser 和 ComposedGrounded 将定位拆成元素编号或描述 grounding。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L14,8 L2,14 Z" fill="#334155" />
+    </marker>
+    <style>
+      text { font-family: Inter, "PingFang SC", "Microsoft YaHei", sans-serif; fill: #172033; letter-spacing: 0; }
+      .title { font-size: 42px; font-weight: 760; }
+      .subtitle { font-size: 27px; fill: #596579; }
+      .head { font-size: 30px; font-weight: 760; }
+      .body { font-size: 23px; fill: #475569; }
+      .small { font-size: 20px; fill: #64748b; }
+      .box { fill: #ffffff; stroke-width: 3; rx: 18; }
+      .chip { rx: 14; stroke-width: 2; }
+      .line { fill: none; stroke: #334155; stroke-width: 4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1520" height="860" fill="#f8fafc" />
+  <text class="title" x="760" y="72" text-anchor="middle">模型 loop 的三种翻译路线</text>
+  <text class="subtitle" x="760" y="116" text-anchor="middle">差别不在“谁能点击”，而在模型输出如何被翻译成统一 computer_call</text>
+
+  <rect class="box" x="70" y="190" width="420" height="520" stroke="#38bdf8" />
+  <text class="head" x="280" y="245" text-anchor="middle">原生工具路线</text>
+  <text class="body" x="280" y="300" text-anchor="middle">OpenAI computer_use</text>
+  <text class="body" x="280" y="338" text-anchor="middle">Anthropic hosted tool</text>
+  <rect class="chip" x="128" y="392" width="304" height="72" fill="#ecfeff" stroke="#67e8f9" />
+  <text class="body" x="280" y="436" text-anchor="middle">生成 provider tool schema</text>
+  <path class="line" d="M280 464 V520" />
+  <rect class="chip" x="128" y="520" width="304" height="72" fill="#f0f9ff" stroke="#7dd3fc" />
+  <text class="body" x="280" y="564" text-anchor="middle">返回原生 tool call</text>
+  <path class="line" d="M280 592 V650" />
+  <text class="small" x="280" y="678" text-anchor="middle">再转换为 Responses items</text>
+
+  <rect class="box" x="550" y="190" width="420" height="520" stroke="#f59e0b" />
+  <text class="head" x="760" y="245" text-anchor="middle">Prompt + 解析路线</text>
+  <text class="body" x="760" y="300" text-anchor="middle">UI-TARS / UI-TARS-2</text>
+  <text class="body" x="760" y="338" text-anchor="middle">Generic VLM / Qwen</text>
+  <rect class="chip" x="608" y="392" width="304" height="72" fill="#fff7ed" stroke="#fdba74" />
+  <text class="body" x="760" y="436" text-anchor="middle">注入动作空间 prompt</text>
+  <path class="line" d="M760 464 V520" />
+  <rect class="chip" x="608" y="520" width="304" height="72" fill="#fefce8" stroke="#fde047" />
+  <text class="body" x="760" y="564" text-anchor="middle">解析 Action / tool_call</text>
+  <path class="line" d="M760 592 V650" />
+  <text class="small" x="760" y="678" text-anchor="middle">坐标缩放后变成 computer_call</text>
+
+  <rect class="box" x="1030" y="190" width="420" height="520" stroke="#22c55e" />
+  <text class="head" x="1240" y="245" text-anchor="middle">Grounding 拆分路线</text>
+  <text class="body" x="1240" y="300" text-anchor="middle">OmniParser + LLM</text>
+  <text class="body" x="1240" y="338" text-anchor="middle">grounding + thinking</text>
+  <rect class="chip" x="1088" y="392" width="304" height="72" fill="#f0fdf4" stroke="#86efac" />
+  <text class="body" x="1240" y="436" text-anchor="middle">截图标号或元素描述</text>
+  <path class="line" d="M1240 464 V520" />
+  <rect class="chip" x="1088" y="520" width="304" height="72" fill="#eef2ff" stroke="#a5b4fc" />
+  <text class="body" x="1240" y="564" text-anchor="middle">定位模型产出坐标</text>
+  <path class="line" d="M1240 592 V650" />
+  <text class="small" x="1240" y="678" text-anchor="middle">推理和定位可以分开替换</text>
+
+  <rect x="454" y="748" width="612" height="72" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5" />
+  <text class="body" x="760" y="793" text-anchor="middle">三条路线最后都交给 ComputerAgent._handle_item 执行</text>
+</svg>
