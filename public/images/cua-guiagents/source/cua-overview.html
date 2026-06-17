@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./diagram.css" />
+  </head>
+  <body>
+    <main class="canvas overview">
+      <div class="kicker">trycua/cua · GUIAgents</div>
+      <h1>CUA 将 GUI agent 拆成可替换的运行时层</h1>
+      <p class="subtitle">入口负责装配任务和环境，ComputerAgent 负责模型适配与动作闭环，底层 handler 负责把标准化动作落到真实电脑或 sandbox。</p>
+
+      <section class="overview-grid">
+        <div class="card overview-stage">
+          <div class="stage-title"><span>1</span>调用入口</div>
+          <div class="chip">Notebook / SDK</div>
+          <div class="chip">CLI</div>
+          <div class="chip">Playground</div>
+          <div class="chip">/responses API</div>
+        </div>
+
+        <div class="arrow-text">→</div>
+
+        <div class="card overview-agent">
+          <div class="stage-title"><span>2</span>运行时核心</div>
+          <div class="agent-core">
+            <div class="core-title">
+              ComputerAgent
+              <div class="core-sub">run loop · callbacks · tool dispatch</div>
+            </div>
+            <div class="chip blue">find_agent_config(model)</div>
+            <div class="chip green">Responses items</div>
+            <div class="chip amber">trajectory / budget</div>
+          </div>
+        </div>
+
+        <div class="arrow-text">→</div>
+
+        <div class="card overview-stage">
+          <div class="stage-title"><span>3</span>模型适配</div>
+          <div class="chip blue">OpenAI / Claude</div>
+          <div class="chip amber">UI-TARS / Generic VLM</div>
+          <div class="chip green">OmniParser</div>
+          <div class="chip green">ComposedGrounded</div>
+        </div>
+
+        <div class="arrow-text">→</div>
+
+        <div class="card overview-stage">
+          <div class="stage-title"><span>4</span>执行环境</div>
+          <div class="chip blue">AsyncComputer<br />Handler</div>
+          <div class="chip">Computer</div>
+          <div class="chip">Sandbox</div>
+          <div class="chip">Custom functions</div>
+        </div>
+      </section>
+
+      <section class="overview-footer">
+        <div class="feedback-pill input">computer_call</div>
+        <div class="feedback-line">click / type / scroll / keypress</div>
+        <div class="feedback-pill output">screenshot observation</div>
+      </section>
+    </main>
+  </body>
+</html>

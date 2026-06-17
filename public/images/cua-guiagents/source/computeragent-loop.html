@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./diagram.css" />
+  </head>
+  <body>
+    <main class="canvas loop">
+      <div class="kicker">ComputerAgent.run()</div>
+      <h1>每轮执行都围绕“预测、执行、截图、回灌”展开</h1>
+      <p class="subtitle">主循环持续调用当前模型 loop；只有当输出进入最终 assistant message，或者预算、终止动作等条件介入时，循环才结束。</p>
+
+      <section class="card loop-band">
+        <div class="loop-row">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h2>合并上下文</h2>
+            <p><code>old_items + new_items</code> 形成当前轮输入。</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h2>回调预处理</h2>
+            <p>注入指令、裁剪旧截图、执行脱敏或轨迹准备。</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h2>模型预测</h2>
+            <p>调用当前 <code>agent_loop.predict_step()</code>。</p>
+          </div>
+        </div>
+
+        <div class="connector-row">
+          <span>→</span>
+          <span>→</span>
+          <span>↓</span>
+          <span> </span>
+          <span> </span>
+        </div>
+
+        <div class="loop-row bottom">
+          <div class="step">
+            <div class="step-number">6</div>
+            <h2>结果回灌</h2>
+            <p>截图包装成 <code>computer_call_output</code>，追加到历史。</p>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <h2>执行动作</h2>
+            <p><code>_handle_item()</code> 调用 handler 的 click、type、scroll 等方法。</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h2>标准输出</h2>
+            <p>输出统一为 message、reasoning、computer_call 或 function_call。</p>
+          </div>
+        </div>
+
+        <div class="return-band">
+          <span>如果还没有最终 assistant message</span>
+          <span class="line"></span>
+          <span>继续下一轮</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

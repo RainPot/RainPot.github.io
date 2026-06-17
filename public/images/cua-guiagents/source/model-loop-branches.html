@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./diagram.css" />
+  </head>
+  <body>
+    <main class="canvas branches">
+      <div class="kicker">model loop adapters</div>
+      <h1>不同模型路线最终收敛到同一种动作协议</h1>
+      <p class="subtitle">CUA 没有要求所有 GUI 模型使用同一种输出格式；各 loop 负责消化模型方言，再交给同一个执行器。</p>
+
+      <section class="branches-grid">
+        <div class="card branch-card">
+          <div class="branch-head">
+            <div class="branch-icon">A</div>
+            <h2>原生工具路线</h2>
+          </div>
+          <p>OpenAI、Anthropic 等模型直接支持 computer-use 或 hosted tool。</p>
+          <div class="branch-list">
+            <div class="branch-step"><strong>工具 schema</strong><small>provider 原生格式</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>tool call</strong><small>模型返回点击、输入、滚动</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>Responses item</strong><small>少量转换后进入执行层</small></div>
+          </div>
+        </div>
+
+        <div class="card branch-card">
+          <div class="branch-head">
+            <div class="branch-icon">B</div>
+            <h2>Prompt 解析路线</h2>
+          </div>
+          <p>UI-TARS、Generic VLM 依赖动作空间 prompt 与解析器。</p>
+          <div class="branch-list">
+            <div class="branch-step"><strong>Action prompt</strong><small>click / drag / type / finished</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>parser</strong><small>解析文本或类 tool_call 输出</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>坐标映射</strong><small>归一化坐标还原到屏幕像素</small></div>
+          </div>
+        </div>
+
+        <div class="card branch-card">
+          <div class="branch-head">
+            <div class="branch-icon">C</div>
+            <h2>Grounding 拆分路线</h2>
+          </div>
+          <p>OmniParser、ComposedGrounded 将“想做什么”和“点哪里”拆开。</p>
+          <div class="branch-list">
+            <div class="branch-step"><strong>元素标注</strong><small>element_id 或 element_description</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>定位模型</strong><small>把描述映射成 x、y</small></div>
+            <div class="branch-arrow">↓</div>
+            <div class="branch-step"><strong>动作补全</strong><small>最终仍输出标准 computer_call</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="branches-footer">
+        <div class="footer-node secondary">Responses items</div>
+        <div class="arrow-text">→</div>
+        <div class="footer-node">ComputerAgent._handle_item()</div>
+        <div class="arrow-text">→</div>
+        <div class="footer-node green">AsyncComputerHandler</div>
+      </section>
+    </main>
+  </body>
+</html>

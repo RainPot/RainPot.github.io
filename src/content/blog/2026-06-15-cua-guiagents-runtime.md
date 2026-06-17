@@ -1,6 +1,6 @@
 ---
-title: "CUA 源码拆解：GUIAgents 不是一个模型，而是一套电脑使用闭环"
-description: "拆解 trycua/cua 的项目分层和 GUIAgents 逻辑：ComputerAgent 如何选择模型 loop、统一工具协议、执行电脑动作、回灌截图，并兼容 OpenAI、Claude、UI-TARS、OmniParser 和组合 grounding 模型。"
+title: "CUA 源码拆解：GUIAgents 运行时与电脑使用闭环"
+description: "基于 trycua/cua 源码，解析 CUA 的项目分层和 GUIAgents 运行时：ComputerAgent 如何选择模型 loop、统一工具协议、执行电脑动作、回灌截图，并兼容 OpenAI、Claude、UI-TARS、OmniParser 和组合 grounding 模型。"
 date: "2026-06-15"
 tags: ["CUA", "GUI Agent", "Computer Use", "UI-TARS", "Agent Runtime"]
 draft: false
@@ -10,9 +10,9 @@ readingTime: 24
 
 > 项目：[trycua/cua](https://github.com/trycua/cua)  
 > 分析版本：`main@edbcf3b`，提交时间 `2026-06-15T09:42:56Z`  
-> 一句话结论：**CUA 的 GUIAgents 逻辑不是某个单独模型，而是 `ComputerAgent` 把多种 GUI 模型输出翻译成统一 `computer_call`，再交给真实电脑 / sandbox 执行，并把动作后的截图喂回下一轮。**
+> 核心结论：**CUA 的 GUIAgents 实现集中在 `libs/python/agent/cua_agent` 运行时。`ComputerAgent` 将多种 GUI 模型输出标准化为 `computer_call`，交给真实电脑或 sandbox 执行，并把动作后的截图作为下一轮模型输入。**
 
-这篇拆的是 `trycua/cua`。它的 README 把项目定位写成 “Build, benchmark, and deploy agents that use computers”。真正读源码以后会发现，这句话里的重点不是“又包了一层 LLM API”，而是把 GUIAgent 需要的几件麻烦事拆成了清楚的层：
+`trycua/cua` 在 README 中将项目定位为 “Build, benchmark, and deploy agents that use computers”。从源码结构看，CUA 的核心价值不在于封装一层 LLM API，而在于把 GUI agent 运行所需的模型适配、动作协议、执行环境和轨迹管理拆成可替换的层：
 
 - `cua-agent`：模型 loop、工具 schema、回调、轨迹、预算和主循环；
 - `cua-computer`：把云端、本地 VM、Docker、Windows Sandbox、Lume 等环境统一成 `Computer`；
@@ -20,17 +20,19 @@ readingTime: 24
 - `cua-sandbox` / `cua-bench`：面向可复现环境、benchmark 和训练轨迹；
 - `cua-driver`：让外部 coding agent 通过 MCP/CLI 操作后台桌面。
 
-所以本文说的 `GUIAgents`，主要不是仓库里某个叫 `GUIAgents` 的文件夹，而是 `libs/python/agent/cua_agent` 这套 GUI agent runtime。它解决的问题很具体：**不同模型说不同语言，CUA 把它们都翻译成同一种“看屏幕、点鼠标、敲键盘、再看屏幕”的循环。**
+下文中的 GUIAgents 指的是 CUA 在 `libs/python/agent/cua_agent` 中实现的 GUI agent runtime。它承担的职责很明确：**把不同 GUI 模型的输出格式收敛到统一动作协议，并维持“观察屏幕、生成动作、执行动作、回灌截图”的闭环。**
 
 ## 总览：CUA 把 GUIAgent 切成五层
 
-![CUA 项目与 GUIAgent 分层总览](/images/cua-guiagents/cua-overview.svg)
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+  <img src="/images/cua-guiagents/cua-overview.png" alt="CUA GUIAgents 运行时分层总览" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+</div>
 
-这张图的读法很简单：左边是调用入口，右边是真正操作系统。中间的 `ComputerAgent` 是最关键的翻译层，它上接 OpenAI、Claude、UI-TARS、Generic VLM、OmniParser、ComposedGrounded 等模型 loop，下接 `Computer`、`Sandbox` 或自定义截图/点击函数。
+总览图展示了 CUA 的主要边界：入口层负责装配任务和环境；`ComputerAgent` 是运行时核心，负责模型 loop 选择、统一输出协议、执行调度和生命周期回调；执行层则把标准化动作落到 `Computer`、`Sandbox` 或自定义函数。
 
 顶层 README 的包列表也能印证这个拆法：`cua-agent` 是 agent framework，`cua-sandbox` 是创建和控制 sandbox 的 SDK，`cua-computer-server` 是 sandbox 里的 UI interaction / code execution driver，`cua-bench` 是 benchmark 和 RL 环境。
 
-真正的 GUIAgent 主入口在 `ComputerAgent`：
+GUIAgent 的主入口在 `ComputerAgent`：
 
 ```python
 class ComputerAgent:
@@ -42,13 +44,13 @@ class ComputerAgent:
 
 来自 `libs/python/agent/cua_agent/agent.py`。
 
-这段注释已经把职责说得很准：它不直接“思考”，而是选择合适的 `agent_loop`，并执行模型返回的工具调用。
+这段注释明确了职责边界：`ComputerAgent` 不承担模型推理，而是选择合适的 `agent_loop`，并执行模型返回的工具调用。
 
-## 入口：Notebook、CLI、Playground 最后都进 `ComputerAgent`
+## 入口：Notebook、CLI、Playground 收敛到 `ComputerAgent`
 
-CUA 给了几种入口，但最后都绕回同一个对象。
+CUA 提供了几种入口，但这些入口最终都会收敛到同一个运行时对象。
 
-CLI 里，用户选择 provider 后会创建 `Computer`，再把它放进 `tools`：
+在 CLI 中，用户选择 provider 后会创建 `Computer`，再把它放进 `tools`：
 
 ```python
 async with Computer(**computer_kwargs) as computer:
@@ -62,7 +64,7 @@ async with Computer(**computer_kwargs) as computer:
 
 来自 `libs/python/agent/cua_agent/cli.py`。
 
-Playground 也是一样。它的 `/responses` 接口会把请求里的 `model`、`input`、`agent_kwargs` 转成一次 `agent.run(messages)`：
+Playground 路径相同。它的 `/responses` 接口会把请求里的 `model`、`input`、`agent_kwargs` 转成一次 `agent.run(messages)`：
 
 ```python
 agent = ComputerAgent(model=model, **agent_kwargs)
@@ -73,7 +75,7 @@ async for result in agent.run(messages):
 
 来自 `libs/python/agent/cua_agent/playground/server.py`。
 
-`computer-server` 里也有一个 `/responses`，如果调用方没有显式传 `tools`，它会注入一个 `DirectComputer()`，直接代理本进程里的自动化 handler：
+`computer-server` 也提供 `/responses` 接口。如果调用方没有显式传 `tools`，它会注入一个 `DirectComputer()`，直接代理本进程里的自动化 handler：
 
 ```python
 tools = agent_kwargs.get("tools")
@@ -85,7 +87,7 @@ agent = ComputerAgent(model=model, **agent_kwargs)
 
 来自 `libs/python/computer-server/computer_server/main.py`。
 
-这说明 CUA 的入口层没有把 GUIAgent 逻辑散落在 CLI、Web UI、Server 里。入口只是装配环境，真正的循环仍然在 `ComputerAgent`。
+由此可见，CUA 没有把 GUIAgent 主逻辑散落在 CLI、Web UI 或 server 入口中。入口层只负责装配环境，核心循环仍由 `ComputerAgent` 承担。
 
 ## 触发条件：模型名决定走哪个 loop
 
@@ -132,15 +134,17 @@ else:
 | `ComposedGroundedConfig` | `.*\+.*` | grounding 模型 + thinking 模型组合 |
 | `GenericVlmConfig` | `.*`，低优先级 | Qwen 风格的通用 VLM fallback |
 
-这里有两个细节容易漏。
+模型匹配还有两个实现细节。
 
-第一，`find_agent_config` 会先看原始模型名，再把 `cua/<provider>/...` 这种路由前缀剥掉匹配。也就是说 `cua/anthropic/claude...` 仍然会走 Claude loop。
+第一，`find_agent_config` 会先看原始模型名，再把 `cua/<provider>/...` 这种路由前缀剥掉匹配。因此，`cua/anthropic/claude...` 仍然会走 Claude loop。
 
-第二，优先级很重要。`omni+...` 的优先级是 `2`，组合模型 `.*+.*` 是 `1`，通用 VLM fallback 是 `-100`。所以 `omni+gemini...` 不会被普通 `.*+.*` 抢走。
+第二，优先级决定匹配顺序。`omni+...` 的优先级是 `2`，组合模型 `.*+.*` 是 `1`，通用 VLM fallback 是 `-100`。因此，`omni+gemini...` 不会被普通 `.*+.*` 提前匹配。
 
-## 主流程：每一步都是“预测、执行、截图、再预测”
+## 主流程：预测、执行、截图、回灌
 
-![ComputerAgent 每轮执行闭环](/images/cua-guiagents/computeragent-loop.svg)
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+  <img src="/images/cua-guiagents/computeragent-loop.png" alt="ComputerAgent 每轮执行闭环" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+</div>
 
 `ComputerAgent.run()` 的核心不是一次模型调用，而是一个循环。它会把旧消息和本轮新消息合并，交给当前 loop 的 `predict_step()`；如果模型返回工具调用，它就执行工具，把结果追加进 `new_items`，继续下一轮。
 
@@ -158,7 +162,7 @@ while new_items[-1].get("role") != "assistant" if new_items else True:
 
 来自 `libs/python/agent/cua_agent/agent.py`。
 
-翻译成人话：
+这段循环可以分解为：
 
 1. 如果还没有最终 assistant 文本，就继续；
 2. 每轮先跑回调，比如 prompt instructions、图片保留、PII 处理；
@@ -200,9 +204,9 @@ call_output = {
 
 来自 `libs/python/agent/cua_agent/agent.py`。
 
-这就是 GUIAgent 的闭环核心：模型不是一次性看图答题，而是在每个动作后拿到新 observation。它能继续，是因为屏幕状态被编码回 `computer_call_output`。
+这一段构成了 GUIAgent 的闭环核心：模型不是一次性看图答题，而是在每个动作后获得新的 observation。任务之所以能持续推进，是因为屏幕状态被编码回 `computer_call_output`。
 
-## 统一协议：所有模型最后都要变成 Responses items
+## 统一协议：模型输出标准化为 Responses items
 
 CUA 里有一个很重要的中间协议：Responses items。源码里专门有一组 helper，把不同格式变成 `computer_call`、`function_call`、`message`、`reasoning`。
 
@@ -232,13 +236,15 @@ def convert_completion_messages_to_responses_items(...):
 
 来自 `libs/python/agent/cua_agent/responses.py`。
 
-这层适配很关键。OpenAI 的 computer-use、Anthropic 的 hosted tool、UI-TARS 的文本动作、Qwen 的 `<tool_call>`、OmniParser 的元素 ID，最后都要回到同一个动作协议。否则外层执行器就得理解每个模型的方言。
+这层适配是运行时设计的关键。OpenAI 的 computer-use、Anthropic 的 hosted tool、UI-TARS 的文本动作、Qwen 的 `<tool_call>`、OmniParser 的元素 ID，最终都会回到同一个动作协议。否则，外层执行器就必须理解每个模型的输出方言。
 
-## 模型 loop：三类翻译路线
+## 模型 loop：三类适配路线
 
-![CUA 模型 loop 三类适配方式](/images/cua-guiagents/model-loop-branches.svg)
+<div style="overflow-x: auto; margin: 1.5rem 0;">
+  <img src="/images/cua-guiagents/model-loop-branches.png" alt="CUA 模型 loop 的三类适配方式" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+</div>
 
-CUA 支持很多模型，但源码里大致可以归成三类。
+CUA 支持多种模型。从源码实现看，这些模型 loop 大致可以归为三类。
 
 ### 1. 原生工具路线：OpenAI / Anthropic
 
@@ -286,7 +292,7 @@ if anthropic_tools:
 
 来自 `libs/python/agent/cua_agent/loops/anthropic.py`。
 
-这类 loop 的重点是“少翻译”：模型本来就懂 computer-use tool，CUA 主要负责把工具规格、历史消息、坐标缩放和返回项转成统一格式。
+这类 loop 主要承担轻量适配：模型本身已经支持 computer-use tool，CUA 负责把工具规格、历史消息、坐标缩放和返回项转成统一格式。
 
 ### 2. Prompt + 解析路线：UI-TARS / Generic VLM
 
@@ -352,11 +358,11 @@ if not _has_any_image(completion_messages):
 
 来自 `libs/python/agent/cua_agent/loops/generic_vlm.py`。
 
-Generic VLM 还会做一个很工程化的动作：用 `smart_resize` 处理截图，再把 0..1000 的坐标还原到实际像素。这说明 CUA 并不是简单把模型坐标直接丢给鼠标，而是对不同模型的坐标空间做了适配。
+Generic VLM 还会处理截图缩放与坐标还原：用 `smart_resize` 调整截图，再把 0..1000 的坐标映射回实际像素。CUA 并不是把模型坐标直接交给鼠标执行，而是针对不同模型的坐标空间做了适配。
 
 ### 3. Grounding 拆分路线：OmniParser / ComposedGrounded
 
-第三类更像“把思考和定位拆开”。
+第三类路线将“任务推理”和“屏幕定位”拆开处理。
 
 OmniParser loop 会先解析截图，把可交互元素画上编号，再让 LLM 对编号做选择。源码里会把每个元素的中心点记录成 `id2xy`：
 
@@ -402,7 +408,7 @@ if coords:
 
 来自 `libs/python/agent/cua_agent/loops/composed_grounded.py`。
 
-这条路线很有意思：thinking model 不一定需要输出坐标，它可以说“点击搜索框”“拖到提交按钮”；grounding model 再把这些描述落到坐标。对应的转换函数在 `responses.py`：
+在这一路线中，thinking model 不必直接输出坐标。它可以生成“点击搜索框”“拖到提交按钮”这类目标描述，再由 grounding model 将描述映射到屏幕坐标。对应的转换函数在 `responses.py`：
 
 ```python
 if "element_description" in action:
@@ -415,7 +421,7 @@ if "element_description" in action:
 
 来自 `libs/python/agent/cua_agent/responses.py`。
 
-这也是 CUA 比较适合做实验平台的原因：你可以替换 grounding 模型，也可以替换 reasoning 模型，两者不必绑死。
+这种拆分使 CUA 更适合作为实验平台：grounding 模型和 reasoning 模型可以独立替换，不必绑定成单一模型。
 
 ## 执行面：`Computer`、`Sandbox`、自定义函数都统一成 handler
 
@@ -448,7 +454,7 @@ if isinstance(computer, dict):
 
 来自 `libs/python/agent/cua_agent/computers/__init__.py`。
 
-这个设计让 GUIAgent 不关心底层是云容器、本地 VM、Android 模拟器，还是你自己传的一组函数。只要 handler 能截图、能点、能输入，外层循环就能跑。
+这种设计让 GUIAgent 不需要关心底层是云容器、本地 VM、Android 模拟器，还是调用方传入的一组函数。只要 handler 能截图、能点击、能输入，外层循环就能运行。
 
 对于 `Computer`，CUA 会先启动或连接 VM，再用 `InterfaceFactory` 创建 OS 对应接口：
 
@@ -562,15 +568,15 @@ async def on_run_continue(...):
 
 来自 `libs/python/agent/cua_agent/callbacks/budget_manager.py`。
 
-这说明 CUA 的“可复用路径”不只是再次调用模型。它会把轨迹、截图、响应、usage 和模型名落盘，为 debug、benchmark、训练数据导出留入口。
+因此，CUA 的复用能力不止于再次调用模型。它会把轨迹、截图、响应、usage 和模型名落盘，为 debug、benchmark、训练数据导出留入口。
 
-## 边界和容易误会的地方
+## 边界与常见误解
 
 第一，CUA 不是只支持坐标点击。UI-TARS、Qwen 类 loop 确实会把动作落成坐标；但 OmniParser 和 ComposedGrounded 先用元素 ID 或元素描述做 grounding。只是到了最终执行层，仍然需要变成 `x, y` 或 path。
 
 第二，`tool_type` 目前真正做了特殊处理的是 `browser`。例如 FARA、Yutori 这类需要 browser tool 的 loop 会要求 `tool_type="browser"`，`ComputerAgent._resolve_tools()` 会把普通 `Computer` 包成 `BrowserTool`。源码里还留着 `Future: elif required_type == "mobile"`，说明 mobile 专用包装还不是同级能力。
 
-第三，自定义 computer handler 很方便，但缺失动作会变成 no-op。`CustomComputerHandler` 只强制要求 `screenshot`；如果没传 `click`、`type` 等函数，对应动作就是空操作。这适合 mock 和测试，但真实 GUIAgent 不应该只给截图函数就期待它能操作。
+第三，自定义 computer handler 使用成本很低，但缺失动作会变成 no-op。`CustomComputerHandler` 只强制要求 `screenshot`；如果没有传入 `click`、`type` 等函数，对应动作就是空操作。这适合 mock 和测试，真实 GUIAgent 运行时需要显式提供完整动作能力。
 
 第四，安全检查现在不是完整人审。`_handle_item()` 会读取 `pending_safety_checks`，但目前逻辑是直接放入 acknowledged 列表，旁边还有未来 callback 的 TODO：
 
@@ -611,8 +617,8 @@ for check in pending_checks:
 
 ## 总结
 
-CUA 的 GUIAgents 逻辑可以压缩成一句话：**模型 loop 负责把“下一步”说出来，`ComputerAgent` 负责把下一步变成可执行动作，`Computer` / `Sandbox` 负责让动作发生，截图结果再回到模型上下文。**
+CUA 的 GUIAgents 逻辑可以概括为：**模型 loop 负责生成下一步动作，`ComputerAgent` 负责把动作转换为可执行调用，`Computer` / `Sandbox` 负责改变真实屏幕状态，截图结果再回到模型上下文。**
 
-这个拆法的价值在于可替换。你可以换模型，从 OpenAI 换到 Claude、UI-TARS、Qwen、OmniParser；可以换执行环境，从云 Linux 容器换到本地 macOS、Windows、Android；也可以换观测和生命周期策略，比如只保留最近 3 张图、保存完整轨迹、限制预算。外层循环不需要重写。
+这个拆法的价值在于可替换。开发者可以替换模型，从 OpenAI 换到 Claude、UI-TARS、Qwen、OmniParser；也可以替换执行环境，从云 Linux 容器换到本地 macOS、Windows、Android；还可以调整观测和生命周期策略，比如只保留最近 3 张图、保存完整轨迹、限制预算。外层循环不需要重写。
 
-它的边界也同样清楚：安全确认还不完整，部分 loop 依赖额外包，mobile/browser 专用 tool 类型还没有完全对称，custom handler 的 no-op 需要小心。把这些边界看清楚以后，CUA 更像一个“电脑使用 agent 的实验和部署底座”，而不是一个单点 GUI 模型封装。
+它的边界也同样清楚：安全确认还不完整，部分 loop 依赖额外包，mobile/browser 专用 tool 类型还没有完全对称，custom handler 的 no-op 需要显式处理。明确这些边界后，CUA 更接近一个电脑使用 agent 的实验与部署底座，而不是单点 GUI 模型封装。
