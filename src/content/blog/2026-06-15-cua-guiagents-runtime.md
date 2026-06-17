@@ -25,7 +25,7 @@ readingTime: 24
 ## 总览：CUA 把 GUIAgent 切成五层
 
 <div style="overflow-x: auto; margin: 1.5rem 0;">
-  <img src="/images/cua-guiagents/cua-overview.png" alt="CUA GUIAgents 运行时分层总览" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+  <img src="/images/cua-guiagents/cua-overview.drawio.png" alt="CUA GUIAgents 运行时分层总览" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
 </div>
 
 总览图展示了 CUA 的主要边界：入口层负责装配任务和环境；`ComputerAgent` 是运行时核心，负责模型 loop 选择、统一输出协议、执行调度和生命周期回调；执行层则把标准化动作落到 `Computer`、`Sandbox` 或自定义函数。
@@ -143,7 +143,7 @@ else:
 ## 主流程：预测、执行、截图、回灌
 
 <div style="overflow-x: auto; margin: 1.5rem 0;">
-  <img src="/images/cua-guiagents/computeragent-loop.png" alt="ComputerAgent 每轮执行闭环" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+  <img src="/images/cua-guiagents/computeragent-loop.drawio.png" alt="ComputerAgent 每轮执行闭环" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
 </div>
 
 `ComputerAgent.run()` 的核心不是一次模型调用，而是一个循环。它会把旧消息和本轮新消息合并，交给当前 loop 的 `predict_step()`；如果模型返回工具调用，它就执行工具，把结果追加进 `new_items`，继续下一轮。
@@ -241,7 +241,7 @@ def convert_completion_messages_to_responses_items(...):
 ## 模型 loop：三类适配路线
 
 <div style="overflow-x: auto; margin: 1.5rem 0;">
-  <img src="/images/cua-guiagents/model-loop-branches.png" alt="CUA 模型 loop 的三类适配方式" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
+  <img src="/images/cua-guiagents/model-loop-branches.drawio.png" alt="CUA 模型 loop 的三类适配方式" style="min-width: 760px; width: 100%; max-width: none; border-radius: 8px;" />
 </div>
 
 CUA 支持多种模型。从源码实现看，这些模型 loop 大致可以归为三类。
