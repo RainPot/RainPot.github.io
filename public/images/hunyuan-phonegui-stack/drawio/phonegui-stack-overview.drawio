@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="PhoneGUI Stack Overview">
+    <mxGraphModel dx="1420" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="820" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="腾讯混元 PhoneGUI 五层研究栈" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="180" y="30" width="880" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="不是五个孤立 benchmark，而是从环境、训练、运行时到部署边界的一组互补能力" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="130" y="80" width="980" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="base" value="真实手机任务面&#xa;真实 App / 小程序 / 跨 App 流程" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=22;fontStyle=1;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="160" y="660" width="920" height="88" as="geometry" />
+        </mxCell>
+        <mxCell id="world" value="PhoneWorld｜环境供应&#xa;真实轨迹 -> Mock App / 任务 / verifier / rollout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=22;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="210" y="540" width="820" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="buddy" value="PhoneBuddy｜模型训练&#xa;Real App RL + PhoneWorld Mock RL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=22;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="260" y="420" width="720" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="harness" value="PhoneHarness｜运行时执行&#xa;GUI / CLI / MCP 路由 + trace-backed verifier" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=22;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="310" y="300" width="620" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="privacy" value="PhonePrivacy｜隐私边界&#xa;permissioned access / minimal disclosure / memory" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=21;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="180" y="170" width="410" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="safety" value="PhoneSafety｜安全边界&#xa;safe / unsafe / no-useful-action 三分法" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=21;fontColor=#111827;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="650" y="170" width="410" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="label1" value="可验证环境" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=16;fontColor=#374151;" vertex="1" connectable="0" parent="edge1">
+          <mxGeometry x="-0.08" y="1" relative="1" as="geometry">
+            <mxPoint x="-28" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4b5563;strokeWidth=2;endArrow=block;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="base" target="world">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="监督与 RL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4b5563;strokeWidth=2;endArrow=block;fontSize=16;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="world" target="buddy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="执行协议" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4b5563;strokeWidth=2;endArrow=block;fontSize=16;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="buddy" target="harness">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" value="部署约束" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6b7280;strokeWidth=2;dashed=1;endArrow=block;fontSize=16;exitX=0.25;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="harness" target="privacy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" value="风险判断" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6b7280;strokeWidth=2;dashed=1;endArrow=block;fontSize=16;exitX=0.75;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="harness" target="safety">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
