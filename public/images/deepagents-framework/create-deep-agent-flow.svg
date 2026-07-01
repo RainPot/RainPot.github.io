@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="740" viewBox="0 0 1200 740" role="img" aria-labelledby="title desc">
+  <title id="title">create_deep_agent construction and execution flow</title>
+  <desc id="desc">The create_deep_agent function resolves model, backend and profiles, builds middleware stacks and subagents, then calls LangChain create_agent. At runtime middleware filters tools, injects prompts, stores files, summarizes context and handles human interrupts.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#08111f"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#06b6d4"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="0.3"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"/></marker>
+    <style>
+      .title{font:700 32px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#f8fafc}
+      .sub{font:400 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#cbd5e1}
+      .h{font:700 20px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#f8fafc}
+      .t{font:400 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#dbeafe}
+      .small{font:400 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#94a3b8}
+      .box{rx:20;filter:url(#shadow);stroke:#334155;stroke-width:1.2}
+      .mini{rx:14;fill:#111827;stroke:#334155;stroke-width:1}
+      .arrow{stroke:#67e8f9;stroke-width:2.2;marker-end:url(#arrow);fill:none}
+      .dashed{stroke-dasharray:7 7}
+    </style>
+  </defs>
+  <rect width="1200" height="740" fill="url(#bg)"/>
+  <text x="60" y="62" class="title">create_deep_agent() 的两阶段：构造时装配，运行时拦截</text>
+  <text x="60" y="92" class="sub">Deep Agents 的大部分设计都藏在 middleware stack 与 backend 协议里。</text>
+
+  <rect x="70" y="135" width="500" height="82" class="box" fill="#164e63"/>
+  <text x="98" y="167" class="h">1. Resolve model + profiles</text>
+  <text x="98" y="192" class="t">resolve_model；根据 provider/model 匹配 HarnessProfile</text>
+  <text x="98" y="210" class="small">可改 prompt、tool description、excluded_tools、extra_middleware</text>
+
+  <rect x="70" y="255" width="500" height="82" class="box" fill="#1e293b"/>
+  <text x="98" y="287" class="h">2. Resolve backend</text>
+  <text x="98" y="312" class="t">默认 StateBackend；可换 Filesystem / Store / Sandbox / Composite</text>
+  <text x="98" y="330" class="small">backend 同时服务文件、skills、memory、large tool result offload</text>
+
+  <rect x="70" y="375" width="500" height="112" class="box" fill="#312e81"/>
+  <text x="98" y="407" class="h">3. Build middleware stacks</text>
+  <text x="98" y="432" class="t">Main agent: Todo → Skills → Filesystem → SubAgent → Summarization → Patch → AsyncSubAgent</text>
+  <text x="98" y="455" class="t">Tail: profile middleware → tool exclusion → prompt caching → Memory → HITL</text>
+  <text x="98" y="477" class="small">Declarative subagents 也会得到自己的 Todo / Filesystem / Summarization / Skills 栈</text>
+
+  <rect x="70" y="525" width="500" height="82" class="box" fill="#0f766e"/>
+  <text x="98" y="557" class="h">4. Call LangChain create_agent()</text>
+  <text x="98" y="582" class="t">返回 CompiledStateGraph，并把 recursion_limit 设到 9999</text>
+  <text x="98" y="600" class="small">DeepAgentState.messages 使用 DeltaChannel，避免 checkpoint O(N²) 膨胀</text>
+
+  <path d="M320 217 L320 255" class="arrow"/><path d="M320 337 L320 375" class="arrow"/><path d="M320 487 L320 525" class="arrow"/>
+
+  <rect x="665" y="135" width="460" height="472" class="box" fill="#0f172a"/>
+  <text x="698" y="170" class="h">Runtime：middleware around model/tool calls</text>
+  <rect x="700" y="205" width="390" height="52" class="mini"/>
+  <text x="724" y="236" class="t">wrap_model_call：过滤 execute/delete，追加文件系统 prompt</text>
+  <rect x="700" y="282" width="390" height="52" class="mini"/>
+  <text x="724" y="313" class="t">model sees tools：filesystem、task、skills、自定义 tools</text>
+  <rect x="700" y="359" width="390" height="52" class="mini"/>
+  <text x="724" y="390" class="t">wrap_tool_call：执行工具，过大结果 offload 到 backend</text>
+  <rect x="700" y="436" width="390" height="52" class="mini"/>
+  <text x="724" y="467" class="t">Summarization：超过阈值时压缩并保存完整历史</text>
+  <rect x="700" y="513" width="390" height="52" class="mini"/>
+  <text x="724" y="544" class="t">HITL / permissions：deny、interrupt、approve、resume</text>
+  <path d="M895 257 L895 282" class="arrow"/><path d="M895 334 L895 359" class="arrow"/><path d="M895 411 L895 436" class="arrow"/><path d="M895 488 L895 513" class="arrow"/>
+
+  <path d="M570 566 C630 566 630 370 700 370" class="arrow dashed"/>
+  <text x="595" y="640" class="small">构造阶段决定 stack；执行阶段由 stack 持续改写 prompt、工具、消息和状态。</text>
+</svg>

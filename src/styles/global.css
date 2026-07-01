@@ -883,6 +883,149 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   text-decoration: none;
 }
 
+/* ── Visual polish ──────────────────────────────────────────────
+   Additive refinements layered on top of the base terminal theme.
+   All motion here degrades gracefully under prefers-reduced-motion. */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(63, 185, 80, 0.28);
+  color: #f0f6fc;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 148, 158, 0.42) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-color: rgba(139, 148, 158, 0.34);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(88, 166, 255, 0.5);
+}
+
+/* Display headings pick up a subtle depth gradient */
+.hero-copy h1,
+.archive-hero h1,
+.post-article h1 {
+  padding-bottom: 0.08em;
+  background: linear-gradient(135deg, #ffffff 0%, #d7e2ee 55%, #58a6ff 135%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Breathing status dot */
+.dot {
+  animation: dot-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(63, 185, 80, 0.55); opacity: 1; }
+  50% { box-shadow: 0 0 24px rgba(63, 185, 80, 0.95); opacity: 0.72; }
+}
+
+/* Staggered entrance for list cards (fill-mode backwards keeps them
+   visible when animation is disabled for reduced-motion users) */
+.article-card {
+  animation: card-in 520ms cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
+}
+
+.article-card:nth-child(1) { animation-delay: 40ms; }
+.article-card:nth-child(2) { animation-delay: 90ms; }
+.article-card:nth-child(3) { animation-delay: 140ms; }
+.article-card:nth-child(4) { animation-delay: 190ms; }
+.article-card:nth-child(5) { animation-delay: 240ms; }
+.article-card:nth-child(6) { animation-delay: 290ms; }
+.article-card:nth-child(n + 7) { animation-delay: 330ms; }
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Accent bar wipes in along the card's leading edge on hover */
+.article-card::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 3px;
+  content: "";
+  background: linear-gradient(180deg, var(--green), var(--blue));
+  opacity: 0;
+  transform: scaleY(0.35);
+  transform-origin: top;
+  transition: opacity 200ms ease, transform 260ms ease;
+}
+
+.article-card:hover::after {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* Search box lights up while focused */
+.filter-shell:focus-within {
+  border-color: rgba(88, 166, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.14);
+}
+
+/* Softer, glowier button hovers */
+.button.primary:hover {
+  box-shadow: 0 12px 30px rgba(63, 185, 80, 0.32);
+}
+
+.button.ghost:hover {
+  border-color: rgba(88, 166, 255, 0.5);
+  background: rgba(88, 166, 255, 0.1);
+}
+
+/* Animated underline for standalone text links */
+.footer a,
+.back-link {
+  position: relative;
+}
+
+.footer a::after,
+.back-link::after {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  content: "";
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+
+.footer a:hover::after,
+.back-link:hover::after {
+  transform: scaleX(1);
+}
+
 @media (max-width: 920px) {
   .page-shell {
     width: min(100% - 28px, 760px);

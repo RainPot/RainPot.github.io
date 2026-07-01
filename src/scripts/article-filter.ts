@@ -38,9 +38,40 @@ export function initArticleFilter(root: ParentNode = document) {
 
   const texts = cards.map((card) => card.dataset.filterText ?? "");
   const pageSize = Math.max(1, Number(pagination?.dataset.pageSize) || cards.length);
-  let currentPage = Math.max(1, Number(pagination?.dataset.currentPage) || 1);
+  // The page number rendered by the server, derived from the URL (e.g. /blog/page/2/).
+  const serverPage = Math.max(1, Number(pagination?.dataset.currentPage) || 1);
+  // Snapshot the server-rendered pagination (real <a> links). Restoring it keeps each
+  // page on its own URL so the browser back button returns to the correct page.
+  const serverPaginationHTML = pagination ? pagination.innerHTML : "";
+  let currentPage = serverPage;
+
+  const showServerPage = () => {
+    const start = (serverPage - 1) * pageSize;
+
+    cards.forEach((card, index) => {
+      const visible = index >= start && index < start + pageSize;
+      card.classList.toggle("is-filtered", false);
+      card.classList.toggle("is-page-hidden", !visible);
+      card.setAttribute("aria-hidden", String(!visible));
+    });
+
+    if (count) count.textContent = `${cards.length}/${cards.length}`;
+    if (empty) empty.hidden = true;
+    if (pagination) {
+      pagination.hidden = false;
+      pagination.innerHTML = serverPaginationHTML;
+    }
+  };
 
   const update = (resetPage = false) => {
+    // Without an active query, defer to the server's URL-based pagination so that
+    // opening an article and navigating back restores the same page.
+    if (normalizeFilterText(input.value) === "") {
+      currentPage = serverPage;
+      showServerPage();
+      return;
+    }
+
     if (resetPage) currentPage = 1;
 
     const state = getArticleFilterPage(texts, input.value, currentPage, pageSize);

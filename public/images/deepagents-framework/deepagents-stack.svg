@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
+  <title id="title">Deep Agents framework stack</title>
+  <desc id="desc">Deep Agents sits above LangChain create_agent and LangGraph runtime, packaging middleware, backends, profiles and product packages.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#101827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6ee7f9"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title{font:700 34px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#f8fafc}
+      .sub{font:400 17px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#cbd5e1}
+      .h{font:700 21px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#f8fafc}
+      .t{font:400 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#dbeafe}
+      .small{font:400 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#94a3b8}
+      .box{rx:22;filter:url(#shadow);stroke:#334155;stroke-width:1.2}
+      .pill{rx:16;fill:#111827;stroke:#334155;stroke-width:1}
+      .arrow{stroke:#67e8f9;stroke-width:2.2;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="620" fill="url(#bg)"/>
+  <circle cx="920" cy="80" r="180" fill="#312e81" opacity="0.23"/>
+  <circle cx="160" cy="530" r="220" fill="#0e7490" opacity="0.16"/>
+  <text x="60" y="66" class="title">Deep Agents：不是新 runtime，而是 opinionated agent harness</text>
+  <text x="60" y="96" class="sub">它把 LangChain agent loop 和 LangGraph runtime 上常用的长任务能力打包成 SDK、CLI、Code、Evals 与 partner backends。</text>
+
+  <rect x="80" y="135" width="940" height="78" class="box" fill="#172554"/>
+  <text x="112" y="166" class="h">Product / Monorepo packages</text>
+  <text x="112" y="192" class="t">libs/code(dcode) · libs/cli(deploy) · libs/evals · libs/acp · partners(daytona/modal/quickjs/runloop/vercel) · talon</text>
+
+  <rect x="80" y="250" width="940" height="96" class="box" fill="#1e293b"/>
+  <text x="112" y="282" class="h">Deep Agents SDK</text>
+  <text x="112" y="310" class="t">create_deep_agent() assembles: Todo · Skills · Filesystem · Subagents · Summarization · Prompt caching · Memory · HITL</text>
+  <text x="112" y="333" class="small">核心代码集中在 middleware、backends、profiles；公开入口是 deepagents.create_deep_agent。</text>
+
+  <rect x="80" y="382" width="940" height="78" class="box" fill="#0f766e" opacity="0.78"/>
+  <text x="112" y="414" class="h">LangChain create_agent</text>
+  <text x="112" y="440" class="t">模型 + 工具 + middleware 组装成 agent loop：model call → tool call → observation → final answer</text>
+
+  <rect x="80" y="497" width="940" height="78" class="box" fill="#312e81" opacity="0.78"/>
+  <text x="112" y="529" class="h">LangGraph runtime</text>
+  <text x="112" y="555" class="t">state · checkpoints · streaming · interrupts · durable execution · compiled state graph</text>
+
+  <line x1="550" y1="213" x2="550" y2="250" class="arrow"/>
+  <line x1="550" y1="346" x2="550" y2="382" class="arrow"/>
+  <line x1="550" y1="460" x2="550" y2="497" class="arrow"/>
+
+  <rect x="735" y="264" width="250" height="56" class="pill"/>
+  <text x="758" y="288" class="small">关键判断</text>
+  <text x="758" y="309" class="t">Harness 优先，而非 runtime 替代</text>
+</svg>
