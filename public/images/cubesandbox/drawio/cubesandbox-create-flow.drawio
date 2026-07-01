@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="CubeSandbox 创建链路">
+    <mxGraphModel dx="1680" dy="920" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="CubeSandbox 创建沙箱链路" style="text;html=1;strokeColor=none;fillColor=none;fontSize=30;fontStyle=1;fontColor=#1f2937;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="560" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="从 E2B 兼容 REST 请求，到调度、rootfs 克隆、tap 网络、MicroVM 启动，再把代理和生命周期状态写回 Redis。" style="text;html=1;strokeColor=none;fillColor=none;fontSize=20;fontColor=#4b5563;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="60" y="102" width="1180" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="client" value="Client / E2B SDK&#xa;POST /sandboxes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontColor=#111827;fontSize=20;fontStyle=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="190" width="220" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="CubeAPI&#xa;校验 env/lifecycle/network&#xa;组装 CreateSandboxRequest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="350" y="170" width="260" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="master" value="CubeMaster&#xa;调度节点&#xa;失败重试 / 熔断坏节点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="170" width="260" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="cubelet" value="Cubelet&#xa;RunCubeSandbox&#xa;默认 tap 网络" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="170" width="250" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="cow" value="CubeCoW&#xa;模板 rootfs&#xa;reflink O(1) 克隆" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfccb;strokeColor=#65a30d;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="410" width="250" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="netagent" value="network-agent&#xa;EnsureNetwork&#xa;注册 TAP / 下发策略" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ccfbf1;strokeColor=#0f766e;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="690" y="410" width="260" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="shim" value="CubeShim&#xa;containerd Shim v2&#xa;调用 hypervisor API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="350" y="410" width="260" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="hyper" value="CubeHypervisor&#xa;KVM MicroVM&#xa;create / restore / boot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce7f3;strokeColor=#db2777;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="410" width="220" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" value="Redis&#xa;proxy map&#xa;lifecycle meta/events/state" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#15803d;fontColor=#111827;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="690" y="650" width="260" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="proxy" value="CubeProxy + sidecar&#xa;读 Redis 路由&#xa;paused 时触发 resume" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="650" width="250" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="ready" value="sandbox_id&#xa;host / ip / token" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#4b5563;fontColor=#111827;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="657" width="210" height="112" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="REST" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#2563eb;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="client" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="gRPC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#d97706;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="api" target="master">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="RunCubeSandbox" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#16a34a;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="master" target="cubelet">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="rootfs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#65a30d;endArrow=block;exitX=0.55;exitY=1;entryX=0.55;entryY=0;" edge="1" parent="1" source="cubelet" target="cow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="tap 策略" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#0f766e;endArrow=block;exitX=0;exitY=0.75;entryX=1;entryY=0.35;" edge="1" parent="1" source="cubelet" target="netagent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1000" y="350" />
+              <mxPoint x="980" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="Create + Start" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#7c3aed;endArrow=block;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="netagent" target="shim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="VmCreate / Boot" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#db2777;endArrow=block;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="shim" target="hyper">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#15803d;endArrow=block;exitX=0.2;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="master" target="redis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="340" />
+              <mxPoint x="620" y="625" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="HGETALL / stream" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#ea580c;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="redis" target="proxy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="返回" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#4b5563;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="proxy" target="ready">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

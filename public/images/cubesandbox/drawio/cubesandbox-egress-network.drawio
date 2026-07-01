@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="CubeSandbox 出网治理">
+    <mxGraphModel dx="1680" dy="920" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="CubeVS + CubeEgress 出网治理路径" style="text;html=1;strokeColor=none;fillColor=none;fontSize=30;fontStyle=1;fontColor=#1f2937;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="740" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="CubeVS 在 TC ingress 上先做逐沙箱 L3/L4 策略和 NAT；命中 L7 标记的 80/443 流量再进入 CubeEgress 做域名、注入和审计。" style="text;html=1;strokeColor=none;fillColor=none;fontSize=20;fontColor=#4b5563;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="60" y="102" width="1320" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="sandbox" value="MicroVM Sandbox&#xa;untrusted code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontColor=#111827;fontSize=20;fontStyle=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="210" width="230" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="tap" value="TAP 设备&#xa;ifindex + sandbox_ip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="210" width="220" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="fromcube" value="from_cube BPF&#xa;SNAT / ARP proxy&#xa;check_net_policy()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ccfbf1;strokeColor=#0f766e;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="650" y="190" width="250" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="policy" value="策略优先级&#xa;allow_out_v2&#xa;&gt; deny_out&#xa;&gt; default allow" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontColor=#111827;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="980" y="170" width="230" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="drop" value="deny 命中&#xa;TCP reset / drop" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="145" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="nat" value="L3/L4 通过&#xa;do_tcp_nat / UDP NAT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="285" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="l7flag" value="L7_REQUIRED&#xa;TCP 80 / 443" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="500" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="tproxy" value="cube-dev / TPROXY&#xa;转入本机 OpenResty" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#8b5cf6;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="650" y="490" width="250" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="egress" value="CubeEgress&#xa;first-match-wins&#xa;默认拒绝 / 失败关闭" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="480" width="220" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="inject" value="凭证注入 + 审计&#xa;清理沙箱伪造 header&#xa;secret GET 脱敏" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce7f3;strokeColor=#db2777;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="480" width="230" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="internet" value="Internet / SaaS API" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#4b5563;fontColor=#111827;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="520" width="230" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="return" value="from_world&#xa;反向 NAT / 端口映射" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#15803d;fontColor=#111827;fontSize=18;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="650" y="700" width="250" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2563eb;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sandbox" target="tap">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="TC ingress" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#0f766e;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="tap" target="fromcube">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="查 map" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#d97706;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="fromcube" target="policy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="拒绝" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#dc2626;endArrow=block;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="policy" target="drop">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="放行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#16a34a;endArrow=block;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" parent="1" source="policy" target="nat">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="命中 L7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#7c3aed;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="policy" target="l7flag">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="redirect" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#8b5cf6;endArrow=block;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="l7flag" target="tproxy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="access_by_lua" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#ea580c;endArrow=block;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="tproxy" target="egress">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="allow" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#db2777;endArrow=block;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="egress" target="inject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="proxy_pass" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#4b5563;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="l7flag" target="internet">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="普通出网" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#16a34a;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="nat" target="internet">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" value="回包" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#15803d;endArrow=block;exitX=0.35;exitY=1;entryX=1;entryY=0.5;dashed=1;" edge="1" parent="1" source="internet" target="return">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1430" y="760" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="DNAT 回沙箱" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;strokeColor=#15803d;endArrow=block;exitX=0;exitY=0.5;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="return" target="tap">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="753" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
