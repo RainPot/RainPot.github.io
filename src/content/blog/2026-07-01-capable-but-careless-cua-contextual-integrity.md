@@ -1,5 +1,5 @@
 ---
-title: "Capable but Careless 论文解析：会用电脑的 Agent，为什么管不住嘴"
+title: "Capable but Careless：会用电脑的 Agent，为什么管不住嘴"
 description: "从 GUIAgent 与移动端 QA 视角解析 AgentCIBench：它把 computer-use agent 的隐私边界问题变成可执行、确定性打分的测评 harness，用 117 个场景测 15 个前沿 agent，平均泄露率 67.9%，只有一个模型落在既能干活又守边界的象限。文章拆解它的三类失败模式、评分设计和防御实验，并讨论这套确定性 oracle 对 APP 端安全测试的直接启发。"
 date: "2026-07-01"
 tags: ["GUI Agent", "Computer Use", "Contextual Integrity", "隐私泄露", "APP 自动化测试", "安全测试"]

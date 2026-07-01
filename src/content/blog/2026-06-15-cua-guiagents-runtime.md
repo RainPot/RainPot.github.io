@@ -1,5 +1,5 @@
 ---
-title: "CUA 源码拆解：GUIAgents 运行时与电脑使用闭环"
+title: "CUA：GUIAgents 运行时与电脑使用闭环"
 description: "基于 trycua/cua 源码，解析 CUA 的项目分层和 GUIAgents 运行时：ComputerAgent 如何选择模型 loop、统一工具协议、执行电脑动作、回灌截图，并兼容 OpenAI、Claude、UI-TARS、OmniParser 和组合 grounding 模型。"
 date: "2026-06-15"
 tags: ["CUA", "GUI Agent", "Computer Use", "UI-TARS", "Agent Runtime"]

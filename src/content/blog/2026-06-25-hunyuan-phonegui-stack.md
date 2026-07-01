@@ -1,5 +1,5 @@
 ---
-title: "腾讯混元 PhoneGUI 五篇论文拆解：环境、训练、执行与部署边界怎样拼成手机 Agent 栈"
+title: "腾讯混元 PhoneGUI 五篇论文：环境、训练、执行与部署边界怎样拼成手机 Agent 栈"
 description: "详细拆解腾讯混元 PhoneGUI 方向的 PhonePrivacy、PhoneSafety、PhoneWorld、PhoneHarness、PhoneBuddy 五篇论文：为什么它们不是五个孤立 benchmark，而是在回答手机 Agent 从环境供给、模型训练、运行时执行到隐私安全边界的系统问题。"
 date: "2026-06-25"
 tags: ["GUI Agent", "Phone Agent", "Tencent Hunyuan", "Mobile Agent", "AI Safety", "APP 自动化测试"]

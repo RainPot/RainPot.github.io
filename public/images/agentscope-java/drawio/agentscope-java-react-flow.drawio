@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="Page-1">
+    <mxGraphModel dx="1410" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1460" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" value="开始" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="entry" value="call / streamEvents&#xa;共享事件流核心" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="260" y="60" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_mw" value="onAgent&#xa;AgentStart / End" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="570" y="60" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="lifecycle" value="runLifecycle&#xa;串行门 / hooks / state" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="870" y="60" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="result" value="AgentResultEvent&#xa;返回最终 Msg" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="60" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="prompt" value="onSystemPrompt&#xa;workspace / skill / memory" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="170" y="250" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="reasoning" value="Reasoning&#xa;onReasoning + onModelCall" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="520" y="250" width="280" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="model" value="model.stream&#xa;text / thinking / toolUse" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="890" y="250" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="has_tool" value="有工具调用?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="245" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="permission" value="Permission Gate&#xa;规则 / 模式 / 工具自检" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="440" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="need_ask" value="需要确认?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="435" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ask" value="RequireUserConfirm&#xa;暂停并持久化 pending" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="610" y="440" width="230" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_exec" value="Toolkit.callTools&#xa;校验 / 超时 / 重试 / 并发" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="635" width="270" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tool_result" value="ToolResultBlock&#xa;写回 AgentState" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="720" y="640" width="250" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="next_iter" value="下一轮 reasoning&#xa;或 maxIters summarizing" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="330" y="640" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="start" target="entry">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="entry" target="agent_mw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="agent_mw" target="lifecycle">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="进入循环" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="lifecycle" target="reasoning">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="prompt" target="reasoning">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="模型调用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="reasoning" target="model">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="model" target="has_tool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a8" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=16;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="has_tool" target="result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a9" value="是" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=16;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="has_tool" target="permission">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="permission" target="need_ask">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a11" value="是" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=16;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="need_ask" target="ask">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a12" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=16;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="need_ask" target="tool_exec">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="955" y="590" />
+              <mxPoint x="1225" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="tool_exec" target="tool_result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a14" value="进入上下文" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="tool_result" target="next_iter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a15" value="继续" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" edge="1" parent="1" source="next_iter" target="reasoning">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="465" y="600" />
+              <mxPoint x="110" y="600" />
+              <mxPoint x="110" y="220" />
+              <mxPoint x="660" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,5 +1,5 @@
 ---
-title: "Argus 论文解析：GUI Agent 什么时候应该相信自己的点击"
+title: "Argus：GUI Agent 什么时候应该相信自己的点击"
 description: "从 GUIAgent 与移动端 QA 视角解析 Argus：它把 computer-use agent 的不确定性量化从通用 VLM 校准拉回到可执行 GUI grounding，系统比较 27 种 open-weight UQ 方法、8 种 API-only 方法与 conformal click disks，提醒工程系统不要只看 top-1 坐标，还要判断何时拒绝、复查或交给人。"
 date: "2026-06-26"
 tags: ["GUI Agent", "Computer Use", "Uncertainty Quantification", "GUI Grounding", "APP 自动化测试"]

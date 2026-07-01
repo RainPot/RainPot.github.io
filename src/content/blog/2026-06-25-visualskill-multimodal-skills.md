@@ -1,5 +1,5 @@
 ---
-title: "VISUALSKILL 论文解析：GUI Agent 的技能库为什么不能只剩文字"
+title: "VISUALSKILL：GUI Agent 的技能库为什么不能只剩文字"
 description: "从 GUIAgent 与移动端 QA 视角解析 VISUALSKILL：它把应用级技能库从 text-only 文档推进到按需加载的图文混合知识，并用 matched text-only control 证明 UI 图像本身能帮助元素定位和中间状态验证。"
 date: "2026-06-25"
 tags: ["GUI Agent", "Computer Use", "Multimodal Skill", "MCP", "APP 自动化测试"]

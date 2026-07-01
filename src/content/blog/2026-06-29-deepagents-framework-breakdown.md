@@ -1,5 +1,5 @@
 ---
-title: "Deep Agents 源码拆解：四个模块背后的实现机制"
+title: "Deep Agents：四个模块背后的实现机制"
 description: "按官方文档的 Execution environment、Context management、Delegation、Steering 四个模块拆解 langchain-ai/deepagents 的源码实现：middleware、backend protocol、虚拟文件系统、上下文压缩、subagent、HITL 与 LangGraph runtime 如何拼起来。"
 date: "2026-06-29"
 tags: ["AI Agent", "LangChain", "LangGraph", "Agent Harness", "源码拆解"]

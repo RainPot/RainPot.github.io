@@ -1,5 +1,5 @@
 ---
-title: "AndroidDaily 论文解析：闭源真实 App 上，Mobile GUI Agent 终于开始被“过程可验证”地评测"
+title: "AndroidDaily：闭源真实 App 上，Mobile GUI Agent 终于开始被“过程可验证”地评测"
 description: "从 GUIAgent / computer-use agent 专家视角解析 AndroidDaily：350 个真实闭源 Android App 任务、94 个高频应用与 GRADE 过程感知评测，把移动端 GUI Agent 评测从静态 grounding 和开源沙箱推向真实 App 自动化与可诊断验证。"
 date: "2026-06-18"
 tags: ["GUI Agent", "Mobile Agent", "Android", "Benchmark", "APP 自动化测试"]

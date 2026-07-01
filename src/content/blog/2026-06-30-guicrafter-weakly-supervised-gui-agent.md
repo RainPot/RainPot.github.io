@@ -1,5 +1,5 @@
 ---
-title: "GUICrafter 论文解析：GUI Agent 的数据飞轮，未必只能靠人工轨迹"
+title: "GUICrafter：GUI Agent 的数据飞轮，未必只能靠人工轨迹"
 description: "解析 2026-06-29 arXiv 论文 GUICrafter：它用海量未标注截图中的交互信号构造 meta-task，再用少量高质量数据做 RL 校准，尝试把 GUI Agent 训练从昂贵人工轨迹推向弱监督预训练。文章从移动端 QA 与 APP 自动化测试视角讨论其贡献、证据和工程边界。"
 date: "2026-06-30"
 tags: ["GUI Agent", "Computer Use", "Weak Supervision", "Reinforcement Learning", "APP 自动化测试"]

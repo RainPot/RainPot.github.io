@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="AJ-Bench Runtime Flow">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1720" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="AJ-Bench 代码运行链路：从 pipeline 到判定结果" style="text;html=1;strokeColor=none;fillColor=none;fontSize=34;fontStyle=1;fontColor=#1f2937;align=center;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="280" y="28" width="1160" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cli" value="统一入口&#xa;agent_judge_&#xa;pipeline.py&#xa;ds / gui / search 分发" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=22;fontStyle=1;fontColor=#111827;spacing=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="350" width="290" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="search_lane" value="Search：网页证据核验" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#2563eb;fontSize=23;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="390" y="100" width="920" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="search_pipe" value="agent_judge_&#xa;search_pipeline.py&#xa;模型 / 温度&#xa;tasks_root" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=19;fontColor=#111827;spacing=10;" vertex="1" parent="search_lane">
+          <mxGeometry x="35" y="62" width="220" height="112" as="geometry" />
+        </mxCell>
+        <mxCell id="search_eval" value="MCPEvaluator&#xa;Setup → Execute → Verify → Cleanup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="search_lane">
+          <mxGeometry x="310" y="75" width="230" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="search_agent" value="AgentJudgeSearch&#xa;Playwright/Filesystem MCP&#xa;网页内容摘要与证据抽取" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="search_lane">
+          <mxGeometry x="600" y="65" width="270" height="106" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ds_lane" value="DS：可执行环境状态验证" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#16a34a;fontSize=23;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="390" y="345" width="920" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_pipe" value="agent_judge_&#xa;ds_pipeline.py&#xa;读取 DS 轨迹" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="ds_lane">
+          <mxGeometry x="35" y="75" width="220" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_replay" value="JudgeEvaluator&#xa;环境 setup&#xa;回放 messages.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="ds_lane">
+          <mxGeometry x="310" y="65" width="230" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="ds_judge" value="Judge Agent&#xa;同一 MCP 工具交互检查&#xa;输出 PASS / FAIL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#059669;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="ds_lane">
+          <mxGeometry x="600" y="65" width="270" height="106" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gui_lane" value="GUI：桌面最终状态与过程验证" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#d97706;fontSize=23;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="390" y="590" width="920" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="gui_pipe" value="agent_judge_&#xa;gui_pipeline.py&#xa;队列 / 多进程 / AWS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="gui_lane">
+          <mxGeometry x="35" y="75" width="220" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="gui_load" value="SingleJudgeAgentMCP&#xa;加载 task json / traj.jsonl&#xa;screenshot / a11y tree" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="gui_lane">
+          <mxGeometry x="310" y="60" width="245" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="gui_judge" value="逐步交互&#xa;每轮一个 ACTION&#xa;DONE 后 true / false" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontSize=20;fontColor=#111827;spacing=10;" vertex="1" parent="gui_lane">
+          <mxGeometry x="625" y="60" width="245" height="116" as="geometry" />
+        </mxCell>
+
+        <mxCell id="out" value="结果落盘与聚合&#xa;messages.json&#xa;meta.json / summary.json&#xa;Accuracy / Precision&#xa;Recall / F1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontSize=20;fontStyle=1;fontColor=#111827;spacing=14;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="345" width="320" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge_cli_s" value="search" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#2563eb;fontSize=18;exitX=1;exitY=0.2;entryX=0;entryY=0.5;" edge="1" parent="1" source="cli" target="search_pipe"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_cli_d" value="ds" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#16a34a;fontSize=18;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cli" target="ds_pipe"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_cli_g" value="gui" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#d97706;fontSize=18;exitX=1;exitY=0.8;entryX=0;entryY=0.5;" edge="1" parent="1" source="cli" target="gui_pipe"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="edge_s1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#2563eb;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="search_pipe" target="search_eval"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_s2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#2563eb;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="search_eval" target="search_agent"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_s_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" edge="1" parent="1" source="search_agent" target="out"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="edge_d1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#16a34a;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="ds_pipe" target="ds_replay"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_d2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#16a34a;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="ds_replay" target="ds_judge"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_d_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="ds_judge" target="out"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="edge_g1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gui_pipe" target="gui_load"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_g2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#d97706;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gui_load" target="gui_judge"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="edge_g_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="gui_judge" target="out"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

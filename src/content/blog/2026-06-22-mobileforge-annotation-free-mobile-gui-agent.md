@@ -1,5 +1,5 @@
 ---
-title: "MobileForge 论文解析：Mobile GUI Agent 从人工标注走向真实 App 自适应"
+title: "MobileForge：Mobile GUI Agent 从人工标注走向真实 App 自适应"
 description: "从 GUIAgent 专家视角解析 MobileForge：用 MobileGym 与 HiFPO 把真实移动 App 探索、自动任务生成、层级反馈和 GRPO 训练连成 annotation-free adaptation 闭环，并讨论它对 APP 自动化测试与移动端 QA 的价值和风险。"
 date: "2026-06-22"
 tags: ["GUI Agent", "Mobile Agent", "Android", "Reinforcement Learning", "APP 自动化测试"]

@@ -1,5 +1,5 @@
 ---
-title: "MementoGUI 论文解析：长程 GUI Agent 的瓶颈，正在从视觉定位转向多模态记忆控制"
+title: "MementoGUI：长程 GUI Agent 的瓶颈，正在从视觉定位转向多模态记忆控制"
 description: "从 GUIAgent / computer-use agent 专家视角解析 MementoGUI：它把长程 GUI 控制从 raw history replay 和 text-only memory 推向可学习的多模态工作记忆与情景记忆控制，但其 offline benchmark、VLM judge 与低轨迹成功率也提示工程落地仍需谨慎。"
 date: "2026-06-17"
 tags: ["GUI Agent", "Computer Use Agent", "Memory", "Long-Horizon Agent", "MementoGUI"]

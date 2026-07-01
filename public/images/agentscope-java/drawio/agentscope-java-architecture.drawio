@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="Page-1">
+    <mxGraphModel dx="1410" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1460" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="band_app" value="应用层" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f7f9fb;strokeColor=#cfd7e3;fontSize=20;fontStyle=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="1380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="band_harness" value="Harness 层" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff8e8;strokeColor=#d6b656;fontSize=20;fontStyle=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="1380" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="band_core" value="Core 层" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef7ee;strokeColor=#82b366;fontSize=20;fontStyle=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="1380" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="band_ext" value="扩展与基础设施" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f2f8;strokeColor=#9673a6;fontSize=20;fontStyle=1;align=left;verticalAlign=top;spacingTop=10;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="690" width="1380" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="app_call" value="应用入口&#xa;call / streamEvents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="80" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="runtime_context" value="RuntimeContext&#xa;userId / sessionId" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="430" y="80" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="user_output" value="事件流 / 最终 Msg&#xa;AgentEvent + AgentResult" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="980" y="80" width="300" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="harness" value="HarnessAgent&#xa;用户侧装配器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="270" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_stack" value="Middleware Stack&#xa;workspace / memory&#xa;skill / subagent" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="390" y="255" width="260" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="toolkit" value="Toolkit&#xa;内置工具 + MCP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="730" y="270" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="workspace" value="WorkspaceManager&#xa;文件 / 状态空间" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="270" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="react" value="ReActAgent&#xa;推理-行动循环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="510" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_chain" value="MiddlewareChain&#xa;onAgent / reasoning&#xa;acting / modelCall" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="430" y="500" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="model_stream" value="Model.stream&#xa;增量输出解析" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="750" y="510" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="state_store" value="AgentStateStore&#xa;会话上下文 / 权限" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="500" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="model_providers" value="模型扩展&#xa;OpenAI / DashScope&#xa;Gemini / Ollama" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="100" y="730" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fs_sandbox" value="文件与沙箱&#xa;Local / Remote / Sandbox" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="420" y="730" width="260" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="skill_repos" value="Skill 仓库&#xa;项目 / 市场 / 工作区" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="750" y="730" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="extensions" value="企业扩展&#xa;RAG / 协议 / Starter" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="730" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="app_call" target="harness">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="runtime_context" target="mw_stack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="装配" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="harness" target="mw_stack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="注册工具" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="mw_stack" target="toolkit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="管理空间" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="toolkit" target="workspace">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="委托执行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="harness" target="react">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="包裹生命周期" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="mw_stack" target="mw_chain">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="推理" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="mw_chain" target="model_stream">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="持久化" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;fontSize=15;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="model_stream" target="state_store">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="state_store" target="user_output">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1340" y="550" />
+              <mxPoint x="1340" y="175" />
+              <mxPoint x="1130" y="175" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

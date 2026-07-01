@@ -1,5 +1,5 @@
 ---
-title: "MemGUI-Agent 论文解析：长程 Mobile GUI Agent 的瓶颈，正在从点屏转向上下文治理"
+title: "MemGUI-Agent：长程 Mobile GUI Agent 的瓶颈，正在从点屏转向上下文治理"
 description: "从 GUIAgent / mobile QA 视角解析 MemGUI-Agent：ConAct 把历史折叠、UI 记忆和动作生成放进同一个端到端策略，MemGUI-3K 用 2956 条长程轨迹监督模型学习上下文管理，并讨论它对 APP 自动化测试、移动端 QA 与长流程回归的工程启发。"
 date: "2026-06-24"
 tags: ["GUI Agent", "Mobile Agent", "Android", "Context Management", "APP 自动化测试"]

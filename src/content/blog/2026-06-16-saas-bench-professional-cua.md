@@ -1,5 +1,5 @@
 ---
-title: "SaaS-Bench 论文解析：GUI Agent 从“会点网页”到“能完成真实 SaaS 工作流”还差多远？"
+title: "SaaS-Bench：GUI Agent 从“会点网页”到“能完成真实 SaaS 工作流”还差多远？"
 description: "从 GUIAgent / computer-use agent 专家视角解析 SaaS-Bench：23 个真实可部署 SaaS、106 个专业工作流、长程多应用任务和可验证 checkpoint 如何暴露当前 CUA 在规划、状态追踪、自验证与工程落地上的短板。"
 date: "2026-06-16"
 tags: ["GUI Agent", "Computer Use Agent", "Benchmark", "SaaS-Bench", "Long-Horizon Agent"]

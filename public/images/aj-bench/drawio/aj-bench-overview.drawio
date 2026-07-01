@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="AJ-Bench Overview">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="940" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="AJ-Bench：环境感知 Agent-as-a-Judge 评测框架" style="text;html=1;strokeColor=none;fillColor=none;fontSize=34;fontStyle=1;fontColor=#1f2937;align=center;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="270" y="30" width="1160" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="src_lane" value="任务来源" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;fontSize=24;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="280" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="src_search" value="Search&#xa;Mind2Web-2&#xa;WideSearch" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=22;fontColor=#111827;spacing=14;" vertex="1" parent="src_lane">
+          <mxGeometry x="34" y="80" width="212" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="src_ds" value="DS&#xa;MCPMark&#xa;文件与数据库任务" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=22;fontColor=#111827;spacing=14;" vertex="1" parent="src_lane">
+          <mxGeometry x="34" y="225" width="212" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="src_gui" value="GUI&#xa;OSWorld&#xa;桌面轨迹" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=22;fontColor=#111827;spacing=14;" vertex="1" parent="src_lane">
+          <mxGeometry x="34" y="370" width="212" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pipe_lane" value="构建管线" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;fontSize=24;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="420" y="130" width="360" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="pipe_task" value="任务设计&#xa;按领域改写验证目标" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=22;fontColor=#111827;spacing=12;" vertex="1" parent="pipe_lane">
+          <mxGeometry x="52" y="68" width="256" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="pipe_traj" value="轨迹收集&#xa;保留成功与失败执行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=22;fontColor=#111827;spacing=12;" vertex="1" parent="pipe_lane">
+          <mxGeometry x="52" y="188" width="256" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="pipe_label" value="标签标注&#xa;Search 逐项验证&#xa;DS/GUI 看最终状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=22;fontColor=#111827;spacing=12;" vertex="1" parent="pipe_lane">
+          <mxGeometry x="52" y="308" width="256" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="pipe_check" value="人工复核&#xa;过滤低质或歧义样本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=22;fontColor=#111827;spacing=12;" vertex="1" parent="pipe_lane">
+          <mxGeometry x="52" y="450" width="256" height="82" as="geometry" />
+        </mxCell>
+
+        <mxCell id="data_lane" value="基准数据" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;fontSize=24;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="860" y="130" width="360" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="data_total" value="155 个任务&#xa;516 条标注轨迹&#xa;60 个工具" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontSize=26;fontStyle=1;fontColor=#111827;spacing=14;" vertex="1" parent="data_lane">
+          <mxGeometry x="52" y="70" width="256" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="data_search" value="Search&#xa;Wide 9 / Deep 52&#xa;信息获取与证据核验" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=21;fontColor=#111827;spacing=10;" vertex="1" parent="data_lane">
+          <mxGeometry x="52" y="220" width="256" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="data_ds" value="DS&#xa;FileSystem 24&#xa;Postgres 18&#xa;环境状态验证" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=21;fontColor=#111827;spacing=10;" vertex="1" parent="data_lane">
+          <mxGeometry x="52" y="325" width="256" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="data_gui" value="GUI&#xa;PPT 21 / Word 12&#xa;Excel 19&#xa;过程与最终状态验证" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=21;fontColor=#111827;spacing=10;" vertex="1" parent="data_lane">
+          <mxGeometry x="52" y="450" width="256" height="102" as="geometry" />
+        </mxCell>
+
+        <mxCell id="eval_lane" value="评测与输出" style="swimlane;startSize=42;rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;fontSize=24;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="130" width="340" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="eval_llm" value="LLM-as-a-Judge&#xa;只看题目与轨迹文本&#xa;不主动访问环境" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontSize=21;fontColor=#111827;spacing=12;" vertex="1" parent="eval_lane">
+          <mxGeometry x="42" y="85" width="256" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="eval_agent" value="Agent-as-a-Judge&#xa;通过 MCP/GUI 工具交互&#xa;获取可验证证据" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=21;fontColor=#111827;spacing=12;" vertex="1" parent="eval_lane">
+          <mxGeometry x="42" y="235" width="256" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="eval_out" value="F1 / Leaderboard&#xa;推理强度、交互轮数、模态消融" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;fontSize=21;fontColor=#111827;spacing=12;" vertex="1" parent="eval_lane">
+          <mxGeometry x="42" y="390" width="256" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="src_search" target="pipe_task"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="src_ds" target="pipe_traj"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="src_gui" target="pipe_label"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#2563eb;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="pipe_check" target="data_total"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="对比" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#64748b;fontSize=18;exitX=1;exitY=0.45;entryX=0;entryY=0.5;" edge="1" parent="1" source="data_total" target="eval_llm"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" value="交互验证" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#16a34a;fontSize=18;exitX=1;exitY=0.6;entryX=0;entryY=0.5;" edge="1" parent="1" source="data_total" target="eval_agent"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#0284c7;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="eval_agent" target="eval_out"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
