@@ -65,7 +65,9 @@ Table 3 比较了专门的 GUI agent。UGround、Aguvis 这类 coordinate-emitti
 
 Appendix 里的 Table 17 也很有意思：在同一批 web-text click 任务里，按模型 stated belief 分组，跟随结构信念的一组 wrong-click rate 明显更高。也就是说，错误不是简单来自“元素列表被污染所以怎么点都错”，而是先形成了错误状态信念，再把这个信念转成动作。
 
-![Table 16 和 Table 17：一致性 gate 能降低结构跟随；同一个点击任务里，跟随结构信念的样本更容易点错。](/images/gui-agents-believe-their-eyes-state-belief/table-16-17-consistency-and-action-interface.png)
+![Table 16：consistency gate repair 在 web text-swap 与 stale-node 场景下同时降低 action error 和 structure-following。](/images/gui-agents-believe-their-eyes-state-belief/table-16-consistency-gate-repair.png)
+
+![Table 17：同一个 gpt-5.4 click 任务中，跟随结构信念的样本 wrong-click rate 明显更高，说明错误信念会传导到动作。](/images/gui-agents-believe-their-eyes-state-belief/table-17-belief-action-click-error.png)
 
 作者还测试了一个 training-free consistency gate：当检测到截图和结构不一致时，重新 grounding 或调整信任策略。Figure 4 显示，这个 gate 能显著降低 text-swap 的 structure-following，同时对一致条件的错误率影响很小。不过论文也很谨慎：这不是完整防御，只是诊断后的启发式修复。真实环境里，截图也可能被遮挡、压缩、模糊或被恶意视觉元素干扰；结构也可能比截图更可靠，比如屏幕外节点、可访问性标签、隐藏但可操作的控件。关键是系统要知道自己在相信哪个通道，而不是默认融合后就是真相。
 
