@@ -29,7 +29,7 @@
 
 文章围绕以下结论组织，并逐条寻找证据：
 
-1. Persome 不是把屏幕截图直接交给 LLM 总结；采集、分钟级时间线、确定性会话切分与五分钟 reducer 先把状态整理出来，LLM 只进入后续语义建模阶段。
+1. Persome 不是把屏幕截图直接交给一个 LLM 生成“关于你”的总结。S0/S1 采集、去重、时间窗、会话边界、水位线和失败回退由代码约束；分钟级 timeline normalizer 与五分钟 reducer 也会调用 LLM，但输入窗口、输出结构和保真规则是受限的，后续 `memory_delta`、Face、Volume、Root 才逐级形成长期语义模型。
 2. `Point → Line → Face → Volume → Root` 不是装饰性的命名，而是不同层级、不同来源约束的数据结构；重要结论保留 receipt，可以沿模型向证据回查。
 3. `HUMAN.md` 是对已有模型快照的确定性阅读视图，不是第二套模型，也不是机器接口；版本化 JSON snapshot 才是机器契约。
 4. “本地优先”不等于“永不出网”：采集、存储和 BM25 可以本地运行，但启用语义建模时，配置的 LLM provider 或显式授权的 Agent CLI 会接收阶段 prompt。

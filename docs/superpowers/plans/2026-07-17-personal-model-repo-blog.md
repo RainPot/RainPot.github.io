@@ -4,7 +4,7 @@
 
 **Goal:** 基于 `Intuition-Lab/personal-model@fb3986d` 写成一篇证据充分、图文可读的中文源码拆解文章，并通过 RainPotBlog 的 `main` 分支发布。
 
-**Architecture:** 文章不按目录罗列功能，而是沿“活动采集 → 状态形成 → 几何模型 → `HUMAN.md`/MCP”数据流展开。三张 draw.io 图分别承担 Runtime 总览、模型证据链和访问边界，正文使用短代码或 prompt 片段证明关键判断，再用独立章节说明降级、隐私和适用边界。
+**Architecture:** 文章不按目录罗列功能，而是沿“活动采集 → 有确定性边界的状态形成 → 几何模型 → `HUMAN.md`/MCP”数据流展开。三张 draw.io 图分别承担 Runtime 总览、模型证据链和访问边界，正文使用短代码或 prompt 片段证明关键判断，再用独立章节说明降级、隐私和适用边界。
 
 **Tech Stack:** Python 3.12、Persome 0.3.2、draw.io、Astro 6、Markdown、Vitest、GitHub Pages。
 
@@ -105,7 +105,7 @@ Expected: 返回可用版本；如果不可用，按 drawio skill 的 macOS app 
 
 - [ ] **Step 2: 生成 Runtime 总览图**
 
-使用自上而下四段布局：输入源、确定性状态形成、语义建模、消费面。主节点标签固定为“AX / 本地 OCR / 可信导入”“采集缓冲”“分钟时间线”“确定性会话”“五分钟 reducer”“Point / Line”“Face / Volume / Root”“Snapshot / HUMAN.md / MCP”。
+使用自上而下四段布局：输入源、有边界的状态形成、语义建模、消费面。主节点标签固定为“AX / 本地 OCR / 可信导入”“采集缓冲”“分钟时间线”“确定性会话”“五分钟 reducer”“Point / Line”“Face / Volume / Root”“Snapshot / HUMAN.md / MCP”。timeline 与 reducer 节点明确标注受限 LLM 调用，避免把状态形成误画成全确定性过程。
 
 - [ ] **Step 3: 生成模型证据链图**
 
