@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="证据几何">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="930" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="抽象可以上升，证据必须能够向下回查" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=38;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1120" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Persome 用 source_receipts 穿过 Point、Line、Face、Volume 与 Root，查询时再拆成三类结果" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=22;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="72" width="1120" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-aggregate" value="① 聚合：事实逐层形成结构" style="swimlane;startSize=54;rounded=1;html=1;fillColor=#FFF8E8;swimlaneFillColor=#FFFFFF;strokeColor=#D9B45B;strokeWidth=2;fontColor=#5D4600;fontSize=25;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="125" width="1120" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="point-line" value="&lt;b&gt;Point / Line&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:21px&quot;&gt;事实、事件与关系&lt;br&gt;保存原始 receipt&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0C2;strokeColor=#C69214;strokeWidth=3;fontColor=#5D4600;fontSize=29;align=center;verticalAlign=middle;spacing=14;" vertex="1" parent="lane-aggregate">
+          <mxGeometry x="55" y="92" width="285" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="face-volume" value="&lt;b&gt;Face / Volume&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:21px&quot;&gt;主题与跨主题结构&lt;br&gt;继承成员 receipts&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0C2;strokeColor=#C69214;strokeWidth=3;fontColor=#5D4600;fontSize=29;align=center;verticalAlign=middle;spacing=14;" vertex="1" parent="lane-aggregate">
+          <mxGeometry x="415" y="92" width="285" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="root" value="&lt;b&gt;Root&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:21px&quot;&gt;全局叙事&lt;br&gt;最多一个 live Root&lt;br&gt;继续携带 receipts&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0C2;strokeColor=#C69214;strokeWidth=3;fontColor=#5D4600;fontSize=29;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="lane-aggregate">
+          <mxGeometry x="775" y="92" width="285" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-point-face" value="聚类 / 组合" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#A87400;strokeWidth=3;endArrow=block;endFill=1;fontSize=19;fontColor=#7A5700;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane-aggregate" source="point-line" target="face-volume">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-face-root" value="member chain" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#A87400;strokeWidth=3;endArrow=block;endFill=1;fontSize=19;fontColor=#7A5700;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane-aggregate" source="face-volume" target="root">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aggregate-note" value="越往上越抽象，但 source_receipts 不应丢失" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=21;fontStyle=2;fontColor=#7A5700;" vertex="1" parent="lane-aggregate">
+          <mxGeometry x="260" y="248" width="600" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane-resolve" value="② 回查：resolve_evidence 把结果分清楚" style="swimlane;startSize=54;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=25;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="465" width="1120" height="370" as="geometry" />
+        </mxCell>
+        <mxCell id="resolver" value="&lt;b&gt;resolve_evidence&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:21px&quot;&gt;输入 object_id 或 receipt&lt;br&gt;沿成员链与版本链解析&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=29;align=center;verticalAlign=middle;spacing=14;" vertex="1" parent="lane-resolve">
+          <mxGeometry x="90" y="125" width="350" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="sources" value="&lt;b&gt;sources&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:20px&quot;&gt;直接证据与 receipt 路径&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=26;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane-resolve">
+          <mxGeometry x="655" y="72" width="370" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="context" value="&lt;b&gt;context&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:20px&quot;&gt;附近采集线索 ≠ 直接证据&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8EC;strokeColor=#C65A72;strokeWidth=3;fontColor=#7A2438;fontSize=26;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane-resolve">
+          <mxGeometry x="655" y="168" width="370" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="history" value="&lt;b&gt;history&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:20px&quot;&gt;对象演化、版本与 lineage&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=26;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane-resolve">
+          <mxGeometry x="655" y="264" width="370" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-resolver-sources" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane-resolve" source="resolver" target="sources">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-resolver-context" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#C65A72;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane-resolve" source="resolver" target="context">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-resolver-history" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;entryX=0;entryY=0.5;strokeColor=#7B68A6;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane-resolve" source="resolver" target="history">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

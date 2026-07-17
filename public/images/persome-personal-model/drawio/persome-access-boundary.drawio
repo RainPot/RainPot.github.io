@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="访问与隐私边界">
+    <mxGraphModel dx="1250" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="970" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="“本地优先”的边界在哪里？" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=38;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1120" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="默认数据留在 ~/.persome；配置语义阶段后可能发生外发，MCP 仍不提供设备控制" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=22;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="72" width="1120" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="local-boundary" value="本机 Persome Runtime" style="swimlane;startSize=58;rounded=1;html=1;fillColor=#ECFDF3;swimlaneFillColor=#FFFFFF;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=26;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="135" width="700" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="capture" value="&lt;b&gt;采集 + 本地 OCR&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;锁屏 / 暂停 / secure input gate&lt;br&gt;像素加密失败则不落盘&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=25;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="local-boundary">
+          <mxGeometry x="50" y="92" width="275" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="data-root" value="&lt;b&gt;~/.persome&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;0700 目录 · 0600 敏感文件&lt;br&gt;采集默认保留 7 天&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=25;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="local-boundary">
+          <mxGeometry x="375" y="92" width="275" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="model" value="&lt;b&gt;语义模型&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:20px&quot;&gt;Point → Line → Face&lt;br&gt;→ Volume → Root&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0C2;strokeColor=#C69214;strokeWidth=3;fontColor=#5D4600;fontSize=27;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="local-boundary">
+          <mxGeometry x="210" y="292" width="280" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="stdio" value="&lt;b&gt;stdio MCP&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;每个客户端独立进程&lt;br&gt;无需复制 bearer&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=25;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="local-boundary">
+          <mxGeometry x="50" y="495" width="275" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="http" value="&lt;b&gt;127.0.0.1 HTTP + viewer&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;bearer · DNS / CSRF guard&lt;br&gt;仅 loopback&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=24;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="local-boundary">
+          <mxGeometry x="375" y="495" width="275" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="local-note" value="MCP 暴露搜索、证据回查与纠错；没有点击、输入或接管工具" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=2;fontColor=#486581;" vertex="1" parent="local-boundary">
+          <mxGeometry x="75" y="638" width="550" height="38" as="geometry" />
+        </mxCell>
+
+        <mxCell id="trusted-agent" value="&lt;b&gt;受信 Agent&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;本机 MCP 客户端&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=25;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="625" width="210" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="provider" value="&lt;b&gt;配置的 LLM / Agent CLI&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:18px&quot;&gt;语义阶段启用时参与&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0C2;strokeColor=#C69214;strokeWidth=3;fontColor=#5D4600;fontSize=24;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="390" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="untrusted" value="&lt;b&gt;局域网 / 网页&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:19px&quot;&gt;非 loopback 请求&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8EC;strokeColor=#C65A72;strokeWidth=3;fontColor=#7A2438;fontSize=24;align=center;verticalAlign=middle;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="660" width="220" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-capture-data" value="私有落盘" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;fontSize=18;fontColor=#334E68;labelBackgroundColor=#FFFFFF;" edge="1" parent="local-boundary" source="capture" target="data-root">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-data-model" value="构建 / 快照" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.8;entryY=0;strokeColor=#A87400;strokeWidth=3;endArrow=block;endFill=1;fontSize=18;fontColor=#7A5700;labelBackgroundColor=#FFFFFF;" edge="1" parent="local-boundary" source="data-root" target="model">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-model-stdio" value="读取 / 纠错" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;entryX=0.5;entryY=0;strokeColor=#7B68A6;strokeWidth=3;endArrow=block;endFill=1;fontSize=18;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="local-boundary" source="model" target="stdio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-model-http" value="读取 / 检查" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;entryX=0.5;entryY=0;strokeColor=#7B68A6;strokeWidth=3;endArrow=block;endFill=1;fontSize=18;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="local-boundary" source="model" target="http">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-agent-stdio" value="本机 stdio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;fontSize=18;fontColor=#164C31;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="trusted-agent" target="stdio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-model-provider" value="可选语义阶段 egress" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#C69214;strokeWidth=3;dashed=1;dashPattern=8 6;endArrow=block;endFill=1;fontSize=18;fontColor=#7A5700;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="model" target="provider">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-untrusted-http" value="×" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#C65A72;strokeWidth=3;dashed=1;dashPattern=6 6;endArrow=none;fontSize=30;fontStyle=1;fontColor=#7A2438;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="untrusted" target="http">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
