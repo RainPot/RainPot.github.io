@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .title { fill:#111827; font-size:26px; font-weight:700; }
+    .sub { fill:#4b5563; font-size:15px; }
+    .lane-title { fill:#6b7280; font-size:12px; font-weight:700; letter-spacing:.08em; }
+    .node-title { fill:#111827; font-size:15px; font-weight:700; }
+    .node-sub { fill:#374151; font-size:12px; }
+    .tiny { fill:#6b7280; font-size:11px; }
+    .caption { fill:#6b7280; font-size:12px; font-weight:600; }
+    .box { fill:#f9fafb; stroke:#e5e7eb; stroke-width:1.2; rx:8; }
+    .box2 { fill:#ffffff; stroke:#d1d5db; stroke-width:1.2; rx:8; }
+    .blue { fill:#eff6ff; stroke:#93c5fd; }
+    .green { fill:#ecfdf5; stroke:#86efac; }
+    .orange { fill:#fff7ed; stroke:#fdba74; }
+    .purple { fill:#f5f3ff; stroke:#c4b5fd; }
+    .rose { fill:#fff1f2; stroke:#fda4af; }
+    .slate { fill:#f8fafc; stroke:#cbd5e1; }
+    .edge { fill:none; stroke:#3b82f6; stroke-width:2; marker-end:url(#arrow-blue); }
+    .edge2 { fill:none; stroke:#10b981; stroke-width:2; marker-end:url(#arrow-green); }
+    .edge3 { fill:none; stroke:#f97316; stroke-width:2; marker-end:url(#arrow-orange); }
+    .edge4 { fill:none; stroke:#8b5cf6; stroke-width:2; marker-end:url(#arrow-purple); }
+    .dash { fill:none; stroke:#9ca3af; stroke-width:1.6; stroke-dasharray:5 4; marker-end:url(#arrow-gray); }
+    .container { fill:none; stroke:#e5e7eb; stroke-width:1.2; stroke-dasharray:6 5; rx:10; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#3b82f6"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#10b981"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#f97316"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#8b5cf6"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#9ca3af"/></marker>
+  </defs>
+  <rect width="1400" height="820" fill="#ffffff"/>
+  <text x="48" y="52" class="title">jcode Memory 的存储模型</text>
+  <text x="48" y="78" class="sub">不是一张向量表，而是 project/global 两套 JSON MemoryGraph。</text>
+
+<rect x="70" y="150" width="245" height="122" class="box blue"/>
+<text x="88" y="180" class="node-title">MemoryManager</text>
+<text x="88" y="204" class="node-sub">with_project_dir(dir)</text>
+<text x="88" y="226" class="node-sub">project hash → JSON</text>
+<text x="88" y="248" class="node-sub">global.json</text>
+<rect x="410" y="135" width="300" height="155" class="box green"/>
+<text x="428" y="165" class="node-title">Project MemoryGraph</text>
+<text x="428" y="189" class="node-sub">~/.jcode/memory/projects/&lt;hash&gt;.json</text>
+<text x="428" y="211" class="node-sub">repo-specific facts / corrections</text>
+<text x="428" y="233" class="node-sub">loaded &amp; cached as graph</text>
+<rect x="410" y="355" width="300" height="130" class="box green"/>
+<text x="428" y="385" class="node-title">Global MemoryGraph</text>
+<text x="428" y="409" class="node-sub">~/.jcode/memory/global.json</text>
+<text x="428" y="431" class="node-sub">user preferences / global facts</text>
+<text x="428" y="453" class="node-sub">same graph schema</text>
+<rect x="820" y="110" width="250" height="155" class="box purple"/>
+<text x="838" y="140" class="node-title">MemoryEntry</text>
+<text x="838" y="164" class="node-sub">content + category + tags</text>
+<text x="838" y="186" class="node-sub">trust / strength / confidence</text>
+<text x="838" y="208" class="node-sub">embedding + embedding_model</text>
+<text x="838" y="230" class="node-sub">active / superseded_by</text>
+<rect x="1120" y="120" width="210" height="120" class="box orange"/>
+<text x="1138" y="150" class="node-title">TagEntry</text>
+<text x="1138" y="174" class="node-sub">tag:&lt;name&gt;</text>
+<text x="1138" y="196" class="node-sub">count</text>
+<text x="1138" y="218" class="node-sub">reverse lookup</text>
+<rect x="1120" y="300" width="210" height="120" class="box orange"/>
+<text x="1138" y="330" class="node-title">ClusterEntry</text>
+<text x="1138" y="354" class="node-sub">cluster:&lt;id&gt;</text>
+<text x="1138" y="376" class="node-sub">centroid</text>
+<text x="1138" y="398" class="node-sub">member_count</text>
+<rect x="1120" y="480" width="210" height="160" class="box rose"/>
+<text x="1138" y="510" class="node-title">Edges</text>
+<text x="1138" y="534" class="node-sub">HasTag / InCluster</text>
+<text x="1138" y="556" class="node-sub">RelatesTo(weight)</text>
+<text x="1138" y="578" class="node-sub">Supersedes</text>
+<text x="1138" y="600" class="node-sub">Contradicts / DerivedFrom</text>
+<path d="M315,210 L410,210" class="edge"/>
+<rect x="324" y="179" width="80" height="21" rx="5" fill="#ffffff" opacity="0.96"/><text x="330" y="195" class="tiny">load/save</text>
+<path d="M315,255 L410,410" class="edge"/>
+<rect x="324" y="314" width="117" height="21" rx="5" fill="#ffffff" opacity="0.96"/><text x="330" y="330" class="tiny">fallback global</text>
+<path d="M710,212 L820,188" class="edge2"/>
+<path d="M1070,185 L1120,180" class="edge3"/>
+<path d="M1070,230 L1120,360" class="edge3"/>
+<path d="M1070,260 L1120,545" class="edge4"/>
+<path d="M1215,480 C1090,420 1000,355 935,265" class="dash"/>
+<rect x="999" y="384" width="117" height="21" rx="5" fill="#ffffff" opacity="0.96"/><text x="1005" y="400" class="tiny">graph traversal</text>
+<rect x="70" y="700" width="1260" height="54" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+<text x="96" y="734" class="node-sub">关键点：project scope 防止仓库事实污染全局；embedding_model 避免不同向量空间硬算 cosine；active/superseded_by 允许旧记忆退出主路径。</text>
+</svg>

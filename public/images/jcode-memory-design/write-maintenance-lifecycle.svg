@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900" role="img">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .title { fill:#111827; font-size:26px; font-weight:700; }
+    .sub { fill:#4b5563; font-size:15px; }
+    .lane-title { fill:#6b7280; font-size:12px; font-weight:700; letter-spacing:.08em; }
+    .node-title { fill:#111827; font-size:15px; font-weight:700; }
+    .node-sub { fill:#374151; font-size:12px; }
+    .tiny { fill:#6b7280; font-size:11px; }
+    .caption { fill:#6b7280; font-size:12px; font-weight:600; }
+    .box { fill:#f9fafb; stroke:#e5e7eb; stroke-width:1.2; rx:8; }
+    .box2 { fill:#ffffff; stroke:#d1d5db; stroke-width:1.2; rx:8; }
+    .blue { fill:#eff6ff; stroke:#93c5fd; }
+    .green { fill:#ecfdf5; stroke:#86efac; }
+    .orange { fill:#fff7ed; stroke:#fdba74; }
+    .purple { fill:#f5f3ff; stroke:#c4b5fd; }
+    .rose { fill:#fff1f2; stroke:#fda4af; }
+    .slate { fill:#f8fafc; stroke:#cbd5e1; }
+    .edge { fill:none; stroke:#3b82f6; stroke-width:2; marker-end:url(#arrow-blue); }
+    .edge2 { fill:none; stroke:#10b981; stroke-width:2; marker-end:url(#arrow-green); }
+    .edge3 { fill:none; stroke:#f97316; stroke-width:2; marker-end:url(#arrow-orange); }
+    .edge4 { fill:none; stroke:#8b5cf6; stroke-width:2; marker-end:url(#arrow-purple); }
+    .dash { fill:none; stroke:#9ca3af; stroke-width:1.6; stroke-dasharray:5 4; marker-end:url(#arrow-gray); }
+    .container { fill:none; stroke:#e5e7eb; stroke-width:1.2; stroke-dasharray:6 5; rx:10; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#3b82f6"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#10b981"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#f97316"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#8b5cf6"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M1,1 L9,4 L1,7 Z" fill="#9ca3af"/></marker>
+  </defs>
+  <rect width="1500" height="900" fill="#ffffff"/>
+  <text x="48" y="52" class="title">jcode Memory 的写入、冲突和维护闭环</text>
+  <text x="48" y="78" class="sub">显式 memory tool 与自动抽取并存；新信息会去重、强化、冲突检测，再进入图维护。</text>
+
+<rect x="55" y="125" width="665" height="655" class="container"/>
+<text x="75" y="150" class="lane-title">WRITE PATH</text>
+<rect x="780" y="125" width="665" height="655" class="container"/>
+<text x="800" y="150" class="lane-title">MAINTENANCE PATH</text>
+<rect x="95" y="190" width="250" height="100" class="box blue"/>
+<text x="113" y="220" class="node-title">Manual memory tool</text>
+<text x="113" y="244" class="node-sub">remember / tag / link</text>
+<text x="113" y="266" class="node-sub">project scope uses working_dir</text>
+<rect x="95" y="340" width="250" height="125" class="box blue"/>
+<text x="113" y="370" class="node-title">Auto extraction</text>
+<text x="113" y="394" class="node-sub">topic change &lt; 0.3</text>
+<text x="113" y="416" class="node-sub">periodic every 12 turns</text>
+<text x="113" y="438" class="node-sub">final session extraction</text>
+<rect x="420" y="250" width="250" height="140" class="box purple"/>
+<text x="438" y="280" class="node-title">Sidecar extraction</text>
+<text x="438" y="304" class="node-sub">CATEGORY|CONTENT|TRUST</text>
+<text x="438" y="326" class="node-sub">Already known list</text>
+<text x="438" y="348" class="node-sub">quality bar: useful weeks later</text>
+<rect x="420" y="470" width="250" height="145" class="box orange"/>
+<text x="438" y="500" class="node-title">Write decision</text>
+<text x="438" y="524" class="node-sub">duplicate ≥ 0.90 → reinforce</text>
+<text x="438" y="546" class="node-sub">similar + contradiction → supersede</text>
+<text x="438" y="568" class="node-sub">otherwise create MemoryEntry</text>
+<path d="M345,240 L420,300" class="edge"/>
+<path d="M345,400 L420,340" class="edge"/>
+<path d="M545,390 L545,470" class="edge3"/>
+<rect x="820" y="190" width="250" height="105" class="box green"/>
+<text x="838" y="220" class="node-title">Graph updates</text>
+<text x="838" y="244" class="node-sub">RelatesTo for co-relevant</text>
+<text x="838" y="266" class="node-sub">DerivedFrom co-extracted</text>
+<text x="838" y="288" class="node-sub">HasTag / InCluster</text>
+<rect x="820" y="350" width="250" height="125" class="box green"/>
+<text x="838" y="380" class="node-title">Confidence updates</text>
+<text x="838" y="404" class="node-sub">verified +0.05</text>
+<text x="838" y="426" class="node-sub">rejected -0.02</text>
+<text x="838" y="448" class="node-sub">low conf prune after age</text>
+<rect x="1135" y="245" width="250" height="130" class="box purple"/>
+<text x="1153" y="275" class="node-title">MemoryGraph JSON</text>
+<text x="1153" y="299" class="node-sub">memories / tags / clusters</text>
+<text x="1153" y="321" class="node-sub">edges + reverse_edges</text>
+<text x="1153" y="343" class="node-sub">project/global stores</text>
+<rect x="1135" y="470" width="250" height="130" class="box orange"/>
+<text x="1153" y="500" class="node-title">Next retrieval</text>
+<text x="1153" y="524" class="node-sub">cascade over graph</text>
+<text x="1153" y="546" class="node-sub">BM25 over search_text</text>
+<text x="1153" y="568" class="node-sub">judge sees cleaner candidates</text>
+<path d="M670,542 C735,542 755,242 820,242" class="edge2"/>
+<rect x="699" y="484" width="131" height="21" rx="5" fill="#ffffff" opacity="0.96"/><text x="705" y="500" class="tiny">store / reinforce</text>
+<path d="M1070,242 L1135,300" class="edge2"/>
+<path d="M1070,410 L1135,520" class="edge2"/>
+<path d="M1260,375 L1260,470" class="edge4"/>
+<path d="M1135,535 C935,685 700,685 545,615" class="dash"/>
+<rect x="814" y="664" width="96" height="21" rx="5" fill="#ffffff" opacity="0.96"/><text x="820" y="680" class="tiny">future turns</text>
+<rect x="95" y="705" width="575" height="44" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+<text x="120" y="733" class="node-sub">不是任务日志：commit、临时错误、行级改动不会进入长期 Memory。</text>
+<rect x="820" y="705" width="565" height="44" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+<text x="845" y="733" class="node-sub">维护不阻塞主路径：图关系和置信度在后台慢慢变好。</text>
+</svg>
