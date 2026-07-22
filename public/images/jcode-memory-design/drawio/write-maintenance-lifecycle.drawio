@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="写入与维护">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1090" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title1" value="jcode Memory 写入与维护：怎么进来的，进来之后又怎么被持续打理" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle1" value="写入决策的去重/强化/冲突细节见图 2 ②；这里聚焦两条入口和检索之后才跑的三类后台维护" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=21;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="62" width="1220" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 1: 写入两条路 -->
+        <mxCell id="lane1" value="① 写入两条路：手动直接写，自动的要先过 sidecar extraction" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="112" width="1160" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-manual" value="&lt;b&gt;手动 memory tool&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;你直接调用 remember，&lt;br&gt;明确要求记住这件事&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C7DDFB;strokeColor=#2C5697;strokeWidth=3;fontColor=#102A43;fontSize=18;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="60" y="56" width="280" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-auto" value="&lt;b&gt;自动抽取触发&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;话题相似度 &amp;lt; 0.3，&lt;br&gt;或同话题满 12 轮周期抽取&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=18;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="60" y="196" width="280" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-sidecar" value="&lt;b&gt;Sidecar extraction&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;输出固定格式&lt;br&gt;CATEGORY|CONTENT|TRUST&lt;br&gt;禁止抽取调试细节、commit hash、&lt;br&gt;代码改动、已知重复表达&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="420" y="91" width="330" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-decision" value="&lt;b&gt;写入决策&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;相似度&amp;gt;0.85 → reinforce&lt;br&gt;相似度 0.5~0.90 → 冲突检测&lt;br&gt;详见图 2 ②&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C7DDFB;strokeColor=#2C5697;strokeWidth=3;fontColor=#102A43;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="830" y="91" width="310" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-auto-sidecar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.7;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-auto" target="n1-sidecar">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-sidecar-decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-sidecar" target="n1-decision">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-manual-decision" value="立刻写入，不经过抽取" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=1;strokeColor=#2C5697;strokeWidth=3;endArrow=block;endFill=1;fontSize=15;fontColor=#243B53;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane1" source="n1-manual" target="n1-decision">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="340" />
+              <mxPoint x="985" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Lane 2: 后台维护三类 -->
+        <mxCell id="lane2" value="② post_retrieval_maintenance()：检索之后才跑，不拖慢当前这一轮，分三类" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#ECFDF3;swimlaneFillColor=#FFFFFF;strokeColor=#8CC7A1;strokeWidth=2;fontColor=#1B5E3C;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="552" width="1160" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-confidence" value="&lt;b&gt;第一类，置信度调节&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;relevant → boost 0.05&lt;br&gt;rejected → decay 0.02&lt;br&gt;每约 250 次维护，prune 老旧&lt;br&gt;低置信记忆&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="60" y="56" width="340" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-graph" value="&lt;b&gt;第二类，图关系维护&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;同轮共同验证的记忆之间&lt;br&gt;建 RelatesTo 边&lt;br&gt;每约 50 次做 cluster refinement&lt;br&gt;缺公共 tag 时尝试推断补全&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="420" y="56" width="340" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-gap" value="&lt;b&gt;第三类，缺口记录&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;候选很多，但没有一条&lt;br&gt;被判定 relevant&lt;br&gt;记一次 memory gap，&lt;br&gt;供后续排查召回质量&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="780" y="56" width="340" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-graphjson" value="&lt;b&gt;MemoryGraph JSON 落盘&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;project / global 各一份&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B9E6C9;strokeColor=#2E7D4F;strokeWidth=3;fontColor=#164C31;fontSize=18;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="380" y="260" width="400" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-c-json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.15;entryY=0;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-confidence" target="n2-graphjson">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-g-json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-graph" target="n2-graphjson">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-gap-json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.85;entryY=0;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-gap" target="n2-graphjson">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-lane feedback -->
+        <mxCell id="e-feedback" value="下一轮的写入决策（①）和检索（图 2 ③）都读这份文件" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#2E7D4F;strokeWidth=3;dashed=1;endArrow=block;endFill=1;fontSize=15;fontColor=#164C31;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n2-graphjson" target="n1-decision">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1250" y="867" />
+              <mxPoint x="1250" y="288" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="note1" value="性能提醒：置信度更新会一次性 load/save 整个 project/global graph，而不是逐条 id 单独读写——因为 graph JSON 文件可能是 multi-MB 级别，这类 IO 细节往往比算法本身更决定系统能不能长期撑住。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1002" width="1220" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

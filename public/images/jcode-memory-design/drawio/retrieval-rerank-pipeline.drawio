@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="召回与裁决">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1500" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title1" value="jcode Memory 召回与裁决：先拉宽候选，再让 LLM 精细取舍" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle1" value="召回负责不漏，裁决负责不滥竽充数，注入前还要再过五道保鲜期/去重检查" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=21;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="62" width="1220" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 1: dense + BM25 + RRF -->
+        <mxCell id="lane1" value="① 混合召回：dense 找语义相近，BM25 找关键词，RRF 按排名融合" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="112" width="1160" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-query" value="&lt;b&gt;Focused query&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;从当前上下文抽出&lt;br&gt;短的『当前意图』，&lt;br&gt;去掉工具噪声和&lt;br&gt;system-reminder&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="60" y="96" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-dense" value="&lt;b&gt;Dense search（embedding cosine）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;只有 embedding_model 一致的记忆参与，避免跨向量空间硬算相似度&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=15;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="420" y="56" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-bm25" value="&lt;b&gt;BM25 search（关键词）&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;对文件路径、工具名这类 term-heavy 内容更敏感，例：auth + mock cookie&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=15;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="420" y="196" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-rrf" value="&lt;b&gt;RRF 融合&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;Reciprocal Rank Fusion，&lt;br&gt;只看两路排序的名次位置，&lt;br&gt;不需要对齐分数量纲&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C7DDFB;strokeColor=#2C5697;strokeWidth=3;fontColor=#102A43;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane1">
+          <mxGeometry x="800" y="96" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-q-dense" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-query" target="n1-dense">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-q-bm25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-query" target="n1-bm25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-dense-rrf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-dense" target="n1-rrf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-bm25-rrf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.7;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-bm25" target="n1-rrf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 2: LLM 裁决 -->
+        <mxCell id="lane2" value="② LLM listwise rerank：召回可以粗，裁决决定最终精度" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F8F4FF;swimlaneFillColor=#FFFFFF;strokeColor=#B8A9D9;strokeWidth=2;fontColor=#3F3D56;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="532" width="1160" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-pool" value="&lt;b&gt;Hybrid 候选池&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;约 99% relevant，&lt;br&gt;但排序很差&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="60" y="91" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-judge" value="&lt;b&gt;LLM listwise rerank&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;rerank_candidates_consensus_attributed()&lt;br&gt;整体排序 + 过滤，&lt;br&gt;最多留 5 条（MAX_MEMORIES_PER_TURN）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=15;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="420" y="91" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-result" value="&lt;b&gt;裁决后&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;recall@5：0.53 → 0.75&lt;br&gt;precision@5：0.23 → 0.35&lt;br&gt;双 judge 共识 → precision≈1.0&lt;br&gt;（代价是多一次 LLM 调用）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD3F0;strokeColor=#6B5B95;strokeWidth=3;fontColor=#2D2550;fontSize=15;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="820" y="91" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-naive" value="&lt;b&gt;若跳过裁决，直接用 top-5&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;recall@5 只有约 0.53，&lt;br&gt;精度也更差 —— 这是不采用的路径&lt;/font&gt;" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#F2ECFA;strokeColor=#9686BE;strokeWidth=2;fontColor=#4C3F73;fontSize=14;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="420" y="290" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-fallback" value="&lt;b&gt;sidecar 不可用时&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;按配置进入 dormant（暂停生效）&lt;br&gt;或启用 no-sidecar fallback（精度更低）&lt;br&gt;绝不把未审核结果直接塞给你&lt;/font&gt;" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#F2ECFA;strokeColor=#9686BE;strokeWidth=2;fontColor=#4C3F73;fontSize=14;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane2">
+          <mxGeometry x="780" y="290" width="360" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-pool-judge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-pool" target="n2-judge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-judge-result" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-judge" target="n2-result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-pool-naive" value="不采用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;strokeColor=#9686BE;strokeWidth=2;dashed=1;endArrow=block;endFill=1;fontSize=13;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane2" source="n2-pool" target="n2-naive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-judge-fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#9686BE;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-judge" target="n2-fallback">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 3: PendingMemory 五道关卡 -->
+        <mxCell id="lane3" value="③ PendingMemory：注入前，还要闯过五道保鲜期和去重关卡" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#ECFDF3;swimlaneFillColor=#FFFFFF;strokeColor=#8CC7A1;strokeWidth=2;fontColor=#1B5E3C;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1022" width="1160" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-g1" value="&lt;b&gt;① is_fresh 120秒&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;超时直接丢弃，&lt;br&gt;不用过期内容开场&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=14;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="lane3">
+          <mxGeometry x="60" y="56" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-g2" value="&lt;b&gt;② prompt签名90秒&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;内容几乎相同，&lt;br&gt;90秒内不重复展示&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=14;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="lane3">
+          <mxGeometry x="270" y="56" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-g3" value="&lt;b&gt;③ id重叠180秒&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;换了说法但引用&lt;br&gt;同一批 id，仍压下&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=14;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="lane3">
+          <mxGeometry x="480" y="56" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-g4" value="&lt;b&gt;④ 单条45分钟TTL&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;展示过的记忆，&lt;br&gt;45分钟内不再刷屏&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=14;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="lane3">
+          <mxGeometry x="690" y="56" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-g5" value="&lt;b&gt;⑤ mark_memories_known&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;刚抽取的新记忆立刻&lt;br&gt;标记已知，防止自己喂自己&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B9E6C9;strokeColor=#2E7D4F;strokeWidth=3;fontColor=#164C31;fontSize=14;align=center;verticalAlign=middle;spacing=6;" vertex="1" parent="lane3">
+          <mxGeometry x="900" y="56" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-final" value="&lt;b&gt;# Memory 注入 prompt&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;Corrections / Facts / Preferences 三段，不带元数据和分数&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8CC7A1;strokeColor=#2E7D4F;strokeWidth=3;fontColor=#0F3D24;fontSize=16;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane3">
+          <mxGeometry x="285" y="220" width="580" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-g1" target="n3-g2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-2-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-g2" target="n3-g3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-3-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-g3" target="n3-g4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-4-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-g4" target="n3-g5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-5-final" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.9;entryY=0;strokeColor=#2E7D4F;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-g5" target="n3-final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-lane connectors -->
+        <mxCell id="e-cross-1" value="融合结果作为候选池" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;fontSize=15;fontColor=#3F3D56;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n1-rrf" target="n2-pool">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="990" y="517" />
+              <mxPoint x="240" y="517" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-cross-2" value="被认为 clearly useful 的记忆，进入注入生命周期" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#2E7D4F;strokeWidth=3;endArrow=block;endFill=1;fontSize=15;fontColor=#1B5E3C;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n2-result" target="n3-g1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="1007" />
+              <mxPoint x="195" y="1007" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="note1" value="设计理由：召回阶段故意覆盖广、精度低一点没关系，因为后面有 judge 兜底；judge 阶段才真正决定最终精度，可以贵一点，因为有 cadence 控制、不必每轮都跑。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1422" width="1220" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

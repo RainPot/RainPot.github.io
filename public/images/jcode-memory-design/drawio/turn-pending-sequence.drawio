@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="非阻塞Turn链路">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="760" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title1" value="jcode Memory 非阻塞 Turn 链路：这一轮用的是上一轮算好的记忆" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=32;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle1" value="主 Agent 不等 Memory 算完；当前轮的上下文异步送去后台，结果留给下一轮使用" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=21;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="62" width="1220" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 1: 消费上一轮 -->
+        <mxCell id="lane1" value="① 第 N 轮：先用上一轮已经算好的记忆，不等待" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="112" width="1160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-fresh" value="&lt;b&gt;Fresh user turn 触发&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;你重新开口说话&lt;br&gt;（不是工具结果续写）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="60" y="56" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-take" value="&lt;b&gt;取出 PENDING_MEMORY&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;是第 N-1 轮后台&lt;br&gt;算好的结果，不是现算的&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="340" y="56" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-inject" value="&lt;b&gt;拼进 # Memory&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;Corrections / Facts /&lt;br&gt;Preferences 三段&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="620" y="56" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-send" value="&lt;b&gt;complete_split() 送出&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;本轮请求立刻发出&lt;br&gt;完全不等 Memory 计算&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C7DDFB;strokeColor=#2C5697;strokeWidth=3;fontColor=#102A43;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="900" y="56" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-fresh" target="n1-take">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-take" target="n1-inject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane1" source="n1-inject" target="n1-send">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 2: 后台为下一轮准备 -->
+        <mxCell id="lane2" value="② 同时把这一轮上下文送去后台，为下一轮准备（不阻塞）" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F8F4FF;swimlaneFillColor=#FFFFFF;strokeColor=#B8A9D9;strokeWidth=2;fontColor=#3F3D56;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="392" width="1160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-send" value="&lt;b&gt;try_send_context()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;把第 N 轮最新对话&lt;br&gt;异步发给 MemoryAgent&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="60" y="56" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-work" value="&lt;b&gt;MemoryAgent 后台工作&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;hybrid 检索 + LLM 裁决&lt;br&gt;+ 图维护（第 6-9 节）&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="420" y="56" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-set" value="&lt;b&gt;set_pending()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;写回 PENDING_MEMORY&lt;br&gt;留给第 N+1 轮使用&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD3F0;strokeColor=#6B5B95;strokeWidth=3;fontColor=#2D2550;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="780" y="56" width="320" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-send" target="n2-work">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane2" source="n2-work" target="n2-set">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-lane: 同时发生 -->
+        <mxCell id="e-cross" value="与上面同时发生，不等待后台结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#8C7FB5;strokeWidth=3;dashed=1;endArrow=block;endFill=1;fontSize=16;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n1-fresh" target="n2-send">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="382" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="note1" value="pending 只有 120 秒有效期（is_fresh()）：如果第 4 轮聊的是 auth middleware，这份算好的记忆要在 120 秒内被第 5 轮用上，超时就直接丢弃，不会用过期内容开场。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="662" width="1220" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

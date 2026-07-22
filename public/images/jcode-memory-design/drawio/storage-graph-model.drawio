@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="存储与图模型">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1380" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title1" value="jcode Memory 存储模型：两套图、会演化的记录、沿边扩展的检索" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=30;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1220" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle1" value="MemoryEntry 不是 append-only 的文本列表，而是会强化、会被取代、能顺着关系被带出来的知识状态" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=21;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="62" width="1220" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 1: 存储范围 -->
+        <mxCell id="lane1" value="① 两套存储范围：project 记忆和 global 记忆分开存" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="112" width="1160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-manager" value="&lt;b&gt;MemoryManager&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;读写前先决定&lt;br&gt;这条记忆该进哪个 graph&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=20;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="60" y="56" width="250" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-project" value="&lt;b&gt;Project graph&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;按 working_dir 哈希&lt;br&gt;~/.jcode/memory/projects/&amp;lt;hash&amp;gt;.json&lt;br&gt;例：这个项目的测试命令是&lt;br&gt;cargo nextest run&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C7DDFB;strokeColor=#2C5697;strokeWidth=3;fontColor=#102A43;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="380" y="56" width="350" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n1-global" value="&lt;b&gt;Global graph&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;用户级，跨项目共享&lt;br&gt;~/.jcode/memory/global.json&lt;br&gt;例：回复先结论、再展开&lt;br&gt;证据 这类跨项目偏好&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane1">
+          <mxGeometry x="800" y="56" width="350" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-1" value="属于当前 repo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.35;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;fontSize=15;fontColor=#243B53;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane1" source="n1-manager" target="n1-project">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1-2" value="跨项目也适用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=1;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;fontSize=15;fontColor=#243B53;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane1" source="n1-manager" target="n1-global">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="240" />
+              <mxPoint x="975" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Lane 2: 强化 vs 取代 -->
+        <mxCell id="lane2" value="② 同一件事再出现时：强化，还是被取代，取决于相似度" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#FFF8E8;swimlaneFillColor=#FFFFFF;strokeColor=#D9B45B;strokeWidth=2;fontColor=#7A5B12;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="392" width="1160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-first" value="&lt;b&gt;第一次写入&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;『这个项目用 cargo test』&lt;br&gt;category=fact, trust=medium&lt;br&gt;strength=1&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEFCB;strokeColor=#C99A3E;strokeWidth=3;fontColor=#5C4415;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="60" y="56" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-again" value="&lt;b&gt;相似度 &amp;gt; 0.85 → reinforce&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;又说了一遍几乎相同的话&lt;br&gt;strength+1，不新建记录&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEFCB;strokeColor=#C99A3E;strokeWidth=3;fontColor=#5C4415;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="420" y="56" width="330" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-changed" value="&lt;b&gt;相似度 0.5~0.90 → 冲突检测&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;内容变了：改成了 cargo nextest run&lt;br&gt;新建 entry + Contradicts 边&lt;br&gt;旧 entry.superseded_by + active=false&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F6DFA0;strokeColor=#A8781F;strokeWidth=3;fontColor=#5C4415;fontSize=16;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane2">
+          <mxGeometry x="810" y="56" width="340" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-1" value="过几天，几乎原话再说一次" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.35;entryX=0;entryY=0.5;strokeColor=#8A6A1E;strokeWidth=3;endArrow=block;endFill=1;fontSize=14;fontColor=#5C4415;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane2" source="n2-first" target="n2-again">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-2" value="几周后，内容真的变了" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=1;strokeColor=#8A6A1E;strokeWidth=3;dashed=1;endArrow=block;endFill=1;fontSize=14;fontColor=#5C4415;labelBackgroundColor=#FFFFFF;" edge="1" parent="lane2" source="n2-first" target="n2-changed">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="240" />
+              <mxPoint x="980" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Lane 3: cascade_retrieve BFS -->
+        <mxCell id="lane3" value="③ cascade_retrieve()：顺着边把相关记忆一起带出来，边的权重决定优先级" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F8F4FF;swimlaneFillColor=#FFFFFF;strokeColor=#B8A9D9;strokeWidth=2;fontColor=#3F3D56;fontSize=22;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="672" width="1160" height="590" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-seed" value="&lt;b&gt;Embedding 命中的种子&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;『不要动登录态&lt;br&gt;相关代码』&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD3F0;strokeColor=#6B5B95;strokeWidth=3;fontColor=#2D2550;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane3">
+          <mxGeometry x="60" y="190" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-hastag" value="&lt;b&gt;沿 HasTag 边，权重 0.8&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;同样打了 auth 标签：&lt;br&gt;『auth 测试要 mock cookie』&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=4;fontColor=#2D2550;fontSize=16;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane3">
+          <mxGeometry x="410" y="40" width="330" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-relates" value="&lt;b&gt;沿 RelatesTo 边&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;权重按建边场景决定：&lt;br&gt;『测试命令改成了 cargo nextest run』&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=16;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane3">
+          <mxGeometry x="410" y="210" width="330" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-contra" value="&lt;b&gt;沿 Contradicts 边，权重仅 0.3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:14px&quot;&gt;『旧记忆：cargo test（已被取代）』&lt;br&gt;关联很弱，优先级靠后&lt;/font&gt;" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#F2ECFA;strokeColor=#9686BE;strokeWidth=2;fontColor=#4C3F73;fontSize=15;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="lane3">
+          <mxGeometry x="410" y="380" width="330" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n3-pool" value="&lt;b&gt;候选池&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:15px&quot;&gt;连同种子一起，&lt;br&gt;交给第 7 节 LLM 裁决&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C9B8E8;strokeColor=#6B5B95;strokeWidth=3;fontColor=#2D2550;fontSize=18;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="lane3">
+          <mxGeometry x="850" y="190" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=4;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-seed" target="n3-hastag">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-seed" target="n3-relates">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#9686BE;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-seed" target="n3-contra">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;strokeColor=#6B5B95;strokeWidth=4;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-hastag" target="n3-pool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-relates" target="n3-pool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.7;strokeColor=#9686BE;strokeWidth=2;dashed=1;endArrow=block;endFill=1;" edge="1" parent="lane3" source="n3-contra" target="n3-pool">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="note1" value="三步走：① 先用 embedding 找种子 → ② 沿图上的边小范围扩展，权重决定优先带出谁 → ③ 种子和扩展结果一起进候选池，交给下一步裁决（第 7 节）。图关系质量取决于后续维护是否靠谱——第 9 节的置信度衰减、剪枝和聚类微调，就是用来防止图变成“什么都相关”。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1282" width="1220" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
