@@ -5,7 +5,7 @@ date: "2026-07-21"
 tags: ["Codex", "Agent Memory", "Coding Agent", "源码拆解", "AI Agent"]
 draft: false
 featured: false
-readingTime: 14
+readingTime: 17
 ---
 
 > 参考资料：
@@ -130,17 +130,36 @@ pub fn start_memories_startup_task(...) {
 
 也就是说，memory 管线在 root session 启动时异步触发；ephemeral session、sub-agent session、feature 未启用、state DB 不可用都会跳过。它还会先看 rate limit，默认要求剩余比例至少 25%，避免后台整理记忆抢占前台额度。
 
-### Phase 1：把单个历史会话抽成 raw memory
+在拆 Phase 1 / Phase 2 的细节之前，先用一张图把整条链路串起来，再配一个具体例子对照着看，会比单独读代码片段更容易建立直觉：
 
-Phase 1 的对象是历史 rollout。它会从 state DB 里挑选最近、已 idle、允许来源、memory mode enabled、尚未处理或需要更新的会话。默认参数非常克制：
+<div style="overflow-x: auto; margin: 24px 0;">
+  <img alt="Codex Memory 写入链路：从新会话启动的资格检查，到 Phase 1 单会话抽取、Phase 2 全局合并的完整两阶段流程" src="/images/codex-memory-implementation/codex-memory-write-pipeline.drawio.png" style="width: 760px; max-width: none; margin: 0;" />
+  <p style="margin: 8px 0 0; font-size: 0.9em; color: #666;">基于 codex-rs/memories/write 源码整理。Phase 1 面向单个 rollout、可并发抽取；Phase 2 面向全局 memory workspace，必须加锁串行；只有 git baseline diff 显示工作区有变化，才会启动受限的 consolidation agent。</p>
+</div>
 
-- 每次启动最多 claim 2 个 rollout；
+举个例子：假设你周一上午跟 Codex 聊了一个会话（记作会话 A），期间讨论了项目的测试命令、代码风格偏好这类信息，聊完之后你没有立刻关终端，但也没再输入新内容——会话 A 进入 idle 状态。写入链路不会因为会话 A 结束就马上处理它，因为它随时可能被你重新唤醒继续聊。真正触发处理的时机，是**下一次有新会话启动**：比如周二早上你开了一个新的 root session（记作会话 B）。
+
+会话 B 一启动，`start_memories_startup_task` 就在后台异步触发（对应图中①），依次做三件事：
+
+1. 先判断会话 B 本身有没有资格触发这条链路：如果它是 ephemeral、是 sub-agent（不是 root session）、或者 `Feature::MemoryTool` 没开，直接跳过，什么都不做；
+2. 通过资格检查后还要看 rate limit：默认要求剩余额度至少 25%，账号额度紧张时宁可这次不整理，也不占前台交互的配额；
+3. 两项检查都通过，才真正 spawn 一个后台任务，依次跑 `phase1::prune`（清理过期/失效候选，异步执行、不阻塞会话 B 当前的对话）、`phase1::run`、`phase2::run`。
+
+注意这里**被处理的对象是会话 A**（那个已经 idle 足够久的历史会话），**触发者是会话 B 的启动动作**。这种“新会话启动，顺带整理旧会话”的关系，是理解整条写入链路的关键：它不是跟随当前对话实时更新的系统，而是由“新会话启动”这个事件驱动、批量处理历史积压的后台管线。
+
+### Phase 1：把单个历史会话抽成 raw memory（对应图中②）
+
+Phase 1 的对象是历史 rollout，也就是会话 A 这样的记录。它会从 state DB 里挑选最近、已 idle、允许来源、memory mode enabled、尚未处理或需要更新的会话。继续看会话 A：它要进入这一批候选，得同时满足下面这些默认参数：
+
+- 每次启动最多 claim 2 个 rollout（如果周一你还聊了另外三个会话，这次最多处理 2 个，剩下的等下次新会话启动再排队）；
 - 只看 10 天内的 rollout；
-- rollout 至少 idle 6 小时；
+- rollout 至少 idle 6 小时（会话 A 从周一上午聊完到周二早上，显然早就超过 6 小时）；
 - failed job 有 lease、retry 和 backoff；
 - 抽取时并发执行，但有固定并发上限。
 
-核心输出是严格 JSON schema：
+会话 A 一旦被选中，Phase 1 会先做一次输入过滤：序列化会话内容时过滤掉 developer message，也排除被标记的 `AGENTS.md instructions` 和 `<skill>...</skill>` 片段。原因很直接——这些东西本来就是运行时注入进对话的上下文，不应该被再次学习成“用户偏好”或“项目事实”，否则记忆会自我放大，越滚越像自己在给自己下指令。
+
+过滤后的会话文本交给抽取模型，核心输出是严格 JSON schema：
 
 ```rust
 struct StageOneOutput {
@@ -150,9 +169,7 @@ struct StageOneOutput {
 }
 ```
 
-Phase 1 prompt 明确要求“证据驱动、不要编造、不要存 secret、没有高信号就输出空字段”。源码还会对 `raw_memory`、`rollout_summary`、`rollout_slug` 做 secret redaction。
-
-更值得注意的是输入过滤。Phase 1 在序列化 rollout 时会过滤掉 developer message，还会排除被标记的 `AGENTS.md instructions` 和 `<skill>...</skill>` 片段。原因很简单：这些东西本来就是运行时注入上下文，不应该被再次学习成用户偏好或项目事实，否则记忆会自我放大。
+Phase 1 prompt 明确要求“证据驱动、不要编造、不要存 secret、没有高信号就输出空字段”——如果会话 A 里其实没什么值得记的内容，模型应该老实交白卷，而不是硬凑一条记忆出来。源码还会对 `raw_memory`、`rollout_summary`、`rollout_slug` 三个字段做 secret redaction。
 
 Phase 1 成功后，结果不直接写 `MEMORY.md`，而是进 SQLite 表 `stage1_outputs`：
 
@@ -171,58 +188,49 @@ CREATE TABLE stage1_outputs (
 );
 ```
 
-这张表是 Codex Memory 的“候选记忆池”。它保留每个线程的抽取结果，也记录后续有没有被使用、最近何时被使用、是否被选入最近一次 Phase 2 baseline。
+这张表是 Codex Memory 的“候选记忆池”。会话 A 抽取出来的 raw memory 此刻只是池子里的一行记录，还没有资格进最终的 `MEMORY.md`——它要不要被真正采纳，取决于后面 Phase 2 的排序。这张表也保留了后续有没有被使用、最近何时被使用、是否被选入最近一次 Phase 2 baseline，这些字段会在下一节读取链路里被反过来更新。
 
-### Phase 2：把候选记忆合并成本地 markdown 工作区
+### Phase 2：把候选记忆合并成本地 markdown 工作区（对应图中③）
 
-Phase 2 做全局合并。它先拿一个单例锁：`memory_consolidate_global`，避免多个 Codex 进程同时改 `~/.codex/memories/`。
+Phase 1 结束后，`stage1_outputs` 里可能已经积累了几十上百条来自不同历史会话的候选记忆，光有这些散装记录还不能直接给新会话用——需要有人把它们合并、去重、控制总量，变成一份可以被稳定读取的文件。这就是 Phase 2 要做的事。
 
-选择输入时，源码按下面规则从 `stage1_outputs` 里选 top-N：
+它先拿一个单例锁：`memory_consolidate_global`，避免多个 Codex 进程同时改 `~/.codex/memories/`。拿到锁之后，按下面规则从 `stage1_outputs` 里选 top-N：
 
 1. `raw_memory` 或 `rollout_summary` 非空；
-2. 如果曾经被引用，`last_usage` 必须在 `max_unused_days` 窗口内；
+2. 如果曾经被引用，`last_usage` 必须在 `max_unused_days`（默认 30 天）窗口内；
 3. 如果从未被引用，就看 `source_updated_at` 是否还新；
 4. 排序优先级是 `usage_count DESC`，再看 `last_usage/source_updated_at` 新旧；
 5. 默认最多 256 条，硬上限 4096。
 
-选出来后，Phase 2 会把 DB 里的输入同步成文件：
+也就是说，会话 A 这条记忆能不能被选中，不只看它新不新，还看它有没有被实际用过、用得多不多。这是一个会在下一节闭环的机制：读取链路里的 `<oai-mem-citation>` 标记，最终会更新这里的 `usage_count`/`last_usage`，反过来影响它在下一轮 Phase 2 里的排名。
 
-- `raw_memories.md`：合并后的 raw memory；
-- `rollout_summaries/<slug>.md`：每个历史会话的 recap；
-- 删除不再被选中的旧 rollout summary。
+选出来后，Phase 2 会把 DB 里的输入同步成文件：`raw_memories.md`（合并后的 raw memory）、`rollout_summaries/<slug>.md`（每个历史会话的 recap），并删除不再被选中的旧 rollout summary。
 
-然后它用一个很有意思的办法判断“到底有没有变化”：把 `~/.codex/memories/` 作为一个 git baseline 工作区。Phase 2 会生成 `phase2_workspace_diff.md`，里面是从上次成功 baseline 到当前输入同步后的 git diff。只有当工作区变化，才启动内部 consolidation agent。
+同步完文件后，Phase 2 用一个很有意思的办法判断“到底有没有实质变化”：把 `~/.codex/memories/` 当成一个 git baseline 工作区，生成 `phase2_workspace_diff.md`，内容是从上次成功 baseline 到这次同步后的 git diff。**只有工作区真的发生了变化，才会启动内部 consolidation agent**——如果这次选出来的 top-N 跟上次几乎一样（比如你周二只新增了会话 A 一条无关紧要的记忆，diff 很小甚至没有实质变化），就直接跳过，省下一次模型调用。
 
-这个 consolidation agent 运行在受限环境里：
+真正启动时，这个 consolidation agent 运行在受限环境里：
 
 - `cwd` 被设为 memory root；
-- `ephemeral = true`，防止它自己的会话再次进入 memory；
+- `ephemeral = true`，防止它自己的会话再次进入 memory（不然就成了“记忆整理过程本身被记成了记忆”的死循环）；
 - `generate_memories = false`，`use_memories = false`；
 - MCP、Apps、Plugins、Collab 都关闭；
 - approvals 设为 never；
 - managed sandbox 下只允许写 memory root，没有网络。
 
-它的任务是把 `raw_memories.md`、`rollout_summaries/` 和 diff 整理成正式输出：
+它的任务是把 `raw_memories.md`、`rollout_summaries/` 和 diff 整理成正式输出：`MEMORY.md`、`memory_summary.md`、`skills/*`。完成后，Codex 校验 `MEMORY.md` 存在，并且 `memory_summary.md` 第一行必须是 `v1`。通过后重置 git baseline，并把本次选中的 stage1 snapshots 标成 `selected_for_phase2 = 1`。
 
-```text
-MEMORY.md
-memory_summary.md
-skills/*
-```
-
-完成后，Codex 校验 `MEMORY.md` 存在，并且 `memory_summary.md` 第一行必须是 `v1`。通过后重置 git baseline，并把本次选中的 stage1 snapshots 标成 `selected_for_phase2 = 1`。
-
-这套流程的关键不是“用了一个模型总结历史”，而是把总结变成了一个有锁、有重试、有 baseline、有 diff、有沙箱的本地整理管线。
+这套流程的关键不是“用了一个模型总结历史”，而是把总结变成了一个有锁、有重试、有 baseline、有 diff、有沙箱的本地整理管线。到这一步，会话 A 里那次关于测试命令和代码风格偏好的讨论，才真正沉淀进了 `MEMORY.md`，等着被后面某次新会话读到。
 
 ## 4. 读取链路：先注入 summary，再按需搜索细节
 
-读路径由 `codex-rs/ext/memories` 这个 extension 贡献。线程开始时，如果 `Feature::MemoryTool` 启用且 `memories.use_memories = true`，它会读取：
+写入链路把历史会话变成了文件，读取链路要解决的是相反的问题：新会话启动时，怎么把这些文件用起来，又不至于每次都把一大堆历史塞进上下文。读路径由 `codex-rs/ext/memories` 这个 extension 贡献。先看整体流程图，再接着用会话 B 的例子走一遍：
 
-```text
-~/.codex/memories/memory_summary.md
-```
+<div style="overflow-x: auto; margin: 24px 0;">
+  <img alt="Codex Memory 读取链路：会话启动时注入 memory_summary，按需检索走 quick memory pass，再通过 citation 反馈回 Phase 2 排序" src="/images/codex-memory-implementation/codex-memory-read-path.drawio.png" style="width: 760px; max-width: none; margin: 0;" />
+  <p style="margin: 8px 0 0; font-size: 0.9em; color: #666;">基于 codex-rs/ext/memories 源码整理。recall 依赖 MEMORY.md / rollout_summaries 的关键词搜索，不是向量语义检索；引用记忆会打 &lt;oai-mem-citation&gt; 标记，用来更新 usage_count / last_usage，进而影响下一轮 Phase 2 的 top-N 排序（对应图 1 的 Phase 2 环节）。</p>
+</div>
 
-然后把它渲染进 developer instructions。源码里还有一个 token cap：`MEMORY_TOOL_DEVELOPER_INSTRUCTIONS_SUMMARY_TOKEN_LIMIT = 2500`，超出会截断。
+延续上一节的例子：周二早上会话 B 启动时（对应图中①），如果 `Feature::MemoryTool` 启用且 `memories.use_memories = true`，Codex 会先读取 `~/.codex/memories/memory_summary.md`，然后把它渲染进 developer instructions。源码里有一个 token cap：`MEMORY_TOOL_DEVELOPER_INSTRUCTIONS_SUMMARY_TOKEN_LIMIT = 2500`，超出会直接截断。这一步跟会话 B 具体聊什么无关——不管你打算问什么，这份压缩摘要都会先被注入进去，相当于给这次对话预装一个“目录”。
 
 注入模板的核心意思是：
 
@@ -234,14 +242,16 @@ skills/*
 - quick pass 尽量控制在 4-6 个搜索步骤内；
 - 如果用了 memory，最终回答要附 `<oai-mem-citation>`，供程序解析和 usage 统计。
 
-默认情况下，这个“按需搜索”主要靠普通 shell/search/read 能力去读文件；如果打开：
+接着往下看图中②：假设你在会话 B 里问了一句“我们上次约定的测试命令是什么”。这类问题依赖历史上下文，所以 Codex 会走 quick memory pass，而不是直接凭空回答。这一步默认靠普通 shell/search/read 能力去翻文件——grep 一下 `MEMORY.md`，或者打开对应的 `rollout_summaries/<slug>.md` 确认细节。如果配置里打开了：
 
 ```toml
 [memories]
 dedicated_tools = true
 ```
 
-Codex 还会暴露 dedicated memory tools：`memories/search`、`memories/read`、`memories/list`、`memories/add_ad_hoc_note`。其中 `search` 是 substring search，不是 embedding search；`read` 按相对路径和行号读取；`add_ad_hoc_note` 只在用户明确要求记住、忘记或更新时使用。
+Codex 还会暴露 dedicated memory tools：`memories/search`、`memories/read`、`memories/list`、`memories/add_ad_hoc_note`。其中 `search` 是 substring search，不是 embedding search；`read` 按相对路径和行号读取；`add_ad_hoc_note` 只在用户明确要求记住、忘记或更新时使用。不管走哪条路径，目标都是同一个：在 4-6 步以内翻到关于测试命令的那条记忆，拼出一个有依据的回答。
+
+如果这次检索确实用上了会话 A 沉淀的记忆，回答里就会带上 `<oai-mem-citation>` 标记（对应图中③）。这个标记不是给你看的——它会触发对 `stage1_outputs` 里那条记录的 `usage_count`/`last_usage` 更新，也就是上一节提到的“会话 A 有没有被用过”。这里正好接回 Phase 2 的排序逻辑：会话 A 这次被引用了一次，`usage_count` 加一，`last_usage` 刷新，等到下一次新会话触发 Phase 2 重新选 top-N 时，它会比那些从没被用过的候选记忆更靠前，也更不容易被 30 天未用规则淘汰。反过来，如果这条题目跟历史无关（比如你只是让 Codex 写一段全新逻辑），判定不需要检索，就直接用 summary 回答，也不会触发这条反馈——读取本身不产生新记忆，会话 B 要成为未来的输入，还得等它自己 idle 够久，被下一次新会话触发的 Phase 1 认领。
 
 所以 Codex native memory 的 recall 路径更像“压缩索引 + grep/read 细节”，而不是“embedding top-k 自动拼上下文”。好处是可解释、可审计、成本低；坏处也明显：同义改写、跨主题模糊匹配、不知道关键词时的召回，都会弱于语义检索。
 

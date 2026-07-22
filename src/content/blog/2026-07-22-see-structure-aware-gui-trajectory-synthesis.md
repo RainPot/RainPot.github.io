@@ -60,7 +60,11 @@ Figure 3 里有两个细节值得看。
 
 SEE-Train 包含 **47K** 条轨迹，不需要人工轨迹标注，平均 **14.8** 步，覆盖 **3237** 个任务；SEE-Test 包含 **5K** 条轨迹，平均 **12.9** 步，覆盖 **419** 个任务。论文还强调三层监督：high-level task instruction、median-level subgoal sequence、low-level step description。
 
-![SEE 数据统计：相比 AndroidControl、AMEX、AndroidLab、UI-GENIE-Agent-16K、OS-Genesis 等，SEE 的平均轨迹长度达到 14.8，平均每屏元素数达到 24.63](/images/see-structure-aware-gui-trajectory-synthesis/tables-1-3-dataset-statistics.png)
+![Table 1：SEE 与其他 GUI 数据集在规模、人工标注、平均步数、轨迹数和任务指令层级上的对比](/images/see-structure-aware-gui-trajectory-synthesis/table-1-dataset-comparison.png)
+
+![Table 2：SEE 轨迹的 subgoal 数量分布及对应平均步数](/images/see-structure-aware-gui-trajectory-synthesis/table-2-trajectory-subgoals.png)
+
+![Table 3：SEE 的平均每屏元素数高于多个已有 GUI 数据集，页面复杂度更高](/images/see-structure-aware-gui-trajectory-synthesis/table-3-page-complexity.png)
 
 Table 1 到 Table 3 说明了它和已有数据的差异：
 

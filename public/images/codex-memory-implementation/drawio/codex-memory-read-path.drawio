@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.0.4">
+  <diagram name="读取链路">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1200" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title2" value="Codex Memory 读取链路：先给摘要，要细节自己去翻文件" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=34;fontStyle=1;fontColor=#102A43;" vertex="1" parent="1">
+          <mxGeometry x="40" y="16" width="1160" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle2" value="recall 依赖关键词搜索文件，不是向量语义检索；使用记忆会打 citation，反过来影响下一轮 Phase 2 排序" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=21;fontColor=#486581;" vertex="1" parent="1">
+          <mxGeometry x="40" y="62" width="1160" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 1: 启动与注入 -->
+        <mxCell id="rlane1" value="① 会话启动与摘要注入" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F0F7FF;swimlaneFillColor=#FFFFFF;strokeColor=#9FB3C8;strokeWidth=2;fontColor=#243B53;fontSize=23;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="112" width="1160" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-start" value="&lt;b&gt;新会话启动&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:18px&quot;&gt;Feature::MemoryTool 开&lt;br&gt;use_memories=true&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=23;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane1">
+          <mxGeometry x="70" y="56" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-summary" value="&lt;b&gt;读取 memory_summary.md&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:18px&quot;&gt;硬上限 2500 tokens&lt;br&gt;超出部分直接截断&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=23;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane1">
+          <mxGeometry x="430" y="56" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-inject" value="&lt;b&gt;注入 developer instructions&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;别再重复打开 summary&lt;br&gt;MEMORY.md/skills/rollout_summaries 按需读&lt;br&gt;quick pass 控制在 4-6 步&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAFD;strokeColor=#486FA8;strokeWidth=3;fontColor=#102A43;fontSize=23;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane1">
+          <mxGeometry x="790" y="56" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-start-summary" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane1" source="n2-start" target="n2-summary">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-summary-inject" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane1" source="n2-summary" target="n2-inject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 2: 按需检索 -->
+        <mxCell id="rlane2" value="② 按需检索（渐进披露，非向量检索）" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#F8F4FF;swimlaneFillColor=#FFFFFF;strokeColor=#B8A9D9;strokeWidth=2;fontColor=#3F3D56;fontSize=23;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="382" width="1160" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-diamond" value="任务依赖历史 /&lt;br&gt;用户偏好 /&lt;br&gt;项目习惯？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=19;align=center;verticalAlign=middle;" vertex="1" parent="rlane2">
+          <mxGeometry x="60" y="100" width="240" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-no" value="&lt;b&gt;否 → 直接用 summary 回答&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;不发起检索&lt;br&gt;若用到 summary 内容仍打 citation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=2;dashed=1;fontColor=#2D2550;fontSize=17;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="rlane2">
+          <mxGeometry x="40" y="330" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-quick" value="&lt;b&gt;是 → quick memory pass&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:17px&quot;&gt;控制在 ≤4-6 个&lt;br&gt;搜索步骤以内&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=19;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane2">
+          <mxGeometry x="390" y="110" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-tool1" value="&lt;b&gt;默认路径：shell / grep / read&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:17px&quot;&gt;翻 MEMORY.md&lt;br&gt;rollout_summaries/ · skills/&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=19;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane2">
+          <mxGeometry x="740" y="40" width="400" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-tool2" value="&lt;b&gt;dedicated_tools=true：专用工具&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:17px&quot;&gt;memories/search（子串，非向量）&lt;br&gt;memories/read · list · add_ad_hoc_note&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0F5;strokeColor=#7B68A6;strokeWidth=3;fontColor=#2D2550;fontSize=19;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane2">
+          <mxGeometry x="740" y="210" width="400" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-merge" value="&lt;b&gt;得到细节答案&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:17px&quot;&gt;回复中附带引用来源&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD3F0;strokeColor=#6B5B95;strokeWidth=3;fontColor=#2D2550;fontSize=20;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane2">
+          <mxGeometry x="740" y="380" width="400" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-diamond-quick" value="是" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;fontSize=17;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="rlane2" source="n2-diamond" target="n2-quick">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-diamond-no" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;fontSize=17;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="rlane2" source="n2-diamond" target="n2-no">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-quick-tool1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane2" source="n2-quick" target="n2-tool1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-quick-tool2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane2" source="n2-quick" target="n2-tool2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-tool1-merge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;entryX=0;entryY=0.5;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane2" source="n2-tool1" target="n2-merge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="170" />
+              <mxPoint x="700" y="425" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2-tool2-merge" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;entryX=0;entryY=0.7;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane2" source="n2-tool2" target="n2-merge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="275" />
+              <mxPoint x="680" y="443" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Lane 3: 引用与反馈闭环 -->
+        <mxCell id="rlane3" value="③ 引用与反馈闭环" style="swimlane;startSize=48;rounded=1;html=1;fillColor=#ECFDF3;swimlaneFillColor=#FFFFFF;strokeColor=#8CC7A1;strokeWidth=2;fontColor=#1B5E3C;fontSize=23;fontStyle=1;container=1;collapsible=0;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="902" width="1160" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-citation" value="&lt;b&gt;打标记 &amp;lt;oai-mem-citation&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;不是给用户看的&lt;br&gt;是给系统做 usage 统计&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane3">
+          <mxGeometry x="90" y="60" width="330" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-usage" value="&lt;b&gt;更新 usage_count / last_usage&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;对应 stage1_outputs&lt;br&gt;里的那条候选记录&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9F2E3;strokeColor=#3F9964;strokeWidth=3;fontColor=#164C31;fontSize=21;align=center;verticalAlign=middle;spacing=10;" vertex="1" parent="rlane3">
+          <mxGeometry x="500" y="60" width="330" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n2-feedback" value="&lt;b&gt;反哺下一轮 Phase 2&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:16px&quot;&gt;top-N 排序 / 30 天淘汰&lt;br&gt;（见图 1 ③）&lt;/font&gt;" style="rounded=1;dashed=1;whiteSpace=wrap;html=1;fillColor=#F2FBF6;strokeColor=#3F9964;strokeWidth=2;fontColor=#1B5E3C;fontSize=18;align=center;verticalAlign=middle;spacing=8;" vertex="1" parent="rlane3">
+          <mxGeometry x="910" y="60" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-citation-usage" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="rlane3" source="n2-citation" target="n2-usage">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2-usage-feedback" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#3F9964;strokeWidth=3;dashed=1;endArrow=block;endFill=1;" edge="1" parent="rlane3" source="n2-usage" target="n2-feedback">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-lane edges -->
+        <mxCell id="e2-inject-diamond" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#486581;strokeWidth=3;endArrow=block;endFill=1;" edge="1" parent="1" source="n2-inject" target="n2-diamond">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="370" />
+              <mxPoint x="180" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2-merge-citation" value="有实质检索结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#6B5B95;strokeWidth=3;endArrow=block;endFill=1;fontSize=16;fontColor=#4C3F73;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n2-merge" target="n2-citation">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="980" y="882" />
+              <mxPoint x="255" y="882" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="note2" value="读取本身不产生新记忆：本次会话若要成为未来输入，需等待自身 idle 足够久，由下一次新会话触发的 Phase 1 认领（见图 1）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1134" width="1160" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
