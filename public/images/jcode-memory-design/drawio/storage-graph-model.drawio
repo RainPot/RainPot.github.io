@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="drawio" version="30.0.4">
   <diagram name="存储与图模型">
-    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1380" math="0" shadow="0" background="#FFFFFF">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1340" math="0" shadow="0" background="#FFFFFF">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -101,8 +101,8 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <mxCell id="note1" value="三步走：① 先用 embedding 找种子 → ② 沿图上的边小范围扩展，权重决定优先带出谁 → ③ 种子和扩展结果一起进候选池，交给下一步裁决（第 7 节）。图关系质量取决于后续维护是否靠谱——第 9 节的置信度衰减、剪枝和聚类微调，就是用来防止图变成“什么都相关”。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="40" y="1282" width="1220" height="70" as="geometry" />
+        <mxCell id="note1" value="三步走：embedding 找种子 → 沿边小范围扩展 → 汇入候选池交给裁决；图的质量靠第 9 节的维护兜底。" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1282" width="1220" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

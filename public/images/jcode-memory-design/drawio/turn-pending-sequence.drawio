@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="drawio" version="30.0.4">
   <diagram name="非阻塞Turn链路">
-    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="760" math="0" shadow="0" background="#FFFFFF">
+    <mxGraphModel dx="1200" dy="1300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="720" math="0" shadow="0" background="#FFFFFF">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -68,8 +68,8 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="note1" value="pending 只有 120 秒有效期（is_fresh()）：如果第 4 轮聊的是 auth middleware，这份算好的记忆要在 120 秒内被第 5 轮用上，超时就直接丢弃，不会用过期内容开场。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="40" y="662" width="1220" height="60" as="geometry" />
+        <mxCell id="note1" value="pending 只有 120 秒有效期：算好的记忆若没被下一轮及时用上，超时就直接丢弃，不用过期内容开场。" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=17;fontColor=#627D98;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="662" width="1220" height="36" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
