@@ -13,9 +13,12 @@
   "dependencies": {
     "@astrojs/react": "^4.3.1",
     "astro": "^6.1.9",
+    "katex": "^0.16.47",
     "ogl": "^1.0.11",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "three": "^0.184.0"
   },
   "devDependencies": {

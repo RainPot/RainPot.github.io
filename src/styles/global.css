@@ -827,6 +827,33 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   border: 1px solid var(--line);
 }
 
+/* KaTeX 公式：跟随暗色主题取色，行内公式压到与正文相近的字号 */
+.markdown-content .katex {
+  color: var(--text);
+  font-size: 1.05em;
+}
+
+/* 独立成行的公式在窄屏上横向滚动，而不是撑破容器 */
+.markdown-content .katex-display {
+  margin: 22px 0;
+  padding: 2px 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.markdown-content .katex-display > .katex {
+  font-size: 1.1em;
+  text-align: initial;
+}
+
+/* 公式渲染失败时 KaTeX 会输出这个类，用醒目色标出来而不是静默显示原文 */
+.markdown-content .katex-error {
+  color: var(--amber);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.92em;
+}
+
 .about-shell {
   display: grid;
   min-height: calc(100svh - 132px);

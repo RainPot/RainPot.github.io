@@ -77,7 +77,7 @@ Orchard 的核心是 **Orchard Env**。论文把它设计成一个薄的环境�
 
 第三是 **网络隔离和生命周期清理**。论文强调 default-deny egress、按需 NetworkPolicy、异步生命周期、heartbeat cleanup 和 watch-based readiness。这些听起来像 DevOps 细节，但对 computer-use agent 特别关键：agent 能操作浏览器、文件和工具，一旦没有网络和权限边界，训练环境既不安全，也不可复现。
 
-第四是成本。论文给了一个 128 个并行 sandbox、每个 2 vCPU / 8 GiB、运行 240 小时的估算：Orchard on-demand 约 **$3,362**，E2B / Daytona 各约 **$7,078**，Modal 约 **$10,305**；如果用 spot instance，Orchard 相对 Daytona 的成本可到约 **0.10×**。这些数字不一定能直接迁移到每个团队的云账号，但说明一个趋势：**GUI agent 的训练竞争正在从“会不会写 harness”转向“能不能负担大规模、可控的环境采样”。**
+第四是成本。论文给了一个 128 个并行 sandbox、每个 2 vCPU / 8 GiB、运行 240 小时的估算：Orchard on-demand 约 **\$3,362**，E2B / Daytona 各约 **\$7,078**，Modal 约 **\$10,305**；如果用 spot instance，Orchard 相对 Daytona 的成本可到约 **0.10×**。这些数字不一定能直接迁移到每个团队的云账号，但说明一个趋势：**GUI agent 的训练竞争正在从“会不会写 harness”转向“能不能负担大规模、可控的环境采样”。**
 
 ## 4. Orchard-GUI：从 29 万任务到 4B GUI agent
 
