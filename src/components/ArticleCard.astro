@@ -15,7 +15,8 @@ const title = post.data.title;
 const description = post.data.description ?? "";
 const slug = getPostSlug(post);
 const body = post.body ?? "";
-const filterText = [title, description, slug, ...tags, body].join(" ");
+// 搜索按字段分开给分，所以这里不再拼成一整段文本
+const filterMeta = [slug, ...tags].join(" ");
 const sourceImages = import.meta.glob<{ default: { src?: string } | string }>("../images/**/*.{png,jpg,jpeg,webp,svg}");
 const thumbnailSrc = await getThumbnailSrc(body);
 
@@ -74,7 +75,7 @@ async function sourceImageSrc(src: string): Promise<string> {
 }
 ---
 
-<a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc), "is-page-hidden": pagedOut }]} href={href} data-filter-card data-filter-text={filterText} data-spotlight-card>
+<a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc), "is-page-hidden": pagedOut }]} href={href} data-filter-card data-filter-title={title} data-filter-meta={filterMeta} data-filter-summary={description} data-filter-body={body} data-spotlight-card>
   {thumbnailSrc && (
     <span class="article-card-thumb" aria-hidden="true">
       <img src={thumbnailSrc} alt="" loading="lazy" decoding="async" />

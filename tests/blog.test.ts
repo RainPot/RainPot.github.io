@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { estimateReadingMinutes, getPublishedPosts, getTableOfContents, sortPosts } from "../src/lib/blog";
-import { getArticleFilterPage, initArticleFilter, matchesArticleQuery, normalizeFilterText } from "../src/scripts/article-filter";
+import {
+  getArticleFilterPage,
+  initArticleFilter,
+  matchesArticleQuery,
+  normalizeFilterText,
+  rankArticleFields,
+  scoreArticleFields,
+  type ArticleFilterFields
+} from "../src/scripts/article-filter";
 
 const posts = [
   {
@@ -100,7 +108,12 @@ describe("blog helpers", () => {
   });
 
   it("builds filter pages from all article texts", () => {
-    const state = getArticleFilterPage(["Agent one", "Tensorboard", "Agent two"], "agent", 2, 1);
+    const state = getArticleFilterPage(
+      [{ title: "Agent one" }, { title: "Tensorboard" }, { title: "Agent two" }],
+      "agent",
+      2,
+      1
+    );
 
     expect(state).toEqual({
       currentPage: 2,
@@ -108,6 +121,66 @@ describe("blog helpers", () => {
       pageIndexes: [2],
       totalPages: 2
     });
+  });
+
+  it("scores title hits above tag, summary and body hits", () => {
+    const query = "loop";
+    const titleHit = scoreArticleFields({ title: "Loop Engineering" }, query);
+    const metaHit = scoreArticleFields({ meta: "loop-engineering agent" }, query);
+    const summaryHit = scoreArticleFields({ summary: "讲 loop 的一篇文章" }, query);
+    const bodyHit = scoreArticleFields({ body: "正文里提了一次 loop" }, query);
+
+    expect(titleHit).toBeGreaterThan(metaHit);
+    expect(metaHit).toBeGreaterThan(summaryHit);
+    expect(summaryHit).toBeGreaterThan(bodyHit);
+    expect(scoreArticleFields({ body: "毫不相关" }, query)).toBe(0);
+  });
+
+  it("requires every term to hit some field", () => {
+    const fields = { title: "Loop Engineering", body: "control plane" };
+
+    expect(scoreArticleFields(fields, "loop plane")).toBeGreaterThan(0);
+    expect(scoreArticleFields(fields, "loop kubernetes")).toBe(0);
+  });
+
+  it("ranks title matches ahead of body-only matches", () => {
+    const entries = [
+      { title: "无关标题", body: "顺口提了一次 loopx" },
+      { title: "LoopX 拆解", body: "正文" },
+      { title: "另一篇", meta: "loopx control-plane", body: "正文" }
+    ];
+
+    expect(rankArticleFields(entries, "loopx")).toEqual([1, 2, 0]);
+  });
+
+  it("reorders filtered cards by relevance", () => {
+    let listener = () => {};
+    const input = {
+      value: "",
+      addEventListener: (_event: string, handler: () => void) => {
+        listener = handler;
+      }
+    };
+    const cards = [
+      createFilterCard({ title: "别的文章", body: "正文里提过一次 agent" }),
+      createFilterCard({ title: "Agent Harness 拆解", body: "正文" })
+    ];
+    const root = {
+      querySelector: (selector: string) => (selector === "[data-article-filter]" ? input : null),
+      querySelectorAll: () => cards
+    };
+
+    initArticleFilter(root as unknown as ParentNode);
+    input.value = "agent";
+    listener();
+
+    expect(cards[1].style.order).toBe("0");
+    expect(cards[0].style.order).toBe("1");
+
+    input.value = "";
+    listener();
+
+    expect(cards.map((card) => card.style.order)).toEqual(["", ""]);
   });
 
   it("filters article cards and updates count text", () => {
@@ -206,11 +279,18 @@ describe("blog helpers", () => {
   });
 });
 
-function createFilterCard(filterText: string) {
+function createFilterCard(fields: Partial<ArticleFilterFields> | string) {
+  const dataset = typeof fields === "string" ? { filterText: fields } : {
+    filterTitle: fields.title ?? "",
+    filterMeta: fields.meta ?? "",
+    filterSummary: fields.summary ?? "",
+    filterBody: fields.body ?? ""
+  };
   const card = {
     filtered: false,
     pageHidden: false,
-    dataset: { filterText },
+    dataset,
+    style: { order: "" },
     classList: {
       toggle(className: string, enabled: boolean) {
         if (className === "is-filtered") card.filtered = enabled;
