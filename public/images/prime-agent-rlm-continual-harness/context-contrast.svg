@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="1000" fill="#f8fafc"/>
+  <text x="900" y="52" font-size="30" font-weight="700" fill="#0f172a" text-anchor="middle">同样一个 80k tokens 的日志文件,两种 harness 怎么处理</text>
+  <text x="900" y="86" font-size="18" fill="#64748b" text-anchor="middle">差别不在“会不会读文件”,而在“读完之后这堆内容存在哪里”</text>
+
+  <!-- ================= LEFT PANEL ================= -->
+  <rect x="40" y="118" width="830" height="840" rx="14" fill="#ffffff" stroke="#fecaca" stroke-width="2"/>
+  <rect x="40" y="118" width="830" height="54" rx="14" fill="#fef2f2"/>
+  <rect x="40" y="158" width="830" height="14" fill="#fef2f2"/>
+  <text x="68" y="153" font-size="21" font-weight="700" fill="#b91c1c">A. 工具结果直接进消息历史(多数 harness 的做法)</text>
+
+  <!-- step 1 -->
+  <rect x="72" y="198" width="766" height="72" rx="9" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="92" y="226" font-size="17" font-weight="600" fill="#334155">① 模型发一次 tool_call</text>
+  <text x="92" y="253" font-size="16" font-family="Menlo, DejaVu Sans Mono, monospace" fill="#0f766e">read_file("build.log")</text>
+
+  <line x1="455" y1="270" x2="455" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- step 2 -->
+  <rect x="72" y="302" width="766" height="88" rx="9" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="92" y="330" font-size="17" font-weight="600" fill="#334155">② 整份内容作为 tool_result 回传</text>
+  <text x="92" y="358" font-size="16" fill="#b91c1c">80k tokens 一字不落地写进 message history,之后每一轮都要重发一遍</text>
+  <text x="92" y="381" font-size="15" fill="#94a3b8">模型没有选择权:它还没看到内容,内容已经在上下文里了</text>
+
+  <line x1="455" y1="390" x2="455" y2="420" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- context window bar -->
+  <text x="92" y="446" font-size="16" font-weight="600" fill="#334155">③ 上下文窗口占用</text>
+  <rect x="92" y="458" width="726" height="46" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <rect x="94" y="460" width="240" height="42" rx="4" fill="#fca5a5"/>
+  <rect x="334" y="460" width="200" height="42" fill="#f87171"/>
+  <rect x="534" y="460" width="180" height="42" fill="#ef4444"/>
+  <text x="214" y="487" font-size="15" fill="#7f1d1d" text-anchor="middle">第 1 次读取</text>
+  <text x="434" y="487" font-size="15" fill="#7f1d1d" text-anchor="middle">第 2 次</text>
+  <text x="624" y="487" font-size="15" fill="#fff" text-anchor="middle">第 3 次</text>
+  <text x="768" y="487" font-size="15" fill="#94a3b8" text-anchor="middle">剩余</text>
+
+  <line x1="455" y1="512" x2="455" y2="542" stroke="#dc2626" stroke-width="2" marker-end="url(#arRed)"/>
+
+  <!-- step 4 summarize -->
+  <rect x="72" y="544" width="766" height="96" rx="9" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="92" y="572" font-size="17" font-weight="600" fill="#334155">④ 快满了,触发 summarize 压缩</text>
+  <text x="92" y="600" font-size="16" fill="#9a3412">让模型把前面的历史总结成一段短文本,再用总结替换原文</text>
+  <text x="92" y="624" font-size="15" fill="#94a3b8">这一步是有损的:被总结掉的细节没有任何办法找回来</text>
+
+  <line x1="455" y1="640" x2="455" y2="670" stroke="#dc2626" stroke-width="2" marker-end="url(#arRed)"/>
+
+  <rect x="72" y="672" width="766" height="118" rx="9" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="92" y="702" font-size="18" font-weight="700" fill="#b91c1c">结果:一串靠总结串起来的 agent</text>
+  <text x="92" y="732" font-size="16" fill="#475569">每压缩一次,信息就少一点。任务越长,模型看到的世界越模糊。</text>
+  <text x="92" y="760" font-size="16" fill="#475569">Prime Intellect 把这个现象叫 context rot(上下文腐烂)。</text>
+
+  <rect x="72" y="806" width="766" height="120" rx="9" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="92" y="836" font-size="16" font-weight="600" fill="#334155">代价</text>
+  <text x="92" y="864" font-size="15.5" fill="#64748b">· 单 token 成本随上下文线性上涨</text>
+  <text x="92" y="890" font-size="15.5" fill="#64748b">· 模型能力随上下文变长而下降</text>
+  <text x="92" y="916" font-size="15.5" fill="#64748b">· 压缩边界一过,原始证据不可回溯</text>
+
+  <!-- ================= RIGHT PANEL ================= -->
+  <rect x="930" y="118" width="830" height="840" rx="14" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
+  <rect x="930" y="118" width="830" height="54" rx="14" fill="#ecfdf5"/>
+  <rect x="930" y="158" width="830" height="14" fill="#ecfdf5"/>
+  <text x="958" y="153" font-size="21" font-weight="700" fill="#047857">B. 结果留在 Python 变量里(Prime Agent 的 RLM 做法)</text>
+
+  <rect x="962" y="198" width="766" height="72" rx="9" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="982" y="226" font-size="17" font-weight="600" fill="#334155">① 模型只有一个工具:执行 Python</text>
+  <text x="982" y="253" font-size="16" font-family="Menlo, DejaVu Sans Mono, monospace" fill="#0f766e">log = open("build.log").read()</text>
+
+  <line x1="1345" y1="270" x2="1345" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+
+  <rect x="962" y="302" width="766" height="88" rx="9" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="982" y="330" font-size="17" font-weight="600" fill="#334155">② 80k tokens 落在 kernel 内存里,不进上下文</text>
+  <text x="982" y="358" font-size="16" fill="#047857">进上下文的只有这一行代码本身,以及模型主动 print 出来的部分</text>
+  <text x="982" y="381" font-size="15" fill="#94a3b8">这就是 prompt-as-a-variable:把数据当变量,而不是当消息</text>
+
+  <line x1="1345" y1="390" x2="1345" y2="420" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+
+  <text x="982" y="446" font-size="16" font-weight="600" fill="#334155">③ 上下文窗口占用</text>
+  <rect x="982" y="458" width="726" height="46" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <rect x="984" y="460" width="42" height="42" rx="4" fill="#34d399"/>
+  <rect x="1026" y="460" width="34" height="42" fill="#6ee7b7"/>
+  <rect x="1060" y="460" width="30" height="42" fill="#a7f3d0"/>
+  <text x="1400" y="487" font-size="15" fill="#94a3b8" text-anchor="middle">剩余</text>
+  <text x="1035" y="524" font-size="14" fill="#059669" text-anchor="middle">三次读取合计仍只占一小条</text>
+
+  <line x1="1345" y1="540" x2="1345" y2="566" stroke="#059669" stroke-width="2" marker-end="url(#arGreen)"/>
+
+  <rect x="962" y="568" width="766" height="120" rx="9" fill="#f0fdfa" stroke="#5eead4"/>
+  <text x="982" y="596" font-size="17" font-weight="600" fill="#334155">④ 下一轮想换个角度看,直接对变量再切一刀</text>
+  <text x="982" y="626" font-size="16" font-family="Menlo, DejaVu Sans Mono, monospace" fill="#0f766e">errs = re.findall(r"ERROR.*", log)[:20]</text>
+  <text x="982" y="654" font-size="15.5" fill="#475569">原始数据一直在,想看哪段现取哪段,不需要重新读文件</text>
+  <text x="982" y="678" font-size="15" fill="#94a3b8">变量随 kernel 存活,跨轮次、跨压缩都还在</text>
+
+  <line x1="1345" y1="688" x2="1345" y2="714" stroke="#059669" stroke-width="2" marker-end="url(#arGreen)"/>
+
+  <rect x="962" y="716" width="766" height="102" rx="9" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="982" y="746" font-size="18" font-weight="700" fill="#047857">结果:上下文里放的是索引,不是原文</text>
+  <text x="982" y="776" font-size="16" fill="#475569">官方博客的说法是,RLM“从不真正总结上下文”,</text>
+  <text x="982" y="802" font-size="16" fill="#475569">所以也就没有总结带来的信息丢失。</text>
+
+  <rect x="962" y="834" width="766" height="92" rx="9" fill="#fffbeb" stroke="#fde68a"/>
+  <text x="982" y="864" font-size="16" font-weight="600" fill="#92400e">但这不是免费的</text>
+  <text x="982" y="892" font-size="15.5" fill="#78716c">模型必须真的会写代码去找数据。写不好检索代码,</text>
+  <text x="982" y="916" font-size="15.5" fill="#78716c">它就是在一个自己看不见的变量上瞎猜。</text>
+</svg>

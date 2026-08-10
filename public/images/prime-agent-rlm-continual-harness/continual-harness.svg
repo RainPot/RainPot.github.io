@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="h1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="h2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="h3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0891b2"/>
+    </marker>
+  </defs>
+  <rect width="1800" height="1200" fill="#f8fafc"/>
+  <text x="900" y="46" font-size="29" font-weight="700" fill="#0f172a" text-anchor="middle">Continual Harness:让 agent 改自己的提示词,但只准改一层</text>
+  <text x="900" y="78" font-size="17" fill="#64748b" text-anchor="middle">基础提示词编译进二进制、任何人改不了;能改的是挂在它后面的那一段</text>
+
+  <!-- ========== PANEL A: prompt assembly ========== -->
+  <rect x="34" y="104" width="666" height="596" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="34" y="104" width="666" height="46" rx="12" fill="#1e293b"/>
+  <rect x="34" y="136" width="666" height="14" fill="#1e293b"/>
+  <text x="367" y="134" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">每一轮的系统提示词是怎么拼起来的</text>
+
+  <text x="56" y="172" font-size="14" fill="#94a3b8">从上到下按顺序拼接 · 只有第 3 层可写</text>
+
+  <g font-size="15">
+    <rect x="56" y="182" width="622" height="56" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="206" font-weight="600" fill="#334155">1 · buildRlmPrompt() 基础提示词</text>
+    <text x="72" y="228" font-size="13.5" fill="#64748b">身份、工作目录、递归机制、IPython 使用纪律 —— 写死在代码里</text>
+    <rect x="600" y="192" width="62" height="24" rx="12" fill="#e2e8f0"/>
+    <text x="631" y="209" font-size="12.5" fill="#475569" text-anchor="middle">只读</text>
+
+    <rect x="56" y="246" width="622" height="48" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="270" font-weight="600" fill="#334155">2 · 子 agent 委派指引</text>
+    <text x="72" y="288" font-size="13" fill="#94a3b8">什么时候该派活、怎么派</text>
+    <rect x="600" y="256" width="62" height="24" rx="12" fill="#e2e8f0"/>
+    <text x="631" y="273" font-size="12.5" fill="#475569" text-anchor="middle">只读</text>
+
+    <rect x="56" y="302" width="622" height="76" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="72" y="328" font-weight="700" fill="#6d28d9">3 · # Continual Harness State</text>
+    <text x="72" y="350" font-size="13.5" fill="#5b21b6">补充提示词、记忆、技能描述、子 agent 规格</text>
+    <text x="72" y="370" font-size="13" fill="#7c3aed">这是全篇唯一能被 /refine 写的地方</text>
+    <rect x="586" y="312" width="76" height="26" rx="13" fill="#7c3aed"/>
+    <text x="624" y="330" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">可写</text>
+
+    <rect x="56" y="386" width="622" height="44" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="414" font-weight="600" fill="#334155">4 · # Additional Guidance(工具带来的补充说明)</text>
+
+    <rect x="56" y="438" width="622" height="60" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="462" font-weight="600" fill="#334155">5 · # Project Context</text>
+    <text x="72" y="484" font-size="13.5" fill="#64748b">AGENTS.md / CLAUDE.md 全文原样贴进来 —— 由人来维护</text>
+
+    <rect x="56" y="506" width="622" height="60" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="530" font-weight="600" fill="#334155">6 · &lt;available_skills&gt; 技能索引</text>
+    <text x="72" y="552" font-size="13.5" fill="#64748b">只有名字、类型、import 名、一句话描述、文件路径</text>
+
+    <rect x="56" y="574" width="622" height="44" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <text x="72" y="602" font-weight="600" fill="#334155">7 · appendSystemPrompt(用户自己追加的)</text>
+  </g>
+
+  <rect x="56" y="630" width="622" height="56" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="72" y="654" font-size="14.5" font-weight="600" fill="#92400e">为什么第 1 层不让动</text>
+  <text x="72" y="676" font-size="13.5" fill="#78350f">源码注释把它称作 “trained prefix”:模型是照着这段被训过的。</text>
+
+  <!-- ========== PANEL B: harness store ========== -->
+  <rect x="730" y="104" width="1036" height="596" rx="12" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+  <rect x="730" y="104" width="1036" height="46" rx="12" fill="#6d28d9"/>
+  <rect x="730" y="136" width="1036" height="14" fill="#6d28d9"/>
+  <text x="1248" y="134" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">那一层里到底存了什么:四类条目,两个作用域</text>
+
+  <g>
+    <rect x="752" y="172" width="492" height="122" rx="9" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="772" y="198" font-size="16" font-weight="700" fill="#6d28d9">prompt · 补充提示词</text>
+    <text x="772" y="224" font-size="13.5" fill="#475569">很窄的行为约定,比如“提交前先看 git status”。</text>
+    <text x="772" y="248" font-size="13.5" fill="#475569">校验里明确挡掉 id 为 base_system_prompt 的编辑。</text>
+    <text x="772" y="276" font-size="13" fill="#94a3b8">它是附注,不是对基础提示词的覆盖。</text>
+
+    <rect x="1272" y="172" width="472" height="122" rx="9" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="1292" y="198" font-size="16" font-weight="700" fill="#6d28d9">memory · 记忆</text>
+    <text x="1292" y="224" font-size="13.5" fill="#475569">事实、做过的决定、踩过的坑、用户偏好、</text>
+    <text x="1292" y="248" font-size="13.5" fill="#475569">某次尝试的结果。</text>
+    <text x="1292" y="276" font-size="13" fill="#94a3b8">四类里最常被写的一类。</text>
+
+    <rect x="752" y="306" width="492" height="130" rx="9" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="772" y="332" font-size="16" font-weight="700" fill="#6d28d9">skill · 可复用调用的描述</text>
+    <text x="772" y="358" font-size="13.5" fill="#475569">注意:这里存的是“描述”,不是代码。</text>
+    <text x="772" y="382" font-size="13.5" fill="#475569">必须带 reference(python import + 可调用对象)</text>
+    <text x="772" y="406" font-size="13.5" fill="#475569">和 arguments(参数、必填、默认值),否则校验不过。</text>
+    <text x="772" y="428" font-size="13" fill="#94a3b8">真正打包成 Python 包是 skill-creator 的活。</text>
+
+    <rect x="1272" y="306" width="472" height="130" rx="9" fill="#faf5ff" stroke="#d8b4fe"/>
+    <text x="1292" y="332" font-size="16" font-weight="700" fill="#6d28d9">subagent · 委派规格</text>
+    <text x="1292" y="358" font-size="13.5" fill="#475569">一个可复用的“角色”:干什么、怎么干、</text>
+    <text x="1292" y="382" font-size="13.5" fill="#475569">什么时候该叫它。</text>
+    <text x="1292" y="410" font-size="13" fill="#94a3b8">源码注释说这个菜单的排布是对着</text>
+    <text x="1292" y="430" font-size="13" fill="#94a3b8">Claude Code 的 Agent 工具抄的。</text>
+  </g>
+
+  <rect x="752" y="450" width="992" height="112" rx="9" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="772" y="476" font-size="16" font-weight="700" fill="#334155">两个作用域,默认写本地</text>
+  <g font-family="Menlo, monospace" font-size="13">
+    <rect x="772" y="488" width="470" height="30" rx="6" fill="#ecfdf5"/>
+    <text x="784" y="509" fill="#047857">session-artifacts/&lt;会话 id&gt;/harness/harness_state.json</text>
+    <rect x="772" y="524" width="470" height="30" rx="6" fill="#eff6ff"/>
+    <text x="784" y="545" fill="#1d4ed8">~/.prime/agent/harness/harness_state.json</text>
+  </g>
+  <text x="1262" y="509" font-size="13.5" fill="#047857">本地 · 默认。这次会话自己的进度、临时结论</text>
+  <text x="1262" y="545" font-size="13.5" fill="#1d4ed8">全局 · 要显式 --global。跨会话的稳定经验</text>
+  <text x="772" y="578" font-size="13" fill="#94a3b8">读的时候两边合并(全局打底、本地覆盖);写的时候一次只写一边。id 撞车时本地那条显示成 local:&lt;id&gt;。</text>
+
+  <rect x="752" y="592" width="992" height="94" rx="9" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="772" y="620" font-size="16" font-weight="700" fill="#b91c1c">最容易误解的一点:进提示词的是索引,不是全文</text>
+  <text x="772" y="646" font-size="14" fill="#475569">每一类最多注入 6 条,每条内容截断到 180 字符,多出来的只显示成 “+N more”。</text>
+  <text x="772" y="672" font-size="14" fill="#475569">模型看到的是一份路由提示;要看细节,得自己去 rlm.harness 里读。写太多条,后面的等于隐身。</text>
+
+  <!-- ========== BOTTOM: refine flow ========== -->
+  <text x="40" y="748" font-size="22" font-weight="700" fill="#0f172a">/refine 一次跑完的五步</text>
+  <text x="330" y="748" font-size="15" fill="#64748b">—— 注意它自己也是一次 LLM 调用,只是被死死限制了输出形状</text>
+
+  <g>
+    <rect x="48" y="772" width="310" height="196" rx="10" fill="#ffffff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="48" y="772" width="310" height="38" rx="10" fill="#0891b2"/>
+    <rect x="48" y="798" width="310" height="12" fill="#0891b2"/>
+    <text x="203" y="798" font-size="15.5" font-weight="700" fill="#fff" text-anchor="middle">① 触发</text>
+    <text x="66" y="836" font-size="13.5" fill="#475569">· 人手敲 /refine</text>
+    <text x="66" y="860" font-size="13.5" fill="#475569">· 模型自己 await refine.run()</text>
+    <text x="66" y="884" font-size="13.5" fill="#475569">· 自动:默认每 25 轮一次,</text>
+    <text x="80" y="906" font-size="13.5" fill="#475569">压缩后也会查一次,</text>
+    <text x="80" y="928" font-size="13.5" fill="#475569">冷却 20 分钟</text>
+    <text x="66" y="954" font-size="12.5" fill="#94a3b8">子 agent 里完全禁用</text>
+
+    <rect x="403" y="772" width="310" height="196" rx="10" fill="#ffffff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="403" y="772" width="310" height="38" rx="10" fill="#0891b2"/>
+    <rect x="403" y="798" width="310" height="12" fill="#0891b2"/>
+    <text x="558" y="798" font-size="15.5" font-weight="700" fill="#fff" text-anchor="middle">② 审核闸(只在自动路径)</text>
+    <text x="421" y="836" font-size="13.5" fill="#475569">另起一次 LLM 调用,只回答</text>
+    <text x="421" y="860" font-size="13.5" fill="#475569">一个问题:这段轨迹值不值得</text>
+    <text x="421" y="884" font-size="13.5" fill="#475569">写进去?</text>
+    <text x="421" y="914" font-size="13.5" fill="#0e7490">提示词里明写:一次性的噪音、</text>
+    <text x="421" y="936" font-size="13.5" fill="#0e7490">没证据的猜测,一律驳回。</text>
+    <text x="421" y="958" font-size="12.5" fill="#94a3b8">宁可什么都不写</text>
+
+    <rect x="758" y="772" width="310" height="196" rx="10" fill="#ffffff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="758" y="772" width="310" height="38" rx="10" fill="#0891b2"/>
+    <rect x="758" y="798" width="310" height="12" fill="#0891b2"/>
+    <text x="913" y="798" font-size="15.5" font-weight="700" fill="#fff" text-anchor="middle">③ 规划</text>
+    <text x="776" y="836" font-size="13.5" fill="#475569">喂进去的是:</text>
+    <text x="776" y="860" font-size="13.5" fill="#475569">· 轨迹的最后 80k 字符</text>
+    <text x="776" y="884" font-size="13.5" fill="#475569">· 当前 harness 概览</text>
+    <text x="776" y="908" font-size="13.5" fill="#475569">· 最近 20 条改动历史</text>
+    <text x="776" y="936" font-size="13.5" fill="#0e7490">只允许返回 JSON 编辑列表,</text>
+    <text x="776" y="958" font-size="13.5" fill="#0e7490">而且刻意关掉了 thinking。</text>
+
+    <rect x="1113" y="772" width="310" height="196" rx="10" fill="#ffffff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="1113" y="772" width="310" height="38" rx="10" fill="#0891b2"/>
+    <rect x="1113" y="798" width="310" height="12" fill="#0891b2"/>
+    <text x="1268" y="798" font-size="15.5" font-weight="700" fill="#fff" text-anchor="middle">④ 逐条校验</text>
+    <text x="1131" y="836" font-size="13.5" fill="#475569">· 结构对不对、id 存不存在</text>
+    <text x="1131" y="860" font-size="13.5" fill="#475569">· skill 条目必须带调用契约</text>
+    <text x="1131" y="884" font-size="13.5" fill="#475569">· create 不能悄悄覆盖已有条目</text>
+    <text x="1131" y="908" font-size="13.5" fill="#475569">· 规划期间条目被改过就跳过</text>
+    <text x="1131" y="936" font-size="13.5" fill="#0e7490">某一条挂了只记下错误,</text>
+    <text x="1131" y="958" font-size="13.5" fill="#0e7490">不影响同批其他条目。</text>
+
+    <rect x="1468" y="772" width="284" height="196" rx="10" fill="#ffffff" stroke="#0891b2" stroke-width="2"/>
+    <rect x="1468" y="772" width="284" height="38" rx="10" fill="#0891b2"/>
+    <rect x="1468" y="798" width="284" height="12" fill="#0891b2"/>
+    <text x="1610" y="798" font-size="15.5" font-weight="700" fill="#fff" text-anchor="middle">⑤ 应用</text>
+    <text x="1486" y="836" font-size="13.5" fill="#475569">先写临时文件再 rename,</text>
+    <text x="1486" y="860" font-size="13.5" fill="#475569">避免写坏。</text>
+    <text x="1486" y="888" font-size="13.5" fill="#475569">落盘后立刻重建系统提示词,</text>
+    <text x="1486" y="910" font-size="13.5" fill="#475569">然后自动把 agent 唤醒继续干。</text>
+    <text x="1486" y="940" font-size="12.5" fill="#94a3b8">规划在后台跑,不挡新一轮;</text>
+    <text x="1486" y="960" font-size="12.5" fill="#94a3b8">只有落盘这一小段是阻塞的。</text>
+  </g>
+
+  <g stroke="#0891b2" stroke-width="2.5">
+    <line x1="360" y1="870" x2="399" y2="870" marker-end="url(#h3)"/>
+    <line x1="715" y1="870" x2="754" y2="870" marker-end="url(#h3)"/>
+    <line x1="1070" y1="870" x2="1109" y2="870" marker-end="url(#h3)"/>
+    <line x1="1425" y1="870" x2="1464" y2="870" marker-end="url(#h3)"/>
+  </g>
+
+  <rect x="48" y="994" width="850" height="168" rx="10" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+  <text x="72" y="1024" font-size="17" font-weight="700" fill="#047857">回滚不需要再问模型一次</text>
+  <text x="72" y="1054" font-size="14.5" fill="#475569">每条 edit 落盘时都存了这条目改动前后的完整快照。</text>
+  <text x="72" y="1082" font-size="14.5" fill="#475569">/refine rollback &lt;id&gt; 就是把这批快照倒着回放:删掉的重建、改过的还原、</text>
+  <text x="72" y="1108" font-size="14.5" fill="#475569">新建的删除。全程零 LLM 调用,所以它便宜、确定、可重复。</text>
+  <text x="72" y="1140" font-size="13.5" fill="#94a3b8">回滚本身也会被记成一次新的 refinement,所以回滚也能再回滚。</text>
+
+  <rect x="918" y="994" width="834" height="168" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <text x="942" y="1024" font-size="17" font-weight="700" fill="#92400e">读源码时注意到的几个粗糙处</text>
+  <text x="942" y="1054" font-size="14.5" fill="#78350f">· 没有任何界面能浏览 harness 条目或列出可回滚的 id ——</text>
+  <text x="956" y="1078" font-size="14.5" fill="#78350f">想回滚,得自己去翻 json 文件找 id。</text>
+  <text x="942" y="1106" font-size="14.5" fill="#78350f">· 条目只增不减,没看到淘汰策略;配合“每类只注入 6 条”,</text>
+  <text x="956" y="1130" font-size="14.5" fill="#78350f">写多了之后早期条目实际上就沉底了。</text>
+  <text x="942" y="1154" font-size="13" fill="#a16207">以上基于 a18809e 的源码阅读,未实际运行,可能已被后续提交改掉。</text>
+</svg>

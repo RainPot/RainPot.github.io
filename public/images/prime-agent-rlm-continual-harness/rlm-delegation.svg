@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="s2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/>
+    </marker>
+    <marker id="s3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <rect width="1800" height="1080" fill="#f8fafc"/>
+  <text x="900" y="48" font-size="29" font-weight="700" fill="#0f172a" text-anchor="middle">await rlm(...) 到底做了什么:派活立刻返回,答案后面才回来</text>
+  <text x="900" y="80" font-size="17" font-fill="#64748b" fill="#64748b" text-anchor="middle">最反直觉的一点:这个 await 等的是“任务被受理”,不是“任务被做完”</text>
+
+  <!-- lane headers -->
+  <g text-anchor="middle">
+    <rect x="40" y="104" width="260" height="56" rx="9" fill="#1e293b"/>
+    <text x="170" y="130" font-size="16" font-weight="600" fill="#fff">父 agent 的模型</text>
+    <text x="170" y="150" font-size="13" fill="#94a3b8">Parent model</text>
+
+    <rect x="415" y="104" width="260" height="56" rx="9" fill="#0f766e"/>
+    <text x="545" y="130" font-size="16" font-weight="600" fill="#fff">父 AgentSession</text>
+    <text x="545" y="150" font-size="13" fill="#99f6e4">TypeScript 宿主</text>
+
+    <rect x="770" y="104" width="260" height="56" rx="9" fill="#b45309"/>
+    <text x="900" y="130" font-size="16" font-weight="600" fill="#fff">IPython 内核</text>
+    <text x="900" y="150" font-size="13" fill="#fde68a">Python 进程</text>
+
+    <rect x="1125" y="104" width="260" height="56" rx="9" fill="#6d28d9"/>
+    <text x="1255" y="130" font-size="16" font-weight="600" fill="#fff">子 AgentSession</text>
+    <text x="1255" y="150" font-size="13" fill="#ddd6fe">独立会话</text>
+
+    <rect x="1490" y="104" width="260" height="56" rx="9" fill="#475569"/>
+    <text x="1620" y="130" font-size="16" font-weight="600" fill="#fff">模型 provider</text>
+    <text x="1620" y="150" font-size="13" fill="#cbd5e1">Anthropic / OpenAI …</text>
+  </g>
+
+  <!-- lifelines -->
+  <g stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 6">
+    <line x1="170" y1="160" x2="170" y2="1030"/>
+    <line x1="545" y1="160" x2="545" y2="1030"/>
+    <line x1="900" y1="160" x2="900" y2="1030"/>
+    <line x1="1255" y1="160" x2="1255" y2="1030"/>
+    <line x1="1620" y1="160" x2="1620" y2="1030"/>
+  </g>
+
+  <!-- PHASE 1 band -->
+  <rect x="40" y="180" width="1720" height="330" rx="10" fill="#ecfdf5" opacity="0.55"/>
+  <text x="60" y="204" font-size="16" font-weight="700" fill="#047857">第一阶段:同步派活(全程在一次工具调用里完成)</text>
+
+  <g stroke-width="2.5" font-size="15">
+    <line x1="170" y1="232" x2="537" y2="232" stroke="#475569" marker-end="url(#s1)"/>
+    <text x="180" y="224" fill="#334155">① 调用唯一的 ipython 工具</text>
+
+    <line x1="545" y1="272" x2="892" y2="272" stroke="#475569" marker-end="url(#s1)"/>
+    <text x="556" y="264" font-family="Menlo, monospace" font-size="14" fill="#0f766e">② execute: await rlm("inspect the API")</text>
+
+    <line x1="900" y1="312" x2="553" y2="312" stroke="#7c3aed" marker-end="url(#s3)"/>
+    <text x="580" y="304" fill="#6d28d9">③ Jupyter comm 反向请求 host.request · rlm.run</text>
+    <text x="580" y="330" font-size="13" fill="#94a3b8">走 control 通道,不走 shell 通道</text>
+  </g>
+
+  <!-- self calls on parent session -->
+  <path d="M 545 352 h 150 v 34 h -150" fill="none" stroke="#0f766e" stroke-width="2.5" marker-end="url(#s2)"/>
+  <text x="706" y="366" font-size="14.5" fill="#0f766e">④ 校验 RLM_DEPTH &lt; RLM_MAX_DEPTH(默认上限 1)</text>
+  <text x="706" y="386" font-size="13" fill="#94a3b8">解析 model:不指定就继承父模型;指定但不可用则直接失败,不静默降级</text>
+
+  <path d="M 545 404 h 150 v 34 h -150" fill="none" stroke="#0f766e" stroke-width="2.5" marker-end="url(#s2)"/>
+  <text x="706" y="418" font-size="14.5" fill="#0f766e">⑤ 建 sub-xxxxxxxx 子目录,把任务登记进父级 registry</text>
+  <text x="706" y="438" font-size="13" fill="#94a3b8">registry 由 TypeScript 宿主持有,内核重启 / 压缩 / 恢复都不丢</text>
+
+  <g stroke-width="2.5" font-size="15">
+    <line x1="545" y1="466" x2="892" y2="466" stroke="#059669" marker-end="url(#s2)"/>
+    <text x="556" y="458" fill="#047857">⑥ 返回 RLMSpawnHandle(只有 id / name / session_dir / model)</text>
+
+    <line x1="900" y1="496" x2="178" y2="496" stroke="#475569" marker-end="url(#s1)"/>
+    <text x="240" y="488" fill="#334155">⑦ cell 输出原样回到父模型,这一轮就结束了</text>
+  </g>
+
+  <!-- KEY CALLOUT -->
+  <rect x="330" y="528" width="1140" height="74" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="356" y="558" font-size="17" font-weight="700" fill="#b91c1c">关键:句柄里没有答案。rlm() 永远不会返回子 agent 的结果。</text>
+  <text x="356" y="586" font-size="15.5" fill="#475569">官方文档的措辞是 “it never waits for or returns the child's answer”。父 agent 应该就地结束这一轮,而不是原地轮询等待。</text>
+
+  <!-- PHASE 2 band -->
+  <rect x="40" y="622" width="1720" height="330" rx="10" fill="#f5f3ff" opacity="0.6"/>
+  <text x="60" y="646" font-size="16" font-weight="700" fill="#6d28d9">第二阶段:异步执行(脱离父 agent 的这一轮,自己跑自己的)</text>
+
+  <g stroke-width="2.5" font-size="15">
+    <line x1="545" y1="682" x2="1247" y2="682" stroke="#7c3aed" marker-end="url(#s3)"/>
+    <text x="700" y="674" fill="#6d28d9">⑧ 创建子运行时并投递任务 prompt(标记为 [task from parent])</text>
+    <text x="700" y="700" font-size="13" fill="#94a3b8">复用父级的 provider、模型注册表、工具、重试配置;拿到自己的 RLM_SESSION_DIR</text>
+  </g>
+
+  <rect x="1150" y="722" width="210" height="118" rx="8" fill="#ede9fe" stroke="#a78bfa"/>
+  <text x="1255" y="746" font-size="14" font-weight="600" fill="#5b21b6" text-anchor="middle">子 agent 自己的循环</text>
+  <g stroke-width="2" font-size="13.5">
+    <line x1="1360" y1="770" x2="1612" y2="770" stroke="#7c3aed" marker-end="url(#s3)"/>
+    <text x="1372" y="762" fill="#6d28d9">⑨ 流式请求</text>
+    <line x1="1620" y1="806" x2="1368" y2="806" stroke="#7c3aed" marker-end="url(#s3)"/>
+    <text x="1382" y="798" fill="#6d28d9">响应 / 工具调用</text>
+  </g>
+  <text x="1255" y="826" font-size="13" fill="#6d28d9" text-anchor="middle">可以跑很久</text>
+
+  <g stroke-width="2.5" font-size="15">
+    <line x1="1247" y1="874" x2="553" y2="874" stroke="#059669" marker-end="url(#s2)"/>
+    <text x="640" y="866" font-family="Menlo, monospace" font-size="14" fill="#047857">⑩ await agent_message.send(msg, receiver_role="parent")</text>
+    <text x="640" y="892" font-size="13" fill="#94a3b8">要么这样显式回一句,要么把结果写进文件让父 agent 自己去读</text>
+
+    <line x1="545" y1="924" x2="178" y2="924" stroke="#475569" marker-end="url(#s1)"/>
+    <text x="230" y="916" fill="#334155">⑪ 作为一条普通 agent 消息,出现在父 agent 之后的某一轮</text>
+  </g>
+
+  <!-- bottom notes -->
+  <rect x="40" y="972" width="845" height="86" rx="9" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="64" y="1000" font-size="15.5" font-weight="600" fill="#334155">为什么响应必须走 control 通道</text>
+  <text x="64" y="1026" font-size="14.5" fill="#64748b">IPython 串行处理 shell 消息。受理响应若也走 shell,就会死锁:</text>
+  <text x="64" y="1048" font-size="14.5" fill="#64748b">正在执行的 cell 等响应,而内核要等这个 cell 结束才处理响应。</text>
+
+  <rect x="915" y="972" width="845" height="86" rx="9" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="939" y="1000" font-size="15.5" font-weight="600" fill="#334155">费用算在谁头上</text>
+  <text x="939" y="1026" font-size="14.5" fill="#64748b">子 agent 的用量会异步归并到“发起它的那条父 assistant 消息”上,</text>
+  <text x="939" y="1048" font-size="14.5" fill="#64748b">计入账单总额,但不会撑大父模型自己的上下文窗口读数。</text>
+</svg>

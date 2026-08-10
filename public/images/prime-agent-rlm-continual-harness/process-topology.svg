@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1040" viewBox="0 0 1800 1040" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+  <defs>
+    <marker id="p1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="p1s" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 10 0 L 0 5 L 10 10 z" fill="#475569"/>
+    </marker>
+    <marker id="p2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="p2s" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 10 0 L 0 5 L 10 10 z" fill="#b45309"/>
+    </marker>
+    <marker id="p3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <rect width="1800" height="1040" fill="#f8fafc"/>
+  <text x="900" y="48" font-size="29" font-weight="700" fill="#0f172a" text-anchor="middle">进程拓扑:为什么关掉终端 agent 还在跑</text>
+  <text x="900" y="80" font-size="17" fill="#64748b" text-anchor="middle">界面、协调、执行、Python 运行时被拆成四类进程,每条边界挡住一种故障</text>
+
+  <!-- ===== C1 client ===== -->
+  <rect x="34" y="118" width="286" height="446" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="34" y="118" width="286" height="46" rx="12" fill="#1e293b"/>
+  <rect x="34" y="150" width="286" height="14" fill="#1e293b"/>
+  <text x="177" y="148" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">① 客户端进程</text>
+
+  <rect x="58" y="188" width="238" height="70" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="177" y="214" font-size="15.5" font-weight="600" fill="#334155" text-anchor="middle">交互式 TUI</text>
+  <text x="177" y="238" font-size="13.5" fill="#64748b" text-anchor="middle">渲染 · 键盘 · 本地偏好</text>
+
+  <rect x="58" y="272" width="238" height="70" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="177" y="298" font-size="15.5" font-weight="600" fill="#334155" text-anchor="middle">Print / JSON / RPC</text>
+  <text x="177" y="322" font-size="13.5" fill="#64748b" text-anchor="middle">无界面自动化入口</text>
+
+  <rect x="58" y="360" width="238" height="76" rx="8" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="177" y="386" font-size="15.5" font-weight="600" fill="#0369a1" text-anchor="middle">AgentConnection</text>
+  <text x="177" y="410" font-size="13.5" fill="#0284c7" text-anchor="middle">客户端侧的执行边界</text>
+
+  <rect x="58" y="456" width="238" height="86" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="177" y="482" font-size="14.5" font-weight="600" fill="#b91c1c" text-anchor="middle">客户端不拥有执行</text>
+  <text x="177" y="506" font-size="13.5" fill="#7f1d1d" text-anchor="middle">关掉它,下面的活照跑;</text>
+  <text x="177" y="528" font-size="13.5" fill="#7f1d1d" text-anchor="middle">回来 attach 就能接上</text>
+
+  <!-- ===== C2 daemon ===== -->
+  <rect x="366" y="118" width="266" height="446" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="366" y="118" width="266" height="46" rx="12" fill="#0369a1"/>
+  <rect x="366" y="150" width="266" height="14" fill="#0369a1"/>
+  <text x="499" y="148" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">② 守护进程</text>
+
+  <rect x="388" y="188" width="222" height="150" rx="8" fill="#e0f2fe" stroke="#7dd3fc"/>
+  <text x="499" y="214" font-size="15.5" font-weight="600" fill="#0369a1" text-anchor="middle">Supervisor</text>
+  <text x="404" y="242" font-size="13.5" fill="#0c4a6e">· 发现与路由</text>
+  <text x="404" y="266" font-size="13.5" fill="#0c4a6e">· attach / detach</text>
+  <text x="404" y="290" font-size="13.5" fill="#0c4a6e">· worker 健康与恢复</text>
+  <text x="404" y="314" font-size="13.5" fill="#0c4a6e">· 跨 agent 消息投递</text>
+
+  <rect x="388" y="356" width="222" height="80" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="499" y="382" font-size="15" font-weight="600" fill="#334155" text-anchor="middle">Catalog 进程</text>
+  <text x="499" y="406" font-size="13.5" fill="#64748b" text-anchor="middle">扫描已保存的会话</text>
+
+  <rect x="388" y="456" width="222" height="86" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="499" y="482" font-size="14.5" font-weight="600" fill="#15803d" text-anchor="middle">它只做协调</text>
+  <text x="499" y="506" font-size="13.5" fill="#166534" text-anchor="middle">不跑模型,不执行代码,</text>
+  <text x="499" y="528" font-size="13.5" fill="#166534" text-anchor="middle">所以可以一直轻量常驻</text>
+
+  <!-- ===== C3 worker ===== -->
+  <rect x="678" y="118" width="470" height="446" rx="12" fill="#ffffff" stroke="#0f766e" stroke-width="2.5"/>
+  <rect x="678" y="118" width="470" height="46" rx="12" fill="#0f766e"/>
+  <rect x="678" y="150" width="470" height="14" fill="#0f766e"/>
+  <text x="913" y="148" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">③ Session worker 进程(一棵会话树一个)</text>
+
+  <rect x="700" y="182" width="426" height="56" rx="8" fill="#ccfbf1" stroke="#5eead4"/>
+  <text x="913" y="206" font-size="15.5" font-weight="700" fill="#0f766e" text-anchor="middle">AgentSessionRuntime</text>
+  <text x="913" y="228" font-size="13" fill="#0d9488" text-anchor="middle">SDK 场景下可以直接在进程内跑同一个 runtime</text>
+
+  <rect x="700" y="252" width="256" height="150" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+  <text x="828" y="278" font-size="15.5" font-weight="600" fill="#0f766e" text-anchor="middle">Root AgentSession</text>
+  <text x="716" y="306" font-size="13.5" fill="#115e59">· 调 provider、管队列</text>
+  <text x="716" y="330" font-size="13.5" fill="#115e59">· 工具分发、压缩</text>
+  <text x="716" y="354" font-size="13.5" fill="#115e59">· goal、子 agent 生命周期</text>
+  <text x="716" y="378" font-size="13.5" fill="#115e59">· 写 transcript</text>
+
+  <rect x="972" y="252" width="154" height="150" rx="8" fill="#f0fdfa" stroke="#5eead4"/>
+  <text x="1049" y="278" font-size="15" font-weight="600" fill="#0f766e" text-anchor="middle">Scheduler</text>
+  <text x="1049" y="306" font-size="13" fill="#115e59" text-anchor="middle">心跳</text>
+  <text x="1049" y="330" font-size="13" fill="#115e59" text-anchor="middle">定时任务</text>
+  <text x="1049" y="354" font-size="13" fill="#115e59" text-anchor="middle">goal 续跑</text>
+  <text x="1049" y="378" font-size="13" fill="#115e59" text-anchor="middle">自主模式</text>
+
+  <rect x="700" y="418" width="426" height="124" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="913" y="444" font-size="15.5" font-weight="600" fill="#6d28d9" text-anchor="middle">RLM 子运行时</text>
+  <text x="716" y="472" font-size="13.5" fill="#5b21b6">每个 await rlm(...) 起一个独立的子 AgentSession,</text>
+  <text x="716" y="496" font-size="13.5" fill="#5b21b6">有自己的会话文件和(可选的)自己的内核。</text>
+  <text x="716" y="522" font-size="13.5" fill="#7c3aed">默认递归深度上限 1:根可以生孩子,孩子不能再生。</text>
+
+  <!-- ===== C4 kernel ===== -->
+  <rect x="1194" y="118" width="292" height="446" rx="12" fill="#ffffff" stroke="#b45309" stroke-width="2.5"/>
+  <rect x="1194" y="118" width="292" height="46" rx="12" fill="#b45309"/>
+  <rect x="1194" y="150" width="292" height="14" fill="#b45309"/>
+  <text x="1340" y="148" font-size="17" font-weight="700" fill="#fff" text-anchor="middle">④ IPython 内核进程</text>
+
+  <rect x="1216" y="182" width="248" height="120" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="1340" y="208" font-size="15" font-weight="600" fill="#92400e" text-anchor="middle">持久命名空间</text>
+  <text x="1232" y="236" font-size="13.5" fill="#78350f">变量、函数、import、</text>
+  <text x="1232" y="260" font-size="13.5" fill="#78350f">中间结果,跨轮次都在</text>
+  <text x="1232" y="286" font-size="13" fill="#a16207">首次用到时才懒启动</text>
+
+  <rect x="1216" y="316" width="248" height="112" rx="8" fill="#fffbeb" stroke="#fcd34d"/>
+  <text x="1340" y="342" font-size="15" font-weight="600" fill="#92400e" text-anchor="middle">prime-agent-runtime</text>
+  <text x="1232" y="370" font-size="13.5" fill="#78350f">Python 侧只是薄壳:</text>
+  <text x="1232" y="394" font-size="13.5" fill="#78350f">rlm / harness / skill 模块</text>
+  <text x="1232" y="418" font-size="13" fill="#a16207">它不调 provider,也没有 agent 循环</text>
+
+  <rect x="1216" y="444" width="248" height="98" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+  <text x="1340" y="470" font-size="14.5" font-weight="600" fill="#b91c1c" text-anchor="middle">这不是安全沙箱</text>
+  <text x="1232" y="494" font-size="13.5" fill="#7f1d1d">内核用的是你本人的系统权限,</text>
+  <text x="1232" y="518" font-size="13.5" fill="#7f1d1d">拆进程是为了隔离故障和生命周期。</text>
+
+  <!-- ===== C5 external ===== -->
+  <rect x="1520" y="118" width="246" height="200" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="1520" y="118" width="246" height="46" rx="12" fill="#475569"/>
+  <rect x="1520" y="150" width="246" height="14" fill="#475569"/>
+  <text x="1643" y="148" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">模型 provider</text>
+  <text x="1643" y="196" font-size="14" fill="#475569" text-anchor="middle">凭据由 TypeScript 宿主</text>
+  <text x="1643" y="220" font-size="14" fill="#475569" text-anchor="middle">统一持有和解析</text>
+  <text x="1643" y="252" font-size="13.5" fill="#94a3b8" text-anchor="middle">只有一份有界的模型目录</text>
+  <text x="1643" y="274" font-size="13.5" fill="#94a3b8" text-anchor="middle">作为元数据进到 Python 侧,</text>
+  <text x="1643" y="296" font-size="13.5" fill="#94a3b8" text-anchor="middle">完整鉴权库不过界</text>
+
+  <rect x="1520" y="340" width="246" height="224" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="1520" y="340" width="246" height="46" rx="12" fill="#334155"/>
+  <rect x="1520" y="372" width="246" height="14" fill="#334155"/>
+  <text x="1643" y="370" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">磁盘状态</text>
+  <g font-family="Menlo, monospace" font-size="12.5" fill="#334155">
+    <text x="1538" y="410">~/.prime/agent/</text>
+    <text x="1538" y="432">  sessions/&lt;id&gt;.jsonl</text>
+    <text x="1538" y="454">  session-artifacts/&lt;id&gt;/</text>
+    <text x="1538" y="476">    kernel-state.dill</text>
+    <text x="1538" y="498">    scheduled-jobs.json</text>
+    <text x="1538" y="520">    harness/harness_state.json</text>
+    <text x="1538" y="542">    sub-xxxxxxxx/…</text>
+  </g>
+
+  <!-- ===== arrows between columns ===== -->
+  <line x1="320" y1="396" x2="360" y2="396" stroke="#475569" stroke-width="2.5" marker-end="url(#p1)" marker-start="url(#p1s)"/>
+  <text x="340" y="380" font-size="13" fill="#475569" text-anchor="middle">本地守护协议</text>
+  <text x="340" y="426" font-size="12.5" fill="#94a3b8" text-anchor="middle">带版本号的命令</text>
+
+  <line x1="632" y1="210" x2="672" y2="210" stroke="#475569" stroke-width="2.5" marker-end="url(#p1)"/>
+  <text x="652" y="194" font-size="13" fill="#475569" text-anchor="middle">派发</text>
+
+  <line x1="1148" y1="200" x2="1188" y2="200" stroke="#b45309" stroke-width="2.5" marker-end="url(#p2)" marker-start="url(#p2s)"/>
+  <text x="1161" y="410" font-size="13" font-weight="600" fill="#b45309" text-anchor="middle" transform="rotate(-90 1161 410)">Jupyter 协议 · ZeroMQ</text>
+  <text x="1181" y="410" font-size="11.5" fill="#a16207" text-anchor="middle" transform="rotate(-90 1181 410)">shell · iopub · control</text>
+
+  <path d="M 1000 118 L 1000 100 L 1643 100 L 1643 112" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#p1)"/>
+  <text x="1320" y="92" font-size="13" fill="#475569" text-anchor="middle">模型流式请求</text>
+
+  <path d="M 1126 470 C 1300 620, 1440 640, 1600 578" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#p1)"/>
+  <text x="1330" y="640" font-size="13" fill="#475569" text-anchor="middle">追加 transcript 与产物</text>
+
+  <!-- ===== bottom: failure isolation ===== -->
+  <text x="40" y="712" font-size="21" font-weight="700" fill="#0f172a">每条进程边界各自挡住一种故障</text>
+
+  <rect x="40" y="736" width="418" height="180" rx="10" fill="#ffffff" stroke="#7dd3fc" stroke-width="2"/>
+  <text x="64" y="768" font-size="16.5" font-weight="700" fill="#0369a1">①—② 客户端 ↔ 守护进程</text>
+  <text x="64" y="800" font-size="14.5" fill="#475569">终端崩了、SSH 断了、你主动 detach,</text>
+  <text x="64" y="826" font-size="14.5" fill="#475569">执行完全不受影响。</text>
+  <text x="64" y="858" font-size="14.5" fill="#475569">重新 attach 时,supervisor 会给一份</text>
+  <text x="64" y="884" font-size="14.5" fill="#475569">恢复快照,把界面重放回当前状态。</text>
+
+  <rect x="478" y="736" width="418" height="180" rx="10" fill="#ffffff" stroke="#5eead4" stroke-width="2"/>
+  <text x="502" y="768" font-size="16.5" font-weight="700" fill="#0f766e">②—③ 守护进程 ↔ worker</text>
+  <text x="502" y="800" font-size="14.5" fill="#475569">一个 worker 只管一棵会话树。</text>
+  <text x="502" y="826" font-size="14.5" fill="#475569">某个 agent 把自己搞崩,</text>
+  <text x="502" y="858" font-size="14.5" fill="#475569">不会连累同时在跑的其他 agent;</text>
+  <text x="502" y="884" font-size="14.5" fill="#475569">supervisor 负责发现并恢复。</text>
+
+  <rect x="916" y="736" width="418" height="180" rx="10" fill="#ffffff" stroke="#fcd34d" stroke-width="2"/>
+  <text x="940" y="768" font-size="16.5" font-weight="700" fill="#b45309">③—④ worker ↔ 内核</text>
+  <text x="940" y="800" font-size="14.5" fill="#475569">模型写的 Python 把内核跑挂了,</text>
+  <text x="940" y="826" font-size="14.5" fill="#475569">会话本身还在。</text>
+  <text x="940" y="858" font-size="14.5" fill="#475569">子 agent registry 由宿主持有,</text>
+  <text x="940" y="884" font-size="14.5" fill="#475569">内核重启后依然能对得上。</text>
+
+  <rect x="1354" y="736" width="412" height="180" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="1378" y="768" font-size="16.5" font-weight="700" fill="#b91c1c">但边界不等于隔离</text>
+  <text x="1378" y="800" font-size="14.5" fill="#475569">这套拆分解决的是“别互相拖死”,</text>
+  <text x="1378" y="826" font-size="14.5" fill="#475569">不是“别乱动我的机器”。</text>
+  <text x="1378" y="858" font-size="14.5" fill="#475569">内核以你的用户权限执行模型生成的</text>
+  <text x="1378" y="884" font-size="14.5" fill="#475569">代码。不可信仓库请套外部沙箱。</text>
+
+  <rect x="40" y="940" width="1726" height="72" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="64" y="970" font-size="15.5" font-weight="600" fill="#334155">还有一条不在图上的路径</text>
+  <text x="64" y="996" font-size="14.5" fill="#64748b">心跳、定时任务、goal 续跑、自主模式、别的 agent 发来的消息,进的是同一个会话队列,走的是同一条执行和持久化链路 —— 区别只在于“这一轮是谁发起的”。</text>
+</svg>
