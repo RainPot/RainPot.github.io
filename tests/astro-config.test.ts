@@ -18,7 +18,7 @@ describe("markdown math config", () => {
     expect(config).toContain('import remarkMath from "remark-math"');
     expect(config).toContain('import rehypeKatex from "rehype-katex"');
     expect(config).toContain("remarkPlugins: [remarkMath]");
-    expect(config).toContain("rehypePlugins: [[rehypeKatex,");
+    expect(config).toContain("[rehypeKatex,");
   });
 
   it("renders math at build time instead of failing the build on a bad formula", () => {

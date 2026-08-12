@@ -854,6 +854,24 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
   font-size: 0.92em;
 }
 
+/* 图注跟着正文里的图片走，预览层只负责看图 */
+.markdown-content .post-figure {
+  margin: 26px 0;
+}
+
+.markdown-content .post-figure img {
+  margin: 0 auto;
+}
+
+.markdown-content .post-figure__caption {
+  margin: 10px auto 0;
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
 /* 正文配图多是论文里的图表，正文宽度下细节看不清，点开进预览层 */
 .markdown-content img.is-zoomable {
   cursor: zoom-in;
@@ -872,15 +890,8 @@ body.lightbox-open {
   position: fixed;
   inset: 0;
   z-index: 60;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 56px 24px 24px;
-  background: rgba(1, 4, 9, 0.92);
-  backdrop-filter: blur(6px);
-  animation: lightbox-fade-in 160ms ease-out;
+  --lightbox-dim: 1;
+  animation: lightbox-fade-in 180ms ease-out;
 }
 
 .image-lightbox[hidden] {
@@ -897,26 +908,49 @@ body.lightbox-open {
   }
 }
 
-/* 用 grid + margin auto 居中：图片超出容器时不会像 flex 那样把左上角截掉 */
+.image-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(1, 4, 9, 0.94);
+  backdrop-filter: blur(8px);
+  opacity: var(--lightbox-dim);
+  transition: opacity 220ms ease;
+}
+
+/* 拖动时背景要跟手，过渡会让它慢半拍 */
+.image-lightbox.is-dragging .image-lightbox__backdrop {
+  transition: none;
+}
+
+/* 舞台铺满整层，缩放和平移都走 transform，滚轮不再滚容器 */
 .image-lightbox__stage {
+  position: absolute;
+  inset: 0;
   display: grid;
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
+  place-items: center;
+  overflow: hidden;
+  touch-action: none;
 }
 
 .image-lightbox__image {
   display: block;
-  margin: auto;
   max-width: none;
   border-radius: 8px;
   border: 1px solid var(--line);
   background: var(--bg);
   box-shadow: var(--shadow);
-  cursor: zoom-out;
-  transition: opacity 0.16s ease;
+  transform-origin: center center;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.image-lightbox.is-zoomed .image-lightbox__image {
+  cursor: grab;
+}
+
+.image-lightbox.is-zoomed.is-dragging .image-lightbox__image {
+  cursor: grabbing;
 }
 
 /* 尺寸算好之前先不显示，避免带着上一张图的宽高闪一帧 */
@@ -924,50 +958,142 @@ body.lightbox-open {
   opacity: 0;
 }
 
-.image-lightbox.is-zoomable .image-lightbox__image {
-  cursor: zoom-in;
+.image-lightbox.is-closing.is-fading .image-lightbox__image {
+  opacity: 0;
+  transition: opacity 180ms ease, transform 240ms ease;
 }
 
-.image-lightbox.is-zoomed .image-lightbox__image {
-  cursor: zoom-out;
-}
-
-.image-lightbox__caption {
-  flex: 0 0 auto;
-  max-width: min(880px, 100%);
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.image-lightbox__close {
+.image-lightbox__spinner {
   position: absolute;
-  top: 14px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--line);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  opacity: 0;
+  animation: lightbox-spin 720ms linear infinite;
+}
+
+.image-lightbox.is-loading .image-lightbox__spinner {
+  opacity: 1;
+}
+
+@keyframes lightbox-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.image-lightbox__toolbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  /* 控件之间的空白要留给图片，不然点哪儿都关不掉 */
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.image-lightbox__toolbar > * {
+  pointer-events: auto;
+}
+
+.image-lightbox__counter {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.image-lightbox.is-single .image-lightbox__counter {
+  display: none;
+}
+
+.image-lightbox__button,
+.image-lightbox__nav {
   display: grid;
   place-items: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--surface-strong);
   color: var(--text);
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
-.image-lightbox__close:hover,
-.image-lightbox__close:focus-visible {
+.image-lightbox__button {
+  width: 36px;
+  height: 36px;
+  font-size: 0.9rem;
+}
+
+.image-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding-bottom: 4px;
+}
+
+.image-lightbox__nav--prev {
+  left: 18px;
+}
+
+.image-lightbox__nav--next {
+  right: 18px;
+}
+
+.image-lightbox__nav[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.image-lightbox__button:hover,
+.image-lightbox__button:focus-visible,
+.image-lightbox__nav:hover,
+.image-lightbox__nav:focus-visible {
   border-color: var(--green);
   color: var(--green);
 }
 
+.image-lightbox.is-closing .image-lightbox__toolbar,
+.image-lightbox.is-closing .image-lightbox__nav {
+  opacity: 0;
+}
+
 @media (max-width: 640px) {
+  /* 窄屏改用左右滑动翻页，箭头按钮太占画面 */
+  .image-lightbox__nav {
+    display: none;
+  }
+
+  .image-lightbox__toolbar {
+    padding: 10px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .image-lightbox {
-    padding: 52px 12px 16px;
+    animation: none;
+  }
+
+  .image-lightbox__image {
+    transition: none !important;
+  }
+
+  .image-lightbox__spinner {
+    animation-duration: 2s;
   }
 }
 
