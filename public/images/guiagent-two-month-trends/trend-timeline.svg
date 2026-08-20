@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1128" viewBox="0 0 1800 1128" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+<rect width="1800" height="1128" fill="#f8fafc"/>
+<text x="900" y="54" font-size="31" font-weight="700" fill="#0f172a" text-anchor="middle">GUI Agent 近两个月方向演进（2026-06-15 → 2026-08-20）</text>
+<text x="900" y="90" font-size="18" fill="#64748b" text-anchor="middle">条目取自 RainPot 逐日精读语料，属策展样本而非全量快照；重心从「评测与记忆」经「RL 与真机」移向「世界模型、失败归因与实时性」</text>
+<rect x="318.0" y="140" width="352.5" height="46" rx="9" fill="#e2e8f0"/>
+<text x="494.2" y="170" font-size="19" font-weight="600" fill="#334155" text-anchor="middle">6/15 - 6/30</text>
+<rect x="678.5" y="140" width="352.5" height="46" rx="9" fill="#e2e8f0"/>
+<text x="854.8" y="170" font-size="19" font-weight="600" fill="#334155" text-anchor="middle">7/01 - 7/15</text>
+<rect x="1039.0" y="140" width="352.5" height="46" rx="9" fill="#e2e8f0"/>
+<text x="1215.2" y="170" font-size="19" font-weight="600" fill="#334155" text-anchor="middle">7/16 - 7/31</text>
+<rect x="1399.5" y="140" width="352.5" height="46" rx="9" fill="#e2e8f0"/>
+<text x="1575.8" y="170" font-size="19" font-weight="600" fill="#334155" text-anchor="middle">8/01 - 8/20</text>
+<rect x="40" y="196.0" width="268" height="156.0" rx="11" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
+<rect x="40" y="196.0" width="7" height="156.0" rx="3" fill="#2563eb"/>
+<text x="62" y="282.0" font-size="20" font-weight="700" fill="#2563eb">评测与环境</text>
+<rect x="318.0" y="196.0" width="352.5" height="156.0" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<rect x="330.0" y="212.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#bfdbfe"/>
+<circle cx="346.0" cy="231.0" r="4.5" fill="#2563eb"/>
+<text x="360.0" y="237.0" font-size="16.5" fill="#1e293b">LivingScreen 动态屏幕</text>
+<rect x="330.0" y="259.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#bfdbfe"/>
+<circle cx="346.0" cy="278.0" r="4.5" fill="#2563eb"/>
+<text x="360.0" y="284.0" font-size="16.5" fill="#1e293b">SaaS-Bench 专业工作流</text>
+<rect x="330.0" y="306.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#bfdbfe"/>
+<circle cx="346.0" cy="325.0" r="4.5" fill="#2563eb"/>
+<text x="360.0" y="331.0" font-size="16.5" fill="#1e293b">AndroidDaily 过程可验证</text>
+<rect x="678.5" y="196.0" width="352.5" height="156.0" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<rect x="690.5" y="212.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#bfdbfe"/>
+<circle cx="706.5" cy="231.0" r="4.5" fill="#2563eb"/>
+<text x="720.5" y="237.0" font-size="16.5" fill="#1e293b">AJ-Bench judge 进环境</text>
+<rect x="1039.0" y="196.0" width="352.5" height="156.0" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<rect x="1051.0" y="212.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#bfdbfe"/>
+<circle cx="1067.0" cy="231.0" r="4.5" fill="#2563eb"/>
+<text x="1081.0" y="237.0" font-size="16.5" fill="#1e293b">OSWorld 2.0 318 步长程</text>
+<rect x="1399.5" y="196.0" width="352.5" height="156.0" rx="11" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+<rect x="40" y="360.0" width="268" height="62.0" rx="11" fill="#ffffff" stroke="#ddd6fe" stroke-width="2"/>
+<rect x="40" y="360.0" width="7" height="62.0" rx="3" fill="#7c3aed"/>
+<text x="62" y="386.0" font-size="20" font-weight="700" fill="#7c3aed">grounding 与</text>
+<text x="62" y="412.0" font-size="20" font-weight="700" fill="#7c3aed">状态表征</text>
+<rect x="318.0" y="360.0" width="352.5" height="62.0" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<rect x="330.0" y="376.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#ddd6fe"/>
+<circle cx="346.0" cy="395.0" r="4.5" fill="#7c3aed"/>
+<text x="360.0" y="401.0" font-size="16.5" fill="#1e293b">VISUALSKILL 多模态技能库</text>
+<rect x="678.5" y="360.0" width="352.5" height="62.0" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<rect x="690.5" y="376.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#ddd6fe"/>
+<circle cx="706.5" cy="395.0" r="4.5" fill="#7c3aed"/>
+<text x="720.5" y="401.0" font-size="16.5" fill="#1e293b">像素 / DOM / 状态信念错位</text>
+<rect x="1039.0" y="360.0" width="352.5" height="62.0" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<rect x="1051.0" y="376.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#ddd6fe"/>
+<circle cx="1067.0" cy="395.0" r="4.5" fill="#7c3aed"/>
+<text x="1081.0" y="401.0" font-size="16.5" fill="#1e293b">StateAct 读状态取代看屏幕</text>
+<rect x="1399.5" y="360.0" width="352.5" height="62.0" rx="11" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1.5"/>
+<rect x="40" y="430.0" width="268" height="109.0" rx="11" fill="#ffffff" stroke="#a5f3fc" stroke-width="2"/>
+<rect x="40" y="430.0" width="7" height="109.0" rx="3" fill="#0891b2"/>
+<text x="62" y="492.5" font-size="20" font-weight="700" fill="#0891b2">记忆与上下文治理</text>
+<rect x="318.0" y="430.0" width="352.5" height="109.0" rx="11" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1.5"/>
+<rect x="330.0" y="446.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a5f3fc"/>
+<circle cx="346.0" cy="465.0" r="4.5" fill="#0891b2"/>
+<text x="360.0" y="471.0" font-size="16.5" fill="#1e293b">MementoGUI 记忆控制</text>
+<rect x="330.0" y="493.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a5f3fc"/>
+<circle cx="346.0" cy="512.0" r="4.5" fill="#0891b2"/>
+<text x="360.0" y="518.0" font-size="16.5" fill="#1e293b">MemGUI-Agent 上下文治理</text>
+<rect x="678.5" y="430.0" width="352.5" height="109.0" rx="11" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1.5"/>
+<rect x="690.5" y="446.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a5f3fc"/>
+<circle cx="706.5" cy="465.0" r="4.5" fill="#0891b2"/>
+<text x="720.5" y="471.0" font-size="16.5" fill="#1e293b">视觉记忆失败模式</text>
+<rect x="690.5" y="493.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a5f3fc"/>
+<circle cx="706.5" cy="512.0" r="4.5" fill="#0891b2"/>
+<text x="720.5" y="518.0" font-size="16.5" fill="#1e293b">TSR 外置任务状态机</text>
+<rect x="1039.0" y="430.0" width="352.5" height="109.0" rx="11" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1.5"/>
+<rect x="1399.5" y="430.0" width="352.5" height="109.0" rx="11" fill="#ecfeff" stroke="#a5f3fc" stroke-width="1.5"/>
+<rect x="40" y="547.0" width="268" height="62.0" rx="11" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
+<rect x="40" y="547.0" width="7" height="62.0" rx="3" fill="#059669"/>
+<text x="62" y="586.0" font-size="20" font-weight="700" fill="#059669">过程验证与失败归因</text>
+<rect x="318.0" y="547.0" width="352.5" height="62.0" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="330.0" y="563.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a7f3d0"/>
+<circle cx="346.0" cy="582.0" r="4.5" fill="#059669"/>
+<text x="360.0" y="588.0" font-size="16.5" fill="#1e293b">Argus 点击不确定性</text>
+<rect x="678.5" y="547.0" width="352.5" height="62.0" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="690.5" y="563.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a7f3d0"/>
+<circle cx="706.5" cy="582.0" r="4.5" fill="#059669"/>
+<text x="720.5" y="588.0" font-size="16.5" fill="#1e293b">VisCritic 像素级过程裁判</text>
+<rect x="1039.0" y="547.0" width="352.5" height="62.0" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="1051.0" y="563.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a7f3d0"/>
+<circle cx="1067.0" cy="582.0" r="4.5" fill="#059669"/>
+<text x="1081.0" y="588.0" font-size="16.5" fill="#1e293b">IRA 判定权交回环境状态</text>
+<rect x="1399.5" y="547.0" width="352.5" height="62.0" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="1411.5" y="563.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#a7f3d0"/>
+<circle cx="1427.5" cy="582.0" r="4.5" fill="#059669"/>
+<text x="1441.5" y="588.0" font-size="16.5" fill="#1e293b">CUADebug 归因可被重跑证伪</text>
+<rect x="40" y="617.0" width="268" height="203.0" rx="11" fill="#ffffff" stroke="#fde68a" stroke-width="2"/>
+<rect x="40" y="617.0" width="7" height="203.0" rx="3" fill="#d97706"/>
+<text x="62" y="726.5" font-size="20" font-weight="700" fill="#d97706">训练数据与 RL</text>
+<rect x="318.0" y="617.0" width="352.5" height="203.0" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="330.0" y="633.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="346.0" cy="652.0" r="4.5" fill="#d97706"/>
+<text x="360.0" y="658.0" font-size="16.5" fill="#1e293b">MobileForge 免标注</text>
+<rect x="330.0" y="680.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="346.0" cy="699.0" r="4.5" fill="#d97706"/>
+<text x="360.0" y="705.0" font-size="16.5" fill="#1e293b">GUICrafter 弱监督飞轮</text>
+<rect x="678.5" y="617.0" width="352.5" height="203.0" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="690.5" y="633.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="706.5" cy="652.0" r="4.5" fill="#d97706"/>
+<text x="720.5" y="658.0" font-size="16.5" fill="#1e293b">UI-MOPD 跨平台混训</text>
+<rect x="690.5" y="680.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="706.5" cy="699.0" r="4.5" fill="#d97706"/>
+<text x="720.5" y="705.0" font-size="16.5" fill="#1e293b">Learning from Failure</text>
+<rect x="690.5" y="727.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="706.5" cy="746.0" r="4.5" fill="#d97706"/>
+<text x="720.5" y="752.0" font-size="16.5" fill="#1e293b">ScaleCUA 可验证任务</text>
+<rect x="690.5" y="774.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="706.5" cy="793.0" r="4.5" fill="#d97706"/>
+<text x="720.5" y="799.0" font-size="16.5" fill="#1e293b">EvoCUA-1.5 在线 RL</text>
+<rect x="1039.0" y="617.0" width="352.5" height="203.0" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="1051.0" y="633.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="1067.0" cy="652.0" r="4.5" fill="#d97706"/>
+<text x="1081.0" y="658.0" font-size="16.5" fill="#1e293b">State Transition 预训练</text>
+<rect x="1399.5" y="617.0" width="352.5" height="203.0" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="1411.5" y="633.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fde68a"/>
+<circle cx="1427.5" cy="652.0" r="4.5" fill="#d97706"/>
+<text x="1441.5" y="658.0" font-size="16.5" fill="#1e293b">Gated Hindsight 蒸馏</text>
+<rect x="40" y="828.0" width="268" height="109.0" rx="11" fill="#ffffff" stroke="#fbcfe8" stroke-width="2"/>
+<rect x="40" y="828.0" width="7" height="109.0" rx="3" fill="#db2777"/>
+<text x="62" y="890.5" font-size="20" font-weight="700" fill="#db2777">真机与端侧部署</text>
+<rect x="318.0" y="828.0" width="352.5" height="109.0" rx="11" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1.5"/>
+<rect x="330.0" y="844.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fbcfe8"/>
+<circle cx="346.0" cy="863.0" r="4.5" fill="#db2777"/>
+<text x="360.0" y="869.0" font-size="16.5" fill="#1e293b">混元 PhoneGUI 五篇栈</text>
+<rect x="678.5" y="828.0" width="352.5" height="109.0" rx="11" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1.5"/>
+<rect x="690.5" y="844.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fbcfe8"/>
+<circle cx="706.5" cy="863.0" r="4.5" fill="#db2777"/>
+<text x="720.5" y="869.0" font-size="16.5" fill="#1e293b">Xiaomi-GUI-0 真机</text>
+<rect x="1039.0" y="828.0" width="352.5" height="109.0" rx="11" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1.5"/>
+<rect x="1051.0" y="844.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fbcfe8"/>
+<circle cx="1067.0" cy="863.0" r="4.5" fill="#db2777"/>
+<text x="1081.0" y="869.0" font-size="16.5" fill="#1e293b">PalmClaw 端侧直调能力</text>
+<rect x="1051.0" y="891.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fbcfe8"/>
+<circle cx="1067.0" cy="910.0" r="4.5" fill="#db2777"/>
+<text x="1081.0" y="916.0" font-size="16.5" fill="#1e293b">Qwen-UI-Agent 100 台真机</text>
+<rect x="1399.5" y="828.0" width="352.5" height="109.0" rx="11" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1.5"/>
+<rect x="40" y="945.0" width="268" height="109.0" rx="11" fill="#ffffff" stroke="#fecaca" stroke-width="2"/>
+<rect x="40" y="945.0" width="7" height="109.0" rx="3" fill="#dc2626"/>
+<text x="62" y="994.5" font-size="20" font-weight="700" fill="#dc2626">世界模型 / 安全 /</text>
+<text x="62" y="1020.5" font-size="20" font-weight="700" fill="#dc2626"> 实时</text>
+<rect x="318.0" y="945.0" width="352.5" height="109.0" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="678.5" y="945.0" width="352.5" height="109.0" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="690.5" y="961.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fecaca"/>
+<circle cx="706.5" cy="980.0" r="4.5" fill="#dc2626"/>
+<text x="720.5" y="986.0" font-size="16.5" fill="#1e293b">Capable but Careless 隐私</text>
+<rect x="1039.0" y="945.0" width="352.5" height="109.0" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="1051.0" y="961.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fecaca"/>
+<circle cx="1067.0" cy="980.0" r="4.5" fill="#dc2626"/>
+<text x="1081.0" y="986.0" font-size="16.5" fill="#1e293b">SeerGuard 安全世界模型</text>
+<rect x="1399.5" y="945.0" width="352.5" height="109.0" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="1411.5" y="961.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fecaca"/>
+<circle cx="1427.5" cy="980.0" r="4.5" fill="#dc2626"/>
+<text x="1441.5" y="986.0" font-size="16.5" fill="#1e293b">SeedRealtime 全双工</text>
+<rect x="1411.5" y="1008.0" width="328.5" height="38" rx="7" fill="#ffffff" stroke="#fecaca"/>
+<circle cx="1427.5" cy="1027.0" r="4.5" fill="#dc2626"/>
+<text x="1441.5" y="1033.0" font-size="16.5" fill="#1e293b">AppDeltaWorld 代码世界模型</text>
+<text x="40" y="1102" font-size="16" fill="#94a3b8">读法：同一行看某个方向两个月里是否持续有新工作；同一列看该时间段研究注意力集中在哪几行。空白格代表该窗口内本语料未收录，不等于该方向无进展。</text>
+</svg>

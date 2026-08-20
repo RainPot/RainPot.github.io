@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1010" viewBox="0 0 1800 1010" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+<rect width="1800" height="1010" fill="#f8fafc"/>
+<text x="900" y="56" font-size="31" font-weight="700" fill="#0f172a" text-anchor="middle">两个月里被逐条拆掉的七个默认假设</text>
+<text x="900" y="92" font-size="18" fill="#64748b" text-anchor="middle">它们指向同一件事：把「看整屏截图、点像素坐标」当成 GUI Agent 的默认主回路，是一个被高估的工程选择</text>
+<text x="900" y="120" font-size="16" fill="#94a3b8" text-anchor="middle">左列为该假设在本语料中被明确质疑的时间，右列为论文自己给出的证据数字</text>
+<line x1="159" y1="174" x2="159" y2="886" stroke="#cbd5e1" stroke-width="2"/>
+<rect x="44" y="188.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="213.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">06-15</text>
+<circle cx="159" cy="206.0" r="6" fill="#dc2626"/>
+<rect x="181" y="170" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="214.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">屏幕会静止等 agent 看清</text>
+<text x="665" y="197.0" font-size="19" font-weight="700" fill="#0f172a">LivingScreen  2606.04701</text>
+<text x="665" y="225.0" font-size="16" fill="#475569">人类 SR 94.0，最好的模型只有 69.3；人类观看占比 9.7，Seed-1.8 达 25.1（最动态那层 53.1）</text>
+<rect x="44" y="296.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="321.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">07-02</text>
+<circle cx="159" cy="314.0" r="6" fill="#dc2626"/>
+<rect x="181" y="278" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="322.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">视觉记忆加得越多越好</text>
+<text x="665" y="305.0" font-size="19" font-weight="700" fill="#0f172a">Naive Visual Memory  2606.14106</text>
+<text x="665" y="333.0" font-size="16" fill="#475569">整屏记忆把认知失败压到 82.6 → 75.0，却把隐藏操作盲区推到 67.1 → 78.8、grounding 27.5 → 36.1</text>
+<rect x="44" y="404.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="429.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">07-07</text>
+<circle cx="159" cy="422.0" r="6" fill="#dc2626"/>
+<rect x="181" y="386" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="430.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">agent 的状态信念来自它看到的画面</text>
+<text x="665" y="413.0" font-size="19" font-weight="700" fill="#0f172a">Believe Their Eyes  2607.04334</text>
+<text x="665" y="441.0" font-size="16" fill="#475569">截图本可读对（gpt-5.4 达 0.93），冲突时 0.30~0.75 的信念倒向结构化文本，跨 3 家厂商 5 个模型成立</text>
+<rect x="44" y="512.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="537.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">07-16</text>
+<circle cx="159" cy="530.0" r="6" fill="#dc2626"/>
+<rect x="181" y="494" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="538.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">手机上的事必须靠点屏幕完成</text>
+<text x="665" y="521.0" font-size="19" font-weight="700" fill="#0f172a">PalmClaw  2607.13027</text>
+<text x="665" y="549.0" font-size="16" fill="#475569">改走原生 device tools，日常任务成功率 97.1%，且每个调用带显式参数边界、可审计</text>
+<rect x="44" y="620.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="645.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">07-29</text>
+<circle cx="159" cy="638.0" r="6" fill="#dc2626"/>
+<rect x="181" y="602" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="646.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">截图应该待在主回路里</text>
+<text x="665" y="629.0" font-size="19" font-weight="700" fill="#0f172a">StateAct  2607.22798</text>
+<text x="665" y="657.0" font-size="16" fill="#475569">主回路换成程序状态：OSWorld 2.0 二元完成 20.6 → 26.9，成本约降到九分之一</text>
+<rect x="44" y="728.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="753.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">07-31</text>
+<circle cx="159" cy="746.0" r="6" fill="#dc2626"/>
+<rect x="181" y="710" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="754.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">GUI 是唯一的动作空间</text>
+<text x="665" y="737.0" font-size="19" font-weight="700" fill="#0f172a">Qwen-UI-Agent  2607.28227</text>
+<text x="665" y="765.0" font-size="16" fill="#475569">OSWorld-Verified 上 CLI 占动作 40.7%、出现在 92.0% 的任务里；换到 v2 升为 55.1% 与 98.2%</text>
+<rect x="44" y="836.0" width="104" height="36" rx="8" fill="#0f172a"/>
+<text x="96.0" y="861.0" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle">08-18</text>
+<circle cx="159" cy="854.0" r="6" fill="#dc2626"/>
+<rect x="181" y="818" width="452" height="72" rx="10" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<text x="199" y="862.0" font-size="19" fill="#9aa5b1" text-decoration="line-through">观察空间只是实现细节</text>
+<text x="665" y="845.0" font-size="19" font-weight="700" fill="#0f172a">ComponentBench  2608.18307</text>
+<text x="665" y="873.0" font-size="16" fill="#475569">同一个 GPT-5 mini：无障碍树观察 83.1%，只换成纯像素坐标就掉到 48.9%，相差 34.2 个百分点</text>
+<text x="44" y="962" font-size="16" fill="#94a3b8">这七条不是在说「视觉没用」，而是「视觉不该独占主回路」。StateAct 去掉截图的纯代码变体只有 45.9 的部分完成度，低于截图基线，视觉仍是不可替代的兜底通道。</text>
+<text x="44" y="990" font-size="16" fill="#94a3b8">条目取自 RainPot 逐日精读语料，属策展样本；日期为该假设在本语料中被质疑的时间，不代表学界首次提出。</text>
+</svg>

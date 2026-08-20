@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+<rect width="1800" height="1180" fill="#f8fafc"/>
+<text x="900" y="52" font-size="31" font-weight="700" fill="#0f172a" text-anchor="middle">哪些方向还值得做：研究拥挤度 × 剩余头部空间</text>
+<text x="900" y="88" font-size="18" fill="#64748b" text-anchor="middle">横轴按 2026-06~08 检索到的 173 篇论文的方向密度估计；纵轴按该方向最好成绩距「可用」的差距估计；气泡面积与标注篇数对应同一份计数（多标签，故有重叠）</text>
+<text x="900" y="116" font-size="16" fill="#94a3b8" text-anchor="middle">纵轴与气泡位置为作者判断，非可测量指标，仅用于表达相对关系</text>
+<rect x="170.0" y="152.0" width="785.0" height="448.0" fill="#f0fdf4"/>
+<rect x="955.0" y="152.0" width="785.0" height="448.0" fill="#fffbeb"/>
+<rect x="170.0" y="600.0" width="785.0" height="448.0" fill="#f8fafc"/>
+<rect x="955.0" y="600.0" width="785.0" height="448.0" fill="#fef2f2"/>
+<rect x="170" y="152" width="1570" height="896" fill="none" stroke="#cbd5e1" stroke-width="2"/>
+<line x1="955.0" y1="152" x2="955.0" y2="1048" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8 6"/>
+<line x1="170" y1="600.0" x2="1740" y2="600.0" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="190.0" y="582.0" font-size="17" font-weight="700" fill="#b6c2d1" text-anchor="start">左上 · 空间大且人少：优先投入</text>
+<text x="1720.0" y="582.0" font-size="17" font-weight="700" fill="#b6c2d1" text-anchor="end">右上 · 空间大但拥挤：必做，需差异化</text>
+<text x="190.0" y="1030.0" font-size="17" font-weight="700" fill="#b6c2d1" text-anchor="start">左下 · 空间小人也少：利基</text>
+<text x="1720.0" y="1030.0" font-size="17" font-weight="700" fill="#b6c2d1" text-anchor="end">右下 · 空间小又拥挤：收益递减</text>
+<text x="955.0" y="1118" font-size="20" font-weight="700" fill="#334155" text-anchor="middle">研究拥挤度（论文供给）→</text>
+<text x="166" y="134" font-size="20" font-weight="700" fill="#334155" text-anchor="middle">↑ 剩余头部空间</text>
+<text x="152" y="164" font-size="15" fill="#94a3b8" text-anchor="end">大</text>
+<text x="152" y="1048.0" font-size="15" fill="#94a3b8" text-anchor="end">小</text>
+<text x="170" y="1080.0" font-size="15" fill="#94a3b8" text-anchor="middle">少</text>
+<text x="1740" y="1080.0" font-size="15" fill="#94a3b8" text-anchor="middle">多</text>
+<circle cx="389.8" cy="223.7" r="25.1" fill="#059669" fill-opacity="0.20" stroke="#059669" stroke-width="2.5"/>
+<circle cx="389.8" cy="223.7" r="4.5" fill="#059669"/>
+<text x="429.9" y="218.7" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">混合动作 GUI+CLI+MCP</text>
+<text x="429.9" y="241.7" font-size="15" fill="#64748b" text-anchor="start">接口共识空白，MCP 几无人做 · 10 篇</text>
+<circle cx="892.2" cy="331.2" r="32.5" fill="#059669" fill-opacity="0.20" stroke="#059669" stroke-width="2.5"/>
+<circle cx="892.2" cy="331.2" r="4.5" fill="#059669"/>
+<text x="939.7" y="326.2" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">失败归因与可靠性工程</text>
+<text x="939.7" y="349.2" font-size="15" fill="#64748b" text-anchor="start">联合归因准确率仅 19.6 · 30 篇</text>
+<circle cx="609.6" cy="438.7" r="25.1" fill="#059669" fill-opacity="0.20" stroke="#059669" stroke-width="2.5"/>
+<circle cx="609.6" cy="438.7" r="4.5" fill="#059669"/>
+<text x="649.7" y="433.7" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">评测的元评估 / judge 可信度</text>
+<text x="649.7" y="456.7" font-size="15" fill="#64748b" text-anchor="start">15.3% 的 FAIL 判定是错的 · 10 篇</text>
+<circle cx="484.0" cy="546.2" r="21.4" fill="#059669" fill-opacity="0.20" stroke="#059669" stroke-width="2.5"/>
+<circle cx="484.0" cy="546.2" r="4.5" fill="#059669"/>
+<text x="520.4" y="541.2" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">世界模型 / 状态迁移扩展轴</text>
+<text x="520.4" y="564.2" font-size="15" fill="#64748b" text-anchor="start">刚成为独立扩展轴 · 4 篇</text>
+<circle cx="829.4" cy="689.6" r="36.2" fill="#64748b" fill-opacity="0.20" stroke="#64748b" stroke-width="2.5"/>
+<circle cx="829.4" cy="689.6" r="4.5" fill="#64748b"/>
+<text x="880.6" y="684.6" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">端侧小模型与成本工程</text>
+<text x="880.6" y="707.6" font-size="15" fill="#64748b" text-anchor="start">端侧已下探到 2B 量级 · 44 篇</text>
+<circle cx="1426.0" cy="241.6" r="36.0" fill="#d97706" fill-opacity="0.20" stroke="#d97706" stroke-width="2.5"/>
+<circle cx="1426.0" cy="241.6" r="4.5" fill="#d97706"/>
+<text x="1375.0" y="236.6" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">长程真实工作流评测</text>
+<text x="1375.0" y="259.6" font-size="15" fill="#64748b" text-anchor="end">二元完成率仍只有 26.9 · 43 篇</text>
+<circle cx="1316.1" cy="385.0" r="33.9" fill="#d97706" fill-opacity="0.20" stroke="#d97706" stroke-width="2.5"/>
+<circle cx="1316.1" cy="385.0" r="4.5" fill="#d97706"/>
+<text x="1267.2" y="380.0" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">安全与间接提示注入</text>
+<text x="1267.2" y="403.0" font-size="15" fill="#64748b" text-anchor="end">攻击面新增，防御未收敛 · 35 篇</text>
+<circle cx="1206.2" cy="492.5" r="28.6" fill="#d97706" fill-opacity="0.20" stroke="#d97706" stroke-width="2.5"/>
+<circle cx="1206.2" cy="492.5" r="4.5" fill="#d97706"/>
+<text x="1162.6" y="487.5" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">环境工程（深度而非数量）</text>
+<text x="1162.6" y="510.5" font-size="15" fill="#64748b" text-anchor="end">去掉任务构造即 68.7 → 43.9 · 18 篇</text>
+<circle cx="1237.6" cy="564.2" r="29.3" fill="#d97706" fill-opacity="0.20" stroke="#d97706" stroke-width="2.5"/>
+<circle cx="1237.6" cy="564.2" r="4.5" fill="#d97706"/>
+<text x="1193.3" y="559.2" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">记忆与上下文治理</text>
+<text x="1193.3" y="582.2" font-size="15" fill="#64748b" text-anchor="end">方案多但缺统一口径 · 20 篇</text>
+<circle cx="1394.6" cy="653.8" r="35.0" fill="#dc2626" fill-opacity="0.20" stroke="#dc2626" stroke-width="2.5"/>
+<circle cx="1394.6" cy="653.8" r="4.5" fill="#dc2626"/>
+<text x="1444.6" y="648.8" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="start">训练数据合成与 RL 配方</text>
+<text x="1444.6" y="671.8" font-size="15" fill="#64748b" text-anchor="start">合成密集，收益趋缓 · 39 篇</text>
+<circle cx="1598.7" cy="904.6" r="35.0" fill="#dc2626" fill-opacity="0.20" stroke="#dc2626" stroke-width="2.5"/>
+<circle cx="1598.7" cy="904.6" r="4.5" fill="#dc2626"/>
+<text x="1548.7" y="899.6" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">短程沙箱 benchmark</text>
+<text x="1548.7" y="922.6" font-size="15" fill="#64748b" text-anchor="end">AndroidDaily 97.5 近满分 · 39 篇</text>
+<circle cx="1410.3" cy="976.3" r="30.0" fill="#dc2626" fill-opacity="0.20" stroke="#dc2626" stroke-width="2.5"/>
+<circle cx="1410.3" cy="976.3" r="4.5" fill="#dc2626"/>
+<text x="1365.3" y="971.3" font-size="18.5" font-weight="700" fill="#1e293b" text-anchor="end">静态 grounding 单点精度</text>
+<text x="1365.3" y="994.3" font-size="15" fill="#64748b" text-anchor="end">ScreenSpot-V2 97.5 已饱和 · 22 篇</text>
+<text x="170" y="1156" font-size="16" fill="#94a3b8">读法：左上角是「问题没解决、但还没多少人做」的位置——混合动作与接口设计、失败归因与可靠性工程、评测的元评估、世界模型扩展轴。右上角的环境工程虽已拥挤，却是收益最确定的一块。</text>
+</svg>

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1170" viewBox="0 0 1800 1170" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+<rect width="1800" height="1170" fill="#f8fafc"/>
+<text x="900" y="54" font-size="31" font-weight="700" fill="#0f172a" text-anchor="middle">移动端 GUI Agent 榜单的四次换代（截至 2026-08-20）</text>
+<text x="900" y="90" font-size="18" fill="#64748b" text-anchor="middle">移动端换代速度是全场最快的：一套基准从发布到饱和大约 12 到 18 个月，被替换的原因不是任务不够多，而是任务不够长、跨应用不够多、判定不够细</text>
+<text x="900" y="118" font-size="16" fill="#94a3b8" text-anchor="middle">分数为该基准已知最好成绩；移动端自报比例是各平台里最高的，标注「自报」者未经第三方复现</text>
+<rect x="40.0" y="152" width="404.5" height="54" rx="10" fill="#94a3b8"/>
+<text x="242.2" y="175" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">第一代 · 2023-2024</text>
+<text x="242.2" y="196" font-size="15" fill="#ffffff" fill-opacity="0.88" text-anchor="middle">已停更或废弃</text>
+<path d="M 452.5 458.0 L 469.5 469.0 L 452.5 480.0 Z" fill="#cbd5e1"/>
+<rect x="40.0" y="222" width="404.5" height="116" rx="11" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="58.0" y="252" font-size="18.5" font-weight="700" fill="#1e293b">AITW</text>
+<text x="58.0" y="286" font-size="25" font-weight="700" fill="#94a3b8">87.9</text>
+<text x="58.0" y="310" font-size="13.5" fill="#64748b">在线子集，仅 General+WebShopping</text>
+<text x="58.0" y="328" font-size="13.5" fill="#64748b">与离线 step-acc 两套口径不可比</text>
+<rect x="40.0" y="352" width="404.5" height="116" rx="11" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="58.0" y="382" font-size="18.5" font-weight="700" fill="#1e293b">AndroidLab</text>
+<text x="58.0" y="416" font-size="25" font-weight="700" fill="#94a3b8">47.7</text>
+<text x="58.0" y="440" font-size="13.5" fill="#64748b">138 任务 / 9 应用，无人类基线</text>
+<text x="58.0" y="458" font-size="13.5" fill="#64748b">榜单自 2025-12 起停更</text>
+<rect x="40.0" y="482" width="404.5" height="116" rx="11" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="58.0" y="512" font-size="18.5" font-weight="700" fill="#1e293b">MobileAgentBench</text>
+<text x="58.0" y="546" font-size="25" font-weight="700" fill="#94a3b8">49</text>
+<text x="58.0" y="570" font-size="13.5" fill="#64748b">100 任务 / 10 开源应用</text>
+<text x="58.0" y="588" font-size="13.5" fill="#64748b">项目页无结果表，仓库已失效</text>
+<rect x="40.0" y="612" width="404.5" height="116" rx="11" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="58.0" y="642" font-size="18.5" font-weight="700" fill="#1e293b">AITZ</text>
+<text x="58.0" y="676" font-size="25" font-weight="700" fill="#94a3b8">无可靠来源</text>
+<text x="58.0" y="700" font-size="13.5" fill="#64748b">仅 50 episodes 抽样预实验</text>
+<text x="58.0" y="718" font-size="13.5" fill="#64748b">只报动作类型准确率，无成功率</text>
+<rect x="478.5" y="152" width="404.5" height="54" rx="10" fill="#059669"/>
+<text x="680.8" y="175" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">第二代 · 2024-2025</text>
+<text x="680.8" y="196" font-size="15" fill="#ffffff" fill-opacity="0.88" text-anchor="middle">已饱和</text>
+<path d="M 891.0 458.0 L 908.0 469.0 L 891.0 480.0 Z" fill="#cbd5e1"/>
+<rect x="478.5" y="222" width="404.5" height="116" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.8"/>
+<text x="496.5" y="252" font-size="18.5" font-weight="700" fill="#1e293b">AndroidWorld</text>
+<text x="496.5" y="286" font-size="25" font-weight="700" fill="#059669">97.4</text>
+<text x="496.5" y="310" font-size="13.5" fill="#64748b">116 任务，人类基线 80.0</text>
+<text x="496.5" y="328" font-size="13.5" fill="#64748b">该分数已 10 个月无人刷新</text>
+<rect x="478.5" y="352" width="404.5" height="116" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.8"/>
+<text x="496.5" y="382" font-size="18.5" font-weight="700" fill="#1e293b">AndroidControl</text>
+<text x="496.5" y="416" font-size="25" font-weight="700" fill="#059669">79.1</text>
+<text x="496.5" y="440" font-size="13.5" fill="#64748b">步级成功率，AITW 的实际接棒者</text>
+<text x="496.5" y="458" font-size="13.5" fill="#64748b">约 15 分「难度」实为标注噪声</text>
+<rect x="917.0" y="152" width="404.5" height="54" rx="10" fill="#d97706"/>
+<text x="1119.2" y="175" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">第三代 · 2026 上半年</text>
+<text x="1119.2" y="196" font-size="15" fill="#ffffff" fill-opacity="0.88" text-anchor="middle">当前主战场</text>
+<path d="M 1329.5 458.0 L 1346.5 469.0 L 1329.5 480.0 Z" fill="#cbd5e1"/>
+<rect x="917.0" y="222" width="404.5" height="116" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.8"/>
+<text x="935.0" y="252" font-size="18.5" font-weight="700" fill="#1e293b">MobileWorld</text>
+<text x="935.0" y="286" font-size="25" font-weight="700" fill="#d97706">82.1</text>
+<text x="935.0" y="310" font-size="13.5" fill="#64748b">201 任务，跨应用占 62.2%</text>
+<text x="935.0" y="328" font-size="13.5" fill="#64748b">两个月涨 30.4 分，全场最快</text>
+<rect x="917.0" y="352" width="404.5" height="116" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.8"/>
+<text x="935.0" y="382" font-size="18.5" font-weight="700" fill="#1e293b">MobileWorld-Real</text>
+<text x="935.0" y="416" font-size="25" font-weight="700" fill="#d97706">92.2</text>
+<text x="935.0" y="440" font-size="13.5" fill="#64748b">409 个真机任务</text>
+<text x="935.0" y="458" font-size="13.5" fill="#64748b">自报，无第三方复现</text>
+<rect x="917.0" y="482" width="404.5" height="116" rx="11" fill="#fffbeb" stroke="#fde68a" stroke-width="1.8"/>
+<text x="935.0" y="512" font-size="18.5" font-weight="700" fill="#1e293b">AndroidDaily</text>
+<text x="935.0" y="546" font-size="25" font-weight="700" fill="#d97706">97.5 / 62.0</text>
+<text x="935.0" y="570" font-size="13.5" fill="#64748b">94 个闭源高频 App，350 任务</text>
+<text x="935.0" y="588" font-size="13.5" fill="#64748b">前者为自报，后者为论文自测</text>
+<rect x="1355.5" y="152" width="404.5" height="54" rx="10" fill="#dc2626"/>
+<text x="1557.8" y="175" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">第四代 · 长程与跨系统</text>
+<text x="1557.8" y="196" font-size="15" fill="#ffffff" fill-opacity="0.88" text-anchor="middle">远未解决</text>
+<rect x="1355.5" y="222" width="404.5" height="116" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.8"/>
+<text x="1373.5" y="252" font-size="18.5" font-weight="700" fill="#1e293b">AndroidLens</text>
+<text x="1373.5" y="286" font-size="25" font-weight="700" fill="#dc2626">12.7</text>
+<text x="1373.5" y="310" font-size="13.5" fill="#64748b">571 长程任务 / 38 个域，2025-12 发布</text>
+<text x="1373.5" y="328" font-size="13.5" fill="#64748b">平均 26 步以上，动作级 50.5</text>
+<rect x="1355.5" y="352" width="404.5" height="116" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1.8"/>
+<text x="1373.5" y="382" font-size="18.5" font-weight="700" fill="#1e293b">iOSWorld</text>
+<text x="1373.5" y="416" font-size="25" font-weight="700" fill="#dc2626">52 / 37</text>
+<text x="1373.5" y="440" font-size="13.5" fill="#64748b">133 任务 / 26 个自建 iOS 应用（2026-06）</text>
+<text x="1373.5" y="458" font-size="13.5" fill="#64748b">总体 52、跨应用 37；加无障碍树最高 +26</text>
+<rect x="40" y="768" width="1720" height="224" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="64" y="798" font-size="19" font-weight="700" fill="#0f172a">换代真正改变的是五条口径，而不是分数</text>
+<text x="230" y="798" font-size="14" fill="#94a3b8">早期</text>
+<text x="600" y="798" font-size="14" fill="#94a3b8">当前主战场</text>
+<text x="990" y="798" font-size="14" fill="#94a3b8">正在成为默认</text>
+<text x="64" y="826" font-size="16" font-weight="600" fill="#334155">任务长度</text>
+<text x="230" y="826" font-size="15.5" fill="#94a3b8">十余步的单一意图</text>
+<text x="560" y="826" font-size="15" fill="#cbd5e1">→</text>
+<text x="600" y="826" font-size="15.5" fill="#d97706">平均 27.8 步</text>
+<text x="955" y="826" font-size="15" fill="#cbd5e1">→</text>
+<text x="990" y="826" font-size="15.5" fill="#1e293b">26 步以上的长程工作流</text>
+<text x="64" y="862" font-size="16" font-weight="600" fill="#334155">跨应用比例</text>
+<text x="230" y="862" font-size="15.5" fill="#94a3b8">AndroidWorld 仅 9.5%</text>
+<text x="560" y="862" font-size="15" fill="#cbd5e1">→</text>
+<text x="600" y="862" font-size="15.5" fill="#d97706">MobileWorld 62.2%</text>
+<text x="955" y="862" font-size="15" fill="#cbd5e1">→</text>
+<text x="990" y="862" font-size="15.5" fill="#1e293b">跨应用成为默认而非特例</text>
+<text x="64" y="898" font-size="16" font-weight="600" fill="#334155">运行载体</text>
+<text x="230" y="898" font-size="15.5" fill="#94a3b8">模拟器</text>
+<text x="560" y="898" font-size="15" fill="#cbd5e1">→</text>
+<text x="600" y="898" font-size="15.5" fill="#d97706">真机集群（100 台以上）</text>
+<text x="955" y="898" font-size="15" fill="#cbd5e1">→</text>
+<text x="990" y="898" font-size="15.5" fill="#1e293b">设备、账号、地区、版本漂移进入评测</text>
+<text x="64" y="934" font-size="16" font-weight="600" fill="#334155">应用来源</text>
+<text x="230" y="934" font-size="15.5" fill="#94a3b8">开源可插桩 App</text>
+<text x="560" y="934" font-size="15" fill="#cbd5e1">→</text>
+<text x="600" y="934" font-size="15.5" fill="#d97706">94 个闭源高频 App</text>
+<text x="955" y="934" font-size="15" fill="#cbd5e1">→</text>
+<text x="990" y="934" font-size="15.5" fill="#1e293b">拿不到内部状态，只能靠外部可观察证据</text>
+<text x="64" y="970" font-size="16" font-weight="600" fill="#334155">判定方式</text>
+<text x="230" y="970" font-size="15.5" fill="#94a3b8">终态快照判分</text>
+<text x="560" y="970" font-size="15" fill="#cbd5e1">→</text>
+<text x="600" y="970" font-size="15.5" fill="#d97706">后端数据库直查</text>
+<text x="955" y="970" font-size="15" fill="#cbd5e1">→</text>
+<text x="990" y="970" font-size="15.5" fill="#1e293b">过程 guideline 判定（与人工一致 87.37%）</text>
+<rect x="40" y="1018" width="1720" height="118" rx="12" fill="#fef2f2" stroke="#fecaca" stroke-width="1.8"/>
+<rect x="40" y="1018" width="7" height="118" rx="3" fill="#dc2626"/>
+<text x="64" y="1048" font-size="17" font-weight="700" fill="#b91c1c">读移动端分数前必须知道的三件事</text>
+<text x="64" y="1076" font-size="15.5" fill="#7f1d1d">一、AndroidWorld 榜单首行自带「无独立验证、自报、后果自负」声明；可复现的 GUI 基线在统一环境里只有 57.8 到 69.3。</text>
+<text x="64" y="1100" font-size="15.5" fill="#7f1d1d">二、纯命令行的 Claude Code 未做任何移动端后训练就拿到 71.8，人工写的 oracle 命令行能到 88.8（116 题里 103 题可纯 CLI 解）——榜单在相当程度上测的是「会不会绕开界面」。</text>
+<text x="64" y="1124" font-size="15.5" fill="#7f1d1d">三、同一个名字可能指不同东西：AndroidDaily 在不同论文里有三套互不相容的描述，MobileWorld / GUI-only 子集 / MobileWorld-Real 是三套任务，引用前须对齐任务数与判定协议。</text>
+<text x="40" y="1156" font-size="15.5" fill="#94a3b8">官方榜数字取自各榜单底层数据文件，论文数字取自各论文自述对比表；「第一代/第四代」为本文按饱和度与替代关系的归类，非官方划分。</text>
+</svg>

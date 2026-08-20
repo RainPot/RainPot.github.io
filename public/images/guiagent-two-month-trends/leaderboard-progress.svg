@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1658" viewBox="0 0 1800 1658" font-family="PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif">
+<rect width="1800" height="1658" fill="#f8fafc"/>
+<text x="900" y="52" font-size="31" font-weight="700" fill="#0f172a" text-anchor="middle">GUI Agent 主要榜单进度（截至 2026-08-20）</text>
+<text x="900" y="88" font-size="18" fill="#64748b" text-anchor="middle">同一个 Qwen-CUA-Max 在 OSWorld-Verified 上拿到 87.6，在 OSWorld 2.0 的二元完成率上只有 21.2——差距 66 个百分点</text>
+<text x="900" y="115" font-size="16" fill="#94a3b8" text-anchor="middle">官方榜数字来自各榜单底层数据文件（OSWorld-Verified xlsx、OSWorld 2.0 official-results.json、gui-agent grounding JSON、AndroidWorld/WebArena 表格）；标「自报」者出自论文自述对比表</text>
+<text x="900" y="140" font-size="16" fill="#94a3b8" text-anchor="middle">深色竖线为该榜单自己的人类基线；没有竖线表示该榜单未发布人类成绩，不代表人类做不到</text>
+<line x1="506.0" y1="162" x2="506.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="506.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">0</text>
+<line x1="674.0" y1="162" x2="674.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="674.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">20</text>
+<line x1="842.0" y1="162" x2="842.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="842.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">40</text>
+<line x1="1010.0" y1="162" x2="1010.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="1010.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">60</text>
+<line x1="1178.0" y1="162" x2="1178.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="1178.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">80</text>
+<line x1="1346.0" y1="162" x2="1346.0" y2="1580" stroke="#e2e8f0" stroke-width="1.5"/>
+<text x="1346.0" y="154" font-size="15" fill="#94a3b8" text-anchor="middle">100</text>
+<text x="40" y="167" font-size="16.5" font-weight="700" fill="#059669">已接近饱和（&gt;90）——但每一行都要打折扣</text>
+<rect x="40" y="178" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="178" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="199" font-size="18" font-weight="600" fill="#1e293b">Online-Mind2Web</text>
+<text x="58" y="218" font-size="14" fill="#94a3b8">300 任务 · live web · 人工评测</text>
+<rect x="506" y="183" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="183" width="820.7" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<text x="1339.7" y="209.0" font-size="19.5" font-weight="700" fill="#059669">97.7</text>
+<text x="1398.7" y="209.0" font-size="15" fill="#64748b">Hark Handoff</text>
+<rect x="40" y="238" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="238" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="259" font-size="18" font-weight="600" fill="#1e293b">AndroidDaily</text>
+<text x="58" y="278" font-size="14" fill="#94a3b8">94 个闭源真机 App · 350 任务</text>
+<rect x="506" y="243" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="243" width="819.0" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<text x="1338.0" y="269.0" font-size="19.5" font-weight="700" fill="#059669">97.5</text>
+<text x="1397.0" y="269.0" font-size="15" fill="#64748b">Qwen-UI-Agent-27B（自报）</text>
+<rect x="40" y="298" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="298" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="319" font-size="18" font-weight="600" fill="#1e293b">ScreenSpot-V2</text>
+<text x="58" y="338" font-size="14" fill="#94a3b8">静态 grounding · 官方榜仅 95.3</text>
+<rect x="506" y="303" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="303" width="819.0" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<text x="1338.0" y="329.0" font-size="19.5" font-weight="700" fill="#059669">97.5</text>
+<text x="1397.0" y="329.0" font-size="15" fill="#64748b">Qwen-UI-Agent-27B（自报）</text>
+<rect x="40" y="358" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="358" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="379" font-size="18" font-weight="600" fill="#1e293b">AndroidWorld</text>
+<text x="58" y="398" font-size="14" fill="#94a3b8">116 任务 · 该分数已 10 个月无人刷新</text>
+<rect x="506" y="363" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="363" width="818.2" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<line x1="1178.0" y1="359" x2="1178.0" y2="405" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1178.0" y="357" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 80.0</text>
+<text x="1337.2" y="389.0" font-size="19.5" font-weight="700" fill="#059669">97.4</text>
+<text x="1396.2" y="389.0" font-size="15" fill="#64748b">三方并列（自报，无独立验证）</text>
+<rect x="40" y="418" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="418" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="439" font-size="18" font-weight="600" fill="#1e293b">MobileWorld-Real</text>
+<text x="58" y="458" font-size="14" fill="#94a3b8">真机 409 任务</text>
+<rect x="506" y="423" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="423" width="774.5" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<text x="1293.5" y="449.0" font-size="19.5" font-weight="700" fill="#059669">92.2</text>
+<text x="1352.5" y="449.0" font-size="15" fill="#64748b">Qwen-UI-Agent-27B（自报）</text>
+<rect x="40" y="478" width="448" height="48" rx="8" fill="#ffffff" stroke="#a7f3d0" stroke-width="1.5"/>
+<rect x="40" y="478" width="6" height="48" rx="3" fill="#059669"/>
+<text x="58" y="499" font-size="18" font-weight="600" fill="#1e293b">OSWorld-Verified（全榜视图）</text>
+<text x="58" y="518" font-size="14" fill="#94a3b8">361 任务 · 榜首证据薄弱</text>
+<rect x="506" y="483" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="483" width="757.7" height="38" rx="7" fill="#059669" fill-opacity="0.85"/>
+<line x1="1114.2" y1="479" x2="1114.2" y2="525" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1114.2" y="477" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 72.4</text>
+<text x="1276.7" y="509.0" font-size="19.5" font-weight="700" fill="#059669">90.2</text>
+<text x="1335.7" y="509.0" font-size="15" fill="#64748b">Intelligence-Indeed Agent</text>
+<text x="40" y="557" font-size="16.5" font-weight="700" fill="#d97706">仍在争夺（60-90）</text>
+<rect x="40" y="568" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="568" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="589" font-size="18" font-weight="600" fill="#1e293b">OSWorld-Verified（默认视图）</text>
+<text x="58" y="608" font-size="14" fill="#94a3b8">同一页面切一个 tab 就少 4.2 分</text>
+<rect x="506" y="573" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="573" width="722.4" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<line x1="1114.2" y1="569" x2="1114.2" y2="615" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1114.2" y="567" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 72.4</text>
+<text x="1241.4" y="599.0" font-size="19.5" font-weight="700" fill="#d97706">86.0</text>
+<text x="1300.4" y="599.0" font-size="15" fill="#64748b">claude-fable-5</text>
+<rect x="40" y="628" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="628" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="649" font-size="18" font-weight="600" fill="#1e293b">OSWorld-Verified（自报）</text>
+<text x="58" y="668" font-size="14" fill="#94a3b8">与下方 21.2 是同一个系统</text>
+<rect x="506" y="633" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="633" width="735.8" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<line x1="1114.2" y1="629" x2="1114.2" y2="675" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1114.2" y="627" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 72.4</text>
+<text x="1254.8" y="659.0" font-size="19.5" font-weight="700" fill="#d97706">87.6</text>
+<text x="1313.8" y="659.0" font-size="15" fill="#64748b">Qwen-CUA-Max (&gt;1T)</text>
+<rect x="40" y="688" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="688" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="709" font-size="18" font-weight="600" fill="#1e293b">ComponentBench（无障碍树）</text>
+<text x="58" y="728" font-size="14" fill="#94a3b8">97 类组件 · 2910 个可验证任务</text>
+<rect x="506" y="693" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="693" width="698.0" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1217.0" y="719.0" font-size="19.5" font-weight="700" fill="#d97706">83.1</text>
+<text x="1276.0" y="719.0" font-size="15" fill="#64748b">GPT-5 mini</text>
+<rect x="40" y="748" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="748" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="769" font-size="18" font-weight="600" fill="#1e293b">ScreenSpot-Pro（含 zoom-in）</text>
+<text x="58" y="788" font-size="14" fill="#94a3b8">同模型单次前向只有 73.3</text>
+<rect x="506" y="753" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="753" width="694.7" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1213.7" y="779.0" font-size="19.5" font-weight="700" fill="#d97706">82.7</text>
+<text x="1272.7" y="779.0" font-size="15" fill="#64748b">Indeed-UI-32B-zoomin</text>
+<rect x="40" y="808" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="808" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="829" font-size="18" font-weight="600" fill="#1e293b">MobileWorld（沙箱）</text>
+<text x="58" y="848" font-size="14" fill="#94a3b8">201 任务 · 两个月涨 30.4 分，全场最快</text>
+<rect x="506" y="813" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="813" width="689.6" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1208.6" y="839.0" font-size="19.5" font-weight="700" fill="#d97706">82.1</text>
+<text x="1267.6" y="839.0" font-size="15" fill="#64748b">Qwen-UI-Agent（自报）</text>
+<rect x="40" y="868" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="868" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="889" font-size="18" font-weight="600" fill="#1e293b">WebArena</text>
+<text x="58" y="908" font-size="14" fill="#94a3b8">812 任务 · 已约半年无人刷新</text>
+<rect x="506" y="873" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="873" width="624.1" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<line x1="1162.9" y1="869" x2="1162.9" y2="915" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1162.9" y="867" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 78.2</text>
+<text x="1175.9" y="899.0" font-size="19.5" font-weight="700" fill="#d97706">74.3</text>
+<text x="1234.9" y="899.0" font-size="15" fill="#64748b">WebTactix (DeepSeek v3.2)</text>
+<rect x="40" y="928" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="928" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="949" font-size="18" font-weight="600" fill="#1e293b">UI-Vision</text>
+<text x="58" y="968" font-size="14" fill="#94a3b8">桌面密集 UI</text>
+<rect x="506" y="933" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="933" width="588.0" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1107.0" y="959.0" font-size="19.5" font-weight="700" fill="#d97706">70.0</text>
+<text x="1166.0" y="959.0" font-size="15" fill="#64748b">Qwen-UI-Agent-27B（自报）</text>
+<rect x="40" y="988" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="988" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="1009" font-size="18" font-weight="600" fill="#1e293b">WebVoyager（标准化重测）</text>
+<text x="58" y="1028" font-size="14" fill="#94a3b8">同一个系统自报 87，重测掉 18 分</text>
+<rect x="506" y="993" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="993" width="576.2" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1095.2" y="1019.0" font-size="19.5" font-weight="700" fill="#d97706">68.6</text>
+<text x="1154.2" y="1019.0" font-size="15" fill="#64748b">OpenAI Operator</text>
+<rect x="40" y="1048" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="1048" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="1069" font-size="18" font-weight="600" fill="#1e293b">WindowsAgentArena</text>
+<text x="58" y="1088" font-size="14" fill="#94a3b8">154 任务 · 仍低于人类，官方榜停更</text>
+<rect x="506" y="1053" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1053" width="556.1" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<line x1="1131.8" y1="1049" x2="1131.8" y2="1095" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1131.8" y="1047" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 74.5</text>
+<text x="1144.8" y="1079.0" font-size="19.5" font-weight="700" fill="#d97706">66.2</text>
+<text x="1203.8" y="1079.0" font-size="15" fill="#64748b">UI-Mate-27B</text>
+<rect x="40" y="1108" width="448" height="48" rx="8" fill="#ffffff" stroke="#fde68a" stroke-width="1.5"/>
+<rect x="40" y="1108" width="6" height="48" rx="3" fill="#d97706"/>
+<text x="58" y="1129" font-size="18" font-weight="600" fill="#1e293b">OSWorld 2.0（部分完成度）</text>
+<text x="58" y="1148" font-size="14" fill="#94a3b8">108 任务 · 平均 318 次调用</text>
+<rect x="506" y="1113" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1113" width="517.4" height="38" rx="7" fill="#d97706" fill-opacity="0.85"/>
+<text x="1036.4" y="1139.0" font-size="19.5" font-weight="700" fill="#d97706">61.6</text>
+<text x="1095.4" y="1139.0" font-size="15" fill="#64748b">StateAct + Opus 4.8</text>
+<text x="40" y="1187" font-size="16.5" font-weight="700" fill="#dc2626">远未解决（&lt;60）</text>
+<rect x="40" y="1198" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1198" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1219" font-size="18" font-weight="600" fill="#1e293b">VisualWebArena</text>
+<text x="58" y="1238" font-size="14" fill="#94a3b8">910 任务 · 已 13 个月零增长</text>
+<rect x="506" y="1203" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1203" width="453.6" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<line x1="1251.1" y1="1199" x2="1251.1" y2="1245" stroke="#0f172a" stroke-width="2.5"/>
+<text x="1251.1" y="1197" font-size="12.5" fill="#0f172a" text-anchor="middle">人类 88.7</text>
+<text x="1264.1" y="1229.0" font-size="19.5" font-weight="700" fill="#dc2626">54.0</text>
+<text x="1323.1" y="1229.0" font-size="15" fill="#64748b">Gemini 2.5 Flash (SoM)</text>
+<rect x="40" y="1258" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1258" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1279" font-size="18" font-weight="600" fill="#1e293b">iOSWorld</text>
+<text x="58" y="1298" font-size="14" fill="#94a3b8">133 任务 · 跨应用只有 37</text>
+<rect x="506" y="1263" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1263" width="436.8" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<text x="955.8" y="1289.0" font-size="19.5" font-weight="700" fill="#dc2626">52.0</text>
+<text x="1014.8" y="1289.0" font-size="15" fill="#64748b">前沿模型 · vision+XML 特权观察</text>
+<rect x="40" y="1318" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1318" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1339" font-size="18" font-weight="600" fill="#1e293b">ComponentBench（纯像素）</text>
+<text x="58" y="1358" font-size="14" fill="#94a3b8">同一个 GPT-5 mini，只换观察空间</text>
+<rect x="506" y="1323" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1323" width="410.8" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<text x="929.8" y="1349.0" font-size="19.5" font-weight="700" fill="#dc2626">48.9</text>
+<text x="988.8" y="1349.0" font-size="15" fill="#64748b">GPT-5 mini</text>
+<rect x="40" y="1378" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1378" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1399" font-size="18" font-weight="600" fill="#1e293b">OSWorld 2.0（二元完成）</text>
+<text x="58" y="1418" font-size="14" fill="#94a3b8">官方榜为 20.6，此为已知最好</text>
+<rect x="506" y="1383" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1383" width="226.0" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<text x="745.0" y="1409.0" font-size="19.5" font-weight="700" fill="#dc2626">26.9</text>
+<text x="804.0" y="1409.0" font-size="15" fill="#64748b">StateAct + Opus 4.8</text>
+<rect x="40" y="1438" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1438" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1459" font-size="18" font-weight="600" fill="#1e293b">OSWorld 2.0（二元 · 同一系统）</text>
+<text x="58" y="1478" font-size="14" fill="#94a3b8">与上方 87.6 是同一个模型</text>
+<rect x="506" y="1443" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1443" width="178.1" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<text x="697.1" y="1469.0" font-size="19.5" font-weight="700" fill="#dc2626">21.2</text>
+<text x="756.1" y="1469.0" font-size="15" fill="#64748b">Qwen-CUA-Max (&gt;1T)</text>
+<rect x="40" y="1498" width="448" height="48" rx="8" fill="#ffffff" stroke="#fecaca" stroke-width="1.5"/>
+<rect x="40" y="1498" width="6" height="48" rx="3" fill="#dc2626"/>
+<text x="58" y="1519" font-size="18" font-weight="600" fill="#1e293b">AndroidLens</text>
+<text x="58" y="1538" font-size="14" fill="#94a3b8">571 长程任务 · 平均 26 步以上</text>
+<rect x="506" y="1503" width="840" height="38" rx="7" fill="#eef2f6"/>
+<rect x="506" y="1503" width="106.7" height="38" rx="7" fill="#dc2626" fill-opacity="0.85"/>
+<text x="625.7" y="1529.0" font-size="19.5" font-weight="700" fill="#dc2626">12.7</text>
+<text x="684.7" y="1529.0" font-size="15" fill="#64748b">未点名前沿模型</text>
+<text x="40" y="1614" font-size="16" fill="#94a3b8">口径提醒：OSWorld 的人类基线 72.4 测于 2024 年原版，从未在 Verified 上重测，「已超越人类」并不成立；OSWorld-Verified 榜内分母在 356-361 间浮动且多数只跑 1 次，前两名的差距无统计意义。</text>
+<text x="40" y="1640" font-size="16" fill="#94a3b8">涨分的榜几乎都能被 zoom-in 管线、命令行旁路或无障碍树观察吃掉；不涨的分两类——已饱和的（AndroidWorld、Online-Mind2Web）和真正难的（OSWorld 2.0、VisualWebArena、AndroidLens）。</text>
+</svg>
