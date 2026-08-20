@@ -35,19 +35,19 @@ readingTime: 27
 - **安全攻击面在扩大**。移动端两个月里出现了环境注入（MobileWorldSafety）、多步注入（StepJack）、隐形低危害注入（Invisible Ink）、自合成攻击链（SynChain）、用户内容注入（MIRAGE）五套新的攻击基准，所有被测 agent 的攻击成功率都不低于 23%。
 - **判定器本身成了研究对象**。OSReward 发现 VLM 裁判系统性偏松，How Benchmarks Mis-Score 审计出 15.3% 的 FAIL 判定是错的——给 RL 用的奖励信号，自己的错误率比大多数任务的成功率还高。
 
-下面按这四条主线展开。
+上面四条对应正文的主线一、二、四、五；主线三（全平台榜单水位）和主线六（训练侧变量）是同一批证据的另外两个切面。
 
 ## 2. 语料口径与检索方法
 
-先交代口径，避免「全景」变成营销词。本文语料由三部分组成：
+先交代语料口径。本文语料由三部分组成：
 
 1. **RainPot 逐日精读语料**：2026-06-15 至 2026-08-20 期间的 40 余篇单篇精读（LivingScreen、SaaS-Bench、AndroidDaily、MobileForge、MemGUI-Agent、SeerGuard、OSWorld 2.0、StateAct、IRA、Qwen-UI-Agent、CUADebug、SeedRealtime、AppDeltaWorld、Gated Hindsight Distillation、LLM-as-a-Verifier 等）；
 2. **GUI Agents Paper List**（OSU-NLP-Group）窗口内条目，以及 **arXiv API 按「mobile GUI agent」「computer-use agent」检索**的约 60 篇补充，两者去重后新增约 30 篇（ComponentBench、MobileWorldSafety、Act2Intention、StepReflect、CoAdapt-GUI、Qwen-CUA、Echoverse、SeekJudge、HyMobileAgent 等）；
 3. **榜单底层数据文件**：OSWorld-Verified 的 xlsx、OSWorld 2.0 的 official-results.json、AndroidWorld/WebArena 的官方表格、grounding 榜单 JSON——论文自报数字一律标注「自报」。
 
-这是一份策展样本，不是全量快照。分类是多标签的：一篇 SeerGuard 既是安全工作也是世界模型工作，一篇 AndroidDaily 既是基准工作也是判定器工作。文中所有分数都注明口径，读的时候请先看口径再看数字。
+这是一份策展样本，不是全量快照。分类是多标签的：一篇 SeerGuard 既是安全工作也是世界模型工作，一篇 AndroidDaily 既是基准工作也是判定器工作。文中所有分数都注明口径，读的时候先看口径再看数字。
 
-先看整体注意力的流动：同一行看某个方向两个月里是否持续有新工作，同一列看该时间段研究注意力集中在哪几行。评测与环境从六月的高产期退潮，训练数据与 RL 在七月中旬达到密度峰值，八月的新增量集中在世界模型、失败归因与实时性——而移动端真机部署（最后一行）是唯一一个两个月里每个时间窗都有新论文的方向。
+两个月里研究注意力的分布大致是：评测与环境从六月的高产期退潮，训练数据与 RL 在七月中旬达到密度峰值，八月的新增量集中在世界模型、失败归因与实时性；移动端真机部署是唯一一个每个时间窗都有新论文的方向。下面这张时间线横着读是某个方向的连续性，竖着读是各时间段的注意力分布。
 
 ![GUI Agent 近两个月方向演进时间线](/images/guiagent-two-month-trends/trend-timeline.png)
 
@@ -56,8 +56,6 @@ readingTime: 27
 如果只允许从这两个月里带走一张图，带这张：GUI Agent 领域的七个默认假设在两个月内被逐条拆掉，而它们指向同一个结论——**把「看整屏截图、点像素坐标」当成主回路，是一个被系统性高估的工程选择**。
 
 ![七个被拆掉的默认假设](/images/guiagent-two-month-trends/assumption-teardown.png)
-
-按时间顺序过一遍：
 
 - **06-15，「屏幕会静止等 agent 看清」被拆**。LivingScreen（arXiv:2606.04701）的动态屏幕基准上人类成功率 94.0，最好的模型只有 69.3；Seed-1.8 把 25.1% 的回合花在「观看」上，最动态的那层达到 53.1%——模型不是在做任务，是在盯屏幕等它停。
 - **07-02，「视觉记忆加得越多越好」被拆**。Naive Visual Memory（arXiv:2606.14106）把整屏历史塞进上下文，认知失败确实从 82.6 降到 75.0，但隐藏操作盲区从 67.1 恶化到 78.8，grounding 失败从 27.5 恶化到 36.1。记忆是双刃剑，加错了方向。
@@ -71,7 +69,7 @@ readingTime: 27
 
 ## 4. 主线二：移动端榜单的四次换代
 
-Mobile 是用户最关心的方向，也是换代速度最快的方向：一套移动端基准从发布到饱和大约 12 到 18 个月，被替换的原因不是任务不够多，而是任务不够长、跨应用不够多、判定不够细。
+Mobile 是换代速度最快的方向：一套移动端基准从发布到饱和大约 12 到 18 个月，被替换的原因不是任务不够多，而是任务不够长、跨应用不够多、判定不够细。
 
 ![移动端基准四次换代](/images/guiagent-two-month-trends/mobile-benchmark-generations.png)
 
@@ -89,7 +87,7 @@ AndroidWorld 97.4——注意这是**该分数 10 个月无人刷新**的 97.4�
 - **AndroidDaily**（arXiv:2605.27761）：94 个闭源高频真机 App、350 任务，Qwen-UI-Agent 自报 97.5、论文自测 62.0——一个基准两套口径，引用前必须对齐；
 - **MobileWorld-Real**：409 个真机任务，自报 92.2。
 
-这一代的实质变化是三条口径：真机集群（100 台以上）、闭源 App（拿不到内部状态）、过程可判定（AndroidDaily 的 GRADE 判定器与人工一致率 87.37%，后端数据库直查取代终态快照）。
+这一代的变化集中在三条新口径上：真机集群（100 台以上）、闭源 App（拿不到内部状态）、过程可判定（AndroidDaily 的 GRADE 判定器与人工一致率 87.37%，后端数据库直查取代终态快照）。
 
 ### 第四代（长程与跨系统）：远未解决
 

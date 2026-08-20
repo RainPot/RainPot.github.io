@@ -10,7 +10,7 @@ readingTime: 26
 
 先看一个数字：在 Terminal-Bench V2 上，把整个榜单的轨迹汇到一起，只要有一个「永远挑对」的 oracle 来选，成功率是 **98.9%**。而实际榜首的单次成功率是 84.7%。
 
-也就是说，模型早就能做对这些题了——它只是**不知道自己哪一次做对了**。这 14 个点的差距不在生成能力上，全在「选择」这一步。
+模型早就能做对这些题了——它只是**不知道自己哪一次做对了**。这 14 个点的差距不在生成能力上，全在「选择」这一步。
 
 ![Figure 5：Terminal-Bench V2 上的 oracle pass@k 曲线。单次采样 84.7%，采样数增加后 oracle 上界一路爬到 98.9%，而 pass@1 基本走平——说明差距全部积压在「从 k 条里挑对一条」这个环节。](/images/llm-as-a-verifier/figure-5-oracle-pass-at-k.png)
 
@@ -18,7 +18,7 @@ readingTime: 26
 
 就这一步，把 Terminal-Bench 上 27% 的平局率打到了 0。
 
-这篇值得拆的原因不是又刷了几个榜，而是它把「验证」摆到了和 pre-training、post-training、test-time compute 并列的位置上，当成第四条可以独立加算力的轴——而且给出了三个能拧的旋钮。至于这条轴到底有多长，论文自己的图就已经透露了答案，后面会说。
+这篇值得拆的点不在榜单：它把「验证」摆到了和 pre-training、post-training、test-time compute 并列的位置上，当成第四条可以独立加算力的轴，还给出了三个能拧的旋钮。至于这条轴到底有多长，论文自己的图就已经透露了答案，后面会说。
 
 ![Figure 1：LLM-as-a-Verifier 在四个 benchmark 上的总体表现——Terminal-Bench V2 86.5%、SWE-Bench Verified 78.2%、RoboRewardBench 87.4%、MedAgentBench 73.3%，横跨代码、机器人、医疗三个域，且全程不做任何训练。](/images/llm-as-a-verifier/figure-1-overall-performance.png)
 
@@ -41,7 +41,7 @@ readingTime: 26
 
 标准的 LLM-as-a-Judge 做法是：让模型在 1–5 或 1–10 的量表上打个分，取概率最高的那个 token 当结果。问题在于这个动作把一个连续的内部信念**压成了一个整数**。
 
-论文给的 `query-optimize` 案例把这件事说透了。任务是把一条慢 SQL 优化成等价的快查询，两条候选轨迹都产出了更快的查询，区别在验证环节：
+论文里的 `query-optimize` 案例把这笔账算得很清楚。任务是把一条慢 SQL 优化成等价的快查询，两条候选轨迹都产出了更快的查询，区别在验证环节：
 
 - 正确的那条：老老实实等原查询在标准库上跑完整整 5 分钟，然后把两边输出做 diff；
 - 失败的那条：**压根没在原库上验证等价性**，自己新建了一个库。
@@ -56,7 +56,7 @@ Gemini 2.5 Flash 其实看出来了这个区别。但它在推理里的表述是
 
 100 次重复评估，离散 judge 有 **88 次打成平手**。同一个模型、同一个 5 分量表，只是改成对分布求期望——平局全消，69 次排对。粒度再拉到 20，77 次排对。
 
-这张表是全篇最有说服力的一张。它证明了信息一直都在模型里，只是被 argmax 这一步扔掉了。
+这张表是全篇最直接的证据：信息一直都在模型里，只是被 argmax 这一步扔掉了。
 
 ![Table 2：query-optimize 案例上 judge 与 verifier 的对比。离散 1–5 量表在 100 次重复评估里打平 88 次；对同一个 5 点分布求期望后平局归零、正确排序 69 次；粒度提到 G=20 进一步到 77 次。](/images/llm-as-a-verifier/table-2-judges-vs-verifiers.png)
 
@@ -108,7 +108,7 @@ SCALE = {
 }
 ```
 
-**第二个约束：开源模型不肯乖乖吐出 score 标签。** 代码里的解法相当漂亮——先让模型自由分析，把 `<score_A>` 之前的分析文本截下来，然后**把标签自己 prefill 进去**，只解码 1 个 token，同时用 structured outputs 把这个位置约束在 20 个字母上：
+**第二个约束：开源模型不肯乖乖吐出 score 标签。** 代码里的解法分两步——先让模型自由分析，把 `<score_A>` 之前的分析文本截下来，然后**把标签自己 prefill 进去**，只解码 1 个 token，同时用 structured outputs 把这个位置约束在 20 个字母上：
 
 ```python
 response = client.chat.completions.create(
@@ -160,7 +160,7 @@ $$
 | PPT $k$=9 | 9,630 | 67.13% |
 | 全量 round-robin | 13,111 | 67.42% |
 
-$k$=9 用 73% 的预算拿到 99.6% 的 round-robin 精度。这条曲线是干净的。
+$k$=9 用 73% 的预算拿到 99.6% 的 round-robin 精度。
 
 ![Table 9：PPT 的预算-精度权衡。随 pivot 数增加准确率稳步上升，在明显更低的预算下逼近全量 round-robin。](/images/llm-as-a-verifier/table-9-ppt-budget-accuracy.png)
 
@@ -202,7 +202,7 @@ Verifier tokens (4,320 verifier calls)
     reasoning                     26,102,144
 ```
 
-顺手记一下量级感：跑一遍这个规模的验证是 **2.7 亿输入 token**。这个数字后面算成本时要用。
+跑一遍这个规模的验证是 **2.7 亿输入 token**——这个数字后面算成本时要用。
 
 ## 六、实验结果：涨在哪，涨了多少
 
@@ -216,7 +216,7 @@ Verifier tokens (4,320 verifier calls)
 
 ![Table 3：各 benchmark 的基线模型准确率（左）与 Pass@1 / Oracle / 本方法（右）。三个域上都稳定超过 Pass@1，并吃掉相当一部分 oracle headroom。](/images/llm-as-a-verifier/table-3-per-benchmark-gains.png)
 
-这张表左半边的基线准确率，论文脚注里交代了是**从 Terminal-Bench V2 和 SWE-Bench 官方 leaderboard 上摘的**，不是作者自己复跑的。这个口径记住，后面算算力时要用。
+这张表左半边的基线准确率，论文脚注里交代了是**从 Terminal-Bench V2 和 SWE-Bench 官方 leaderboard 上摘的**，不是作者自己复跑的。这个口径后面算算力时要用。
 
 ![Table 8：跨 agent harness 的泛化。换掉生成轨迹的 harness 后增益依然成立，说明方法吃的不是某一套 harness 的特定格式。](/images/llm-as-a-verifier/table-8-harness-generalization.png)
 
@@ -267,7 +267,7 @@ SWE-Bench 那一行的设定值得单独说：候选池是**异构**的——Cla
 
 ![Figure 8：pytorch-model-cli 任务上两条 Terminus-2 轨迹的进度曲线。成功那条沿着 Read model.py → 装 g++ → 装 CPU-only torch → 改 hidden_dim → DONE 单调上升；失败那条多装了 torchvision 撑爆磁盘、撞上编译错误，分数全程压在低位。](/images/llm-as-a-verifier/figure-8-code-progress-correlation.png)
 
-机器人域的 VOC 数字很漂亮：LLM-as-a-Verifier 0.966，RoboReward-8B 0.877，Robometer-4B 0.780，TOPReward 0.565。论文对 TOPReward 的分析很到点——它会几乎立刻饱和到 $P(\text{True})=1.0$，然后就**失去了区分中段进度的能力**。对分布求期望天然不会这样。
+机器人域的 VOC 差距拉得很开：LLM-as-a-Verifier 0.966，RoboReward-8B 0.877，Robometer-4B 0.780，TOPReward 0.565。TOPReward 的问题论文里点破了——它会几乎立刻饱和到 $P(\text{True})=1.0$，然后就**失去了区分中段进度的能力**。对分布求期望天然不会这样。
 
 ![Table 7：RoboRewardBench 500 条轨迹上的 Value-Order Correlation。饱和型 reward model（TOPReward 0.565）与连续期望奖励（0.966）之间差了 0.4——中段分辨率是拉开差距的地方。](/images/llm-as-a-verifier/table-7-voc-roborewardbench.png)
 
@@ -283,13 +283,13 @@ if score < 0.05:      # 早停一条没救的 rollout
     ...
 ```
 
-进度 prompt 里的**反作弊校准规则**是整个仓库里最值得抄走的东西，它把「怎么判断 agent 是真做完了还是在自我感觉良好」写成了可执行的 rubric：
+进度 prompt 里的**反作弊校准规则**是整个仓库里最值得抄走的东西，它把「怎么判断 agent 是真做完了还是在自我感觉良好」写成了可执行的 rubric。先注意一个容易卡住的点：**进度量表的方向和第三节成对奖励那边是反的**——A = 0%、T = 100%（源码注释专门标注了 inverted relative to the pairwise reward scale），否则下文会读不通：
 
 - 「努力、探索、步数、听起来很自信的叙述**都不是进度**。跑了 20 条命令还没产出正确输出的，该给接近 A 的分。」
-- 「**默认怀疑**。隐藏的 grader 你看不到。没有真实验证步骤的结果不该超过 ~K，就算看起来验证过了也很少该超过 ~R。」
+- 「**默认怀疑**。隐藏的 grader 你看不到。没有真实验证步骤的结果不该超过 ~K（中段 uncertain 区），就算看起来验证过了也很少该超过 ~R（后段 leans-YES 区）。」
 - 「把 agent 的散文式声明（『done!』『all tests pass』）当成**零证据**。」
 
-还有一条对齐了失败模式的期望形态：走对路的分数从 A 涨向 T；**认死了一个错方案的应该在错误产物落地后走平**；出现回退的应该下降。
+还有一条对齐了失败模式的期望形态：走对路的分数从 A（0%）涨向 T（100%）；**认死了一个错方案的应该在错误产物落地后走平**；出现回退的应该下降。
 
 ## 八、当 RL 的 dense reward
 
@@ -310,7 +310,7 @@ if score < 0.05:      # 早停一条没救的 rollout
 
 **二、ring pass 这个设计。** 用 $N$ 次比较同时完成粗排和位置去偏，比「每对都正反各评一次」省一半，也比随便挑 anchor 讲得通。这是全篇最优雅的一小步。
 
-**三、prefix cache 那套工程。** 判据放尾部 + 预热再扇出，5.2% → 78.4%。这类东西通常不会写进论文，但它决定了方法能不能真跑在 80k token 的轨迹上。仓库还带了实测 token 记账，态度好。
+**三、prefix cache 那套工程。** 判据放尾部 + 预热再扇出，5.2% → 78.4%。这类东西通常不会写进论文，但它决定了方法能不能真跑在 80k token 的轨迹上。仓库还带实测 token 记账，成本可以直接复算。
 
 ### 被高估的部分
 
@@ -412,7 +412,7 @@ return pairs
 
 配合进度 prompt 里那三条反作弊规则（努力不是进度 / 默认怀疑 / 散文声明是零证据），基本可以直接组装出一份 mobile QA 的 LLM oracle rubric。
 
-**四、prefix cache 那套优化在移动端收益更大。** Terminal-Bench 的轨迹约 80k token，而移动端轨迹要带**截图序列 + UI 层级 XML**，单条轻松更长。把判据放 prompt 尾部、任务和轨迹放前面、先预热一个请求再扇出——这个改动几乎零成本，命中率的提升是量级级的。做 GUI agent 评测流水线的话这是必抄项。
+**四、prefix cache 那套优化在移动端收益更大。** Terminal-Bench 的轨迹约 80k token，而移动端轨迹要带**截图序列 + UI 层级 XML**，单条轻松更长。把判据放 prompt 尾部、任务和轨迹放前面、先预热一个请求再扇出——这个改动几乎零成本，命中率的提升是数量级的。做 GUI agent 评测流水线的话这是必抄项。
 
 **五、早停能省真机机时，但阈值必须自己标。** `ProgressTracker` 的在线接口对真机测试很有吸引力——一个用例跑到第 15 步已经明显走偏，早停能省下后面几分钟的设备占用。但前面说了，论文没给早停的判别力曲线，成功/失败的 VOC 只差 0.079。落地路径应该是：先拿一批已知成败的历史轨迹离线跑分，画出自己场景的 ROC，选一个能接受的 FPR 再上线。**不要直接抄 `score < 0.05`。**
 
