@@ -6,28 +6,37 @@
   <div id="cursor-outer"></div>
 </div>
 
-<style is:global>
-  /* 全站替换系统光标为小十字 PNG（热点 3 3），需盖过 global.css 里已有的 cursor: pointer */
+<!-- 光标规则内联进每页 HTML：外链 CSS 有加载窗口期，点击跳页后光标会闪回系统箭头，鼠标动一下才恢复 -->
+<style is:inline>
+  /* 通配 + !important：所有元素任何状态（含脚本 inline 设置的 cursor）一律显示自定义十字，
+     盖过 global.css 里的 cursor: pointer / zoom-in / grab 等系统光标，避免来回切换 */
   html,
-  body,
-  html body input,
-  html body textarea,
-  html body select,
-  html body [contenteditable="true"] {
-    cursor: url("/images/cursor-inner.png") 3 3, default;
+  html body,
+  html body * {
+    cursor: url("/images/cursor-inner.png") 3 3, default !important;
   }
 
+  /* 可交互元素保留 pointer 兜底：PNG 万一加载失败仍能提示可点 */
   html body a,
   html body button,
   html body label,
   html body summary,
   html body [role="button"],
-  html .nav-links a,
-  html .button,
-  html .image-lightbox__button {
-    cursor: url("/images/cursor-inner.png") 3 3, pointer;
+  html body .nav-links a,
+  html body .button,
+  html body .image-lightbox__button {
+    cursor: url("/images/cursor-inner.png") 3 3, pointer !important;
   }
 
+  /* 禁止链接/图片原生拖拽：按住拖动时光标会被浏览器接管成系统箭头 */
+  html body a,
+  html body img {
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+</style>
+
+<style is:global>
   #cursor-container #cursor-outer {
     position: fixed;
     left: 0;
