@@ -1,0 +1,95 @@
+<mxfile host="Electron" modified="2026-08-24T00:00:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="pi-architecture" name="Pi Agent Framework Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Pi Agent Framework 分层解耦架构全景" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#0f172a;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="500" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 4: Interaction & Interface Layer -->
+        <mxCell id="layer4" value="交互与分发层 (Interface &amp; Protocol Layer)" style="swimlane;html=1;startSize=30;horizontal=1;containerType=tree;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=14;fontColor=#334155;rounded=1;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="80" width="1100" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_cli" value="&lt;b&gt;Interactive CLI&lt;/b&gt;&lt;br&gt;终端交互式开发&lt;br&gt;多轮对话与流式输出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=12;" vertex="1" parent="layer4">
+          <mxGeometry x="30" y="45" width="230" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_tui" value="&lt;b&gt;@earendil-works/pi-tui&lt;/b&gt;&lt;br&gt;差异化增量渲染引擎&lt;br&gt;无闪烁终端组件 (Container/List)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=12;" vertex="1" parent="layer4">
+          <mxGeometry x="300" y="45" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_rpc" value="&lt;b&gt;RPC Mode (Headless JSONL)&lt;/b&gt;&lt;br&gt;基于 stdin/stdout 的无头协议&lt;br&gt;无缝嵌入 IDE / Web / CI 流水线" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=12;" vertex="1" parent="layer4">
+          <mxGeometry x="580" y="45" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_subagent" value="&lt;b&gt;Subagents 进程派发&lt;/b&gt;&lt;br&gt;Single / Parallel / Chain&lt;br&gt;独立上下文沙盒运行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0e7ff;strokeColor=#6366f1;fontColor=#1e1b4b;fontSize=12;" vertex="1" parent="layer4">
+          <mxGeometry x="860" y="45" width="210" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 3: Harness & Ecosystem Layer -->
+        <mxCell id="layer3" value="Agent 控制面与 Harness 层 (@earendil-works/pi-coding-agent)" style="swimlane;html=1;startSize=30;horizontal=1;containerType=tree;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=14;fontColor=#334155;rounded=1;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="240" width="1100" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_session" value="&lt;b&gt;SessionManager&lt;/b&gt;&lt;br&gt;树状分支导航 (/tree)&lt;br&gt;分支回滚与会话持久化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;" vertex="1" parent="layer3">
+          <mxGeometry x="30" y="50" width="230" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_compact" value="&lt;b&gt;Compaction 压缩器&lt;/b&gt;&lt;br&gt;滑动窗口剪枝 /reserveTokens&lt;br&gt;结构化摘要 + 文件操作追踪" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;" vertex="1" parent="layer3">
+          <mxGeometry x="300" y="50" width="240" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_ext" value="&lt;b&gt;Extensions 扩展系统&lt;/b&gt;&lt;br&gt;生命周期拦截 / 动态工具注册&lt;br&gt;自定义命令 / UI 交互弹窗" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;" vertex="1" parent="layer3">
+          <mxGeometry x="580" y="50" width="240" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_skills" value="&lt;b&gt;Skills 技能规范&lt;/b&gt;&lt;br&gt;遵循 Agent Skills 标准&lt;br&gt;按需发现 / 渐进加载 / 脚本执行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;" vertex="1" parent="layer3">
+          <mxGeometry x="860" y="50" width="210" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2: Core Runtime & State Machine Layer -->
+        <mxCell id="layer2" value="状态化 Agent 运行时与事件循环 (@earendil-works/pi-agent-core)" style="swimlane;html=1;startSize=30;horizontal=1;containerType=tree;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=14;fontColor=#334155;rounded=1;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="420" width="1100" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_loop" value="&lt;b&gt;Agent Loop 核心循环&lt;/b&gt;&lt;br&gt;Turn-based 状态机&lt;br&gt;Parallel/Sequential 工具调度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#10b981;fontColor=#064e3b;fontSize=12;" vertex="1" parent="layer2">
+          <mxGeometry x="30" y="50" width="230" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_msg" value="&lt;b&gt;消息隔离与上下文转译&lt;/b&gt;&lt;br&gt;AgentMessage[] (UI/业务态)&lt;br&gt;↓ transformContext / convertToLlm ↓&lt;br&gt;Message[] (纯净 LLM 边界)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#10b981;fontColor=#064e3b;fontSize=12;" vertex="1" parent="layer2">
+          <mxGeometry x="300" y="50" width="240" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_stream" value="&lt;b&gt;全链路事件流 (AgentEvent)&lt;/b&gt;&lt;br&gt;agent_start → turn_start →&lt;br&gt;message_update (delta) →&lt;br&gt;tool_execution → agent_end" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#10b981;fontColor=#064e3b;fontSize=12;" vertex="1" parent="layer2">
+          <mxGeometry x="580" y="50" width="240" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_hooks" value="&lt;b&gt;生命周期钩子体系&lt;/b&gt;&lt;br&gt;beforeToolCall (权限/拦截)&lt;br&gt;afterToolCall (修正/裁剪)&lt;br&gt;shouldStopAfterTurn (优雅收尾)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#10b981;fontColor=#064e3b;fontSize=12;" vertex="1" parent="layer2">
+          <mxGeometry x="860" y="50" width="210" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 1: Unified Model Gateway -->
+        <mxCell id="layer1" value="多厂商大模型统一网关 (@earendil-works/pi-ai)" style="swimlane;html=1;startSize=30;horizontal=1;containerType=tree;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=14;fontColor=#334155;rounded=1;arcSize=6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="600" width="1100" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_providers" value="&lt;b&gt;Multi-Provider 统一适配&lt;/b&gt;&lt;br&gt;Anthropic / OpenAI / Gemini&lt;br&gt;Ollama / DeepSeek / Bedrock" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#7f1d1d;fontSize=12;" vertex="1" parent="layer1">
+          <mxGeometry x="30" y="45" width="230" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_tools" value="&lt;b&gt;流式 Tool Calling &amp; Schema&lt;/b&gt;&lt;br&gt;Partial JSON 流式增量解析&lt;br&gt;TypeBox / Zod 运行时校验" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#7f1d1d;fontSize=12;" vertex="1" parent="layer1">
+          <mxGeometry x="300" y="45" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_thinking" value="&lt;b&gt;Thinking / Reasoning 抽象&lt;/b&gt;&lt;br&gt;思考预算控制 (thinkingLevel)&lt;br&gt;思考流提取 (thinking_delta)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#7f1d1d;fontSize=12;" vertex="1" parent="layer1">
+          <mxGeometry x="580" y="45" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_cost" value="&lt;b&gt;Token &amp; Cost 计量治理&lt;/b&gt;&lt;br&gt;精确成本与缓存统计 (cacheRead)&lt;br&gt;会话中无缝模型切换 (Handoff)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#7f1d1d;fontSize=12;" vertex="1" parent="layer1">
+          <mxGeometry x="860" y="45" width="210" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Connecting Edges -->
+        <mxCell id="e1" style="orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;dashed=1;" edge="1" parent="1" source="layer4" target="layer3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;dashed=1;" edge="1" parent="1" source="layer3" target="layer2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=2;dashed=1;" edge="1" parent="1" source="layer2" target="layer1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
