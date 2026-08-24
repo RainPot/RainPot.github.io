@@ -1,0 +1,159 @@
+---
+// Arknights 风格自定义鼠标：PNG 小光标 + 跟随圆环 + 点击波纹（无防抖，连点每次都出波纹）
+---
+
+<div id="cursor-container" aria-hidden="true">
+  <div id="cursor-outer"></div>
+</div>
+
+<style is:global>
+  /* 全站替换系统光标为小十字 PNG（热点 3 3），需盖过 global.css 里已有的 cursor: pointer */
+  html,
+  body,
+  html body input,
+  html body textarea,
+  html body select,
+  html body [contenteditable="true"] {
+    cursor: url("/images/cursor-inner.png") 3 3, default;
+  }
+
+  html body a,
+  html body button,
+  html body label,
+  html body summary,
+  html body [role="button"],
+  html .nav-links a,
+  html .button,
+  html .image-lightbox__button {
+    cursor: url("/images/cursor-inner.png") 3 3, pointer;
+  }
+
+  #cursor-container #cursor-outer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 65536;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-50%, -50%, 0);
+    transition: background-color 0.3s, width 0.3s, height 0.3s;
+  }
+
+  #cursor-container .cursor-effect {
+    position: fixed;
+    z-index: 65535;
+    height: 80px;
+    width: 80px;
+    border: 4px solid #ccc;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0);
+  }
+
+  /* 触屏设备没有鼠标，隐藏圆环与波纹 */
+  @media (hover: none), (pointer: coarse) {
+    #cursor-container {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const container = document.getElementById("cursor-container");
+  const outer = document.getElementById("cursor-outer");
+
+  if (container && outer) {
+    // ---- 圆环跟随：rAF 插值缓动（系数 0.3，与参考站一致） ----
+    let targetX = 0;
+    let targetY = 0;
+    let shown = false;
+    let moving = false;
+
+    const move = () => {
+      const left = parseFloat(outer.style.left || "0");
+      const top = parseFloat(outer.style.top || "0");
+      const dx = 0.3 * (targetX - left);
+      const dy = 0.3 * (targetY - top);
+      outer.style.left = (left + dx).toFixed(2) + "px";
+      outer.style.top = (top + dy).toFixed(2) + "px";
+      if (Math.abs(dx) > 0.2 || Math.abs(dy) > 0.2) {
+        window.requestAnimationFrame(move);
+      } else {
+        moving = false;
+      }
+    };
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        if (!shown) {
+          shown = true;
+          outer.style.left = `${targetX}px`;
+          outer.style.top = `${targetY}px`;
+          outer.style.opacity = "1";
+          return;
+        }
+        if (!moving) {
+          moving = true;
+          window.requestAnimationFrame(move);
+        }
+      },
+      { passive: true }
+    );
+
+    // ---- hover 可交互元素时圆环收缩 ----
+    const ATTENTION = "a, button, input, textarea, select, label, summary, [role='button']";
+
+    const hold = () => {
+      outer.style.height = "24px";
+      outer.style.width = "24px";
+      outer.style.background = "rgba(255, 255, 255, 0.5)";
+    };
+
+    const relax = () => {
+      outer.style.height = "36px";
+      outer.style.width = "36px";
+      outer.style.background = "unset";
+    };
+
+    document.addEventListener("mouseover", (e) => {
+      const target = e.target as Element | null;
+      if (target && typeof target.closest === "function" && target.closest(ATTENTION)) hold();
+    });
+    document.addEventListener("mouseout", (e) => {
+      const target = e.target as Element | null;
+      if (target && typeof target.closest === "function" && target.closest(ATTENTION)) relax();
+    });
+
+    // ---- 点击波纹：不做防抖，每次点击都生成独立波纹 ----
+    window.addEventListener(
+      "click",
+      (e) => {
+        const effect = document.createElement("div");
+        effect.className = "cursor-effect";
+        effect.style.left = `${e.clientX}px`;
+        effect.style.top = `${e.clientY}px`;
+        container.appendChild(effect);
+
+        const animation = effect.animate(
+          [
+            { transform: "translate(-50%, -50%) scale(0)", opacity: "1" },
+            { transform: "translate(-50%, -50%) scale(1)", opacity: "0" },
+          ],
+          { duration: 500, easing: "cubic-bezier(0.22, 0.61, 0.21, 1)" }
+        );
+        animation.onfinish = () => effect.remove();
+        // 兜底清理，避免动画被中断时残留节点
+        window.setTimeout(() => effect.remove(), 800);
+      },
+      { passive: true }
+    );
+  }
+</script>
