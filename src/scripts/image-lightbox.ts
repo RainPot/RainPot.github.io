@@ -11,12 +11,15 @@ import {
   type Transform
 } from "../lib/image-lightbox";
 
-const article = document.querySelector<HTMLElement>(".markdown-content");
-const images = article
-  ? [...article.querySelectorAll<HTMLImageElement>("img")].filter((img) => !img.closest("a"))
-  : [];
+export function initImageLightbox(): (() => void) | void {
+  const article = document.querySelector<HTMLElement>(".markdown-content");
+  const images = article
+    ? [...article.querySelectorAll<HTMLImageElement>("img")].filter((img) => !img.closest("a"))
+    : [];
 
-if (images.length > 0) {
+  if (images.length === 0) {
+    return;
+  }
   const AXIS_SLOP = 10; // 拖出这么多像素才判定方向，之前都还算「点了一下」
   const DISMISS_DISTANCE = 120; // 竖着拖过这个距离松手就关掉
   const SWIPE_DISTANCE = 70; // 横着拖过这个距离松手就翻页
@@ -452,7 +455,7 @@ if (images.length > 0) {
     targets[(current + step + targets.length) % targets.length]!.focus();
   };
 
-  document.addEventListener("keydown", (event) => {
+  const handleKeydown = (event: KeyboardEvent) => {
     if (overlay.hidden) {
       return;
     }
@@ -488,13 +491,17 @@ if (images.length > 0) {
         trapFocus(event);
         break;
     }
-  });
+  };
 
-  window.addEventListener("resize", () => {
+  document.addEventListener("keydown", handleKeydown);
+
+  const handleResize = () => {
     if (!overlay.hidden && !closing) {
       fitToStage();
     }
-  });
+  };
+
+  window.addEventListener("resize", handleResize);
 
   for (const [position, img] of images.entries()) {
     img.classList.add("is-zoomable");
@@ -509,4 +516,23 @@ if (images.length > 0) {
       }
     });
   }
+
+  // ClientRouter SPA 导航会替换正文 DOM：上一篇文章的图片引用全部失效，
+  // overlay 是挂在 body 上的额外节点也要一并拆掉，监听器清干净防止堆积
+  return () => {
+    window.clearTimeout(closeTimer);
+    document.removeEventListener("keydown", handleKeydown);
+    window.removeEventListener("resize", handleResize);
+    document.body.classList.remove("lightbox-open");
+    overlay.remove();
+  };
+}
+
+if (typeof document !== "undefined") {
+  let teardown: (() => void) | null = null;
+
+  document.addEventListener("astro:page-load", () => {
+    teardown?.();
+    teardown = initImageLightbox() ?? null;
+  });
 }

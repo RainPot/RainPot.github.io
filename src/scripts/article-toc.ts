@@ -1,9 +1,12 @@
 import { getActiveHeadingId, getCenteredScrollTop } from "../lib/article-toc";
 
-const tocRoot = document.querySelector<HTMLElement>("[data-article-toc]");
-const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
+export function initArticleToc(): (() => void) | null {
+  const tocRoot = document.querySelector<HTMLElement>("[data-article-toc]");
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]")];
 
-if (tocRoot && tocLinks.length > 0) {
+  if (!tocRoot || tocLinks.length === 0) {
+    return null;
+  }
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const items = tocLinks
     .map((link) => {
@@ -62,4 +65,22 @@ if (tocRoot && tocLinks.length > 0) {
   window.addEventListener("scroll", requestUpdate, { passive: true });
   window.addEventListener("resize", requestUpdate);
   window.addEventListener("hashchange", requestUpdate);
+
+  // ClientRouter SPA 导航会替换正文 DOM，上一页目录的引用全部失效，
+  // 返回 teardown 供下次页面加载前清掉挂在 window 上的监听
+  return () => {
+    cancelAnimationFrame(frameId);
+    window.removeEventListener("scroll", requestUpdate);
+    window.removeEventListener("resize", requestUpdate);
+    window.removeEventListener("hashchange", requestUpdate);
+  };
+}
+
+if (typeof document !== "undefined") {
+  let teardown: (() => void) | null = null;
+
+  document.addEventListener("astro:page-load", () => {
+    teardown?.();
+    teardown = initArticleToc();
+  });
 }

@@ -18,5 +18,6 @@ export function initArticleCardSpotlight(root: ParentNode = document) {
 }
 
 if (typeof document !== "undefined") {
-  initArticleCardSpotlight();
+  // ClientRouter SPA 导航不重跑本模块，改为每次页面加载后初始化
+  document.addEventListener("astro:page-load", () => initArticleCardSpotlight());
 }

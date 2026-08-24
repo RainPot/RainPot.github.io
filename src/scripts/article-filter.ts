@@ -217,5 +217,6 @@ export function initArticleFilter(root: ParentNode = document) {
 }
 
 if (typeof document !== "undefined") {
-  initArticleFilter();
+  // ClientRouter SPA 导航不重跑本模块，改为每次页面加载后初始化
+  document.addEventListener("astro:page-load", () => initArticleFilter());
 }
