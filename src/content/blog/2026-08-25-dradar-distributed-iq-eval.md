@@ -5,7 +5,7 @@ date: "2026-08-25"
 tags: ["AI 评测", "Benchmark", "Codex", "分布式", "DRadar"]
 draft: false
 featured: true
-readingTime: 16
+readingTime: 22
 ---
 
 > 项目：[codex-radar/dradar](https://github.com/codex-radar/dradar)（README 内镜像地址 SecurityMind/dradar）
@@ -111,13 +111,76 @@ print(f"submitted: {ack['submission_id']} (grading happens server-side)")
 
 服务端在干净容器里用任务自带 verifier 重放 patch，得到的 pass/fail 才进入统计。补丁要是被打上 `invalid` 或异常标记，客户端 `status` 里能看到状态，但积分不会到账。
 
+## DeepSWE：一道题怎么跑、怎么判
+
+"服务端重跑 verifier"具体长什么样？DeepSWE 的任务仓库是公开的（[datacurve-ai/deep-swe](https://github.com/datacurve-ai/deep-swe)），113 道题（TypeScript 35、Python 34、Go 34、Rust 5、JavaScript 5，服务端当前在线 112 道），全部取材于活跃开源仓库的真实演进任务。每道题的目录长这样：
+
+```text
+tasks/<task-id>/
+├── task.toml        # 元数据：仓库、base commit、语言、镜像、超时、资源配额
+├── instruction.md   # agent 看到的题面
+├── environment/     # Dockerfile，复现预构建镜像
+├── tests/           # 判分入口、隐藏测试（test.patch）、grader 配置
+└── solution/        # 参考答案：判分时永远不用，只供人工抽查
+```
+
+题面不是"修个 bug"一句话。拿真实任务 `abs-module-cache-flags`（Go，改的是 abs 语言的模块加载）来说，instruction.md 列了一二十条"预期行为"：模块解析的查找顺序、缓存去重规则、要新增的三个 API 的字段和语义、CLI 标志在 script mode 下的行为……判分器验证的只是**这些可观察行为**，README 原话是 "accepts any solution whose observable behavior is correct, regardless of internal symbol names or structure"——不管你内部怎么写，行为对就算过。
+
+task.toml 把执行约束写死了（关键字段摘自真实任务）：
+
+```toml
+[verifier]
+network_mode = "no-network"      # 判分容器同样断网
+environment_mode = "separate"    # 判分环境与 agent 环境分离
+timeout_sec = 1800.0             # 判分限时 30 分钟
+
+[[verifier.collect]]
+command = "cd /app && ... git diff --binary <base_commit> HEAD > /logs/artifacts/model.patch"
+
+[agent]
+network_mode = "no-network"      # agent 全程断网
+timeout_sec = 5400.0             # 90 分钟限时（部分任务 120 分钟）
+[environment]
+docker_image = "public.ecr.aws/.../<task-hash>-v1.1"   # 每题固定预构建镜像
+cpus = 2
+memory_mb = 8192
+```
+
+![DeepSWE 单次判分流水线](/images/dradar-iq-eval/deepswe-grading.png)
+
+*图 3：一次 DeepSWE 判分的完整流水线。左：agent 在一次性容器里自由解题并 commit；中：collect 钩子用 git diff 提取 patch，这是唯一的判分依据；右：patch 在 pristine verifier 容器里重放，注入隐藏测试后按 F2P/P2P 白名单出分。*
+
+**执行是三段式的。** 第一段，agent 容器从固定 base commit 启动，断网、限时内自由工作——读代码、改代码、用仓库自带测试自查，完成后 git commit。第二段，`[[verifier.collect]]` 钩子执行 `git diff --binary base..HEAD`，把 agent 的全部工作浓缩成 model.patch——这正是上一节客户端上传的那个文件。第三段，服务端在一个全新的 pristine 容器里重放这个 patch 判分。
+
+**判分逻辑每道题自带，且完全公开**，在 tests/ 目录的五件套里：Dockerfile、config.json（测试白名单）、grader.py（判分器）、test.patch（隐藏测试补丁）、test.sh（入口脚本）。核心是与 SWE-Bench 一脉相承的 F2P/P2P 双白名单：
+
+```python
+# tests/grader.py —— 每个任务自带
+binary = 1 if (len(f2p) > 0 and ff == 0 and pf == 0) else 0
+```
+
+- **F2P（fail-to-pass）**：修复前失败、修复后必须通过的测试——证明问题真的被解决，上面那道 ABS 任务有 19 条；
+- **P2P（pass-to-pass）**：原本就通过、修复后仍必须通过的测试——证明没把别的东西改坏，同题 3 条；
+- **reward = 1 的条件**：F2P 非空、F2P 全过、P2P 无一失败，缺一条就是 0。
+
+判分时序上有两个关键设计。其一，verifier 容器先在 base 状态应用 model.patch，应用失败直接写 `reward: 0, apply_failed: 1`，连测试套件都不跑。其二，patch 应用成功后，才应用 **test.patch 注入隐藏测试**——这些测试只存在于判分环境，agent 的容器里根本没有，想针对判分测试做特化也无从下手。最后跑完整套件，产出 ctrf 格式的机器可读报告，grader.py 按白名单统计出分。
+
+几个防呆细节值得单独说：
+
+- **worst-status-wins**：同一测试出现在多份报告里时取最差状态（failed > skipped > passed）；
+- **缺席即失败**：白名单里的测试没出现在报告里（没跑到、没产出结果）按 failed 计，堵"让测试跑不起来"这种侧门；
+- **基础设施错误有独立哨兵**：判分器自己崩了会写 `reward.txt = -1`，与"模型没做出来"（reward 0）区分开，不污染统计；
+- **作弊信号只记录不改判**：test.sh 会扫描依赖清单改动、vendored 依赖、模型自加 TestMain 劫持测试二进制这类信号，记录下来供审计，当场不改 reward——"判分"和"反作弊"两层职责分得很清。
+
+除 binary reward 外，reward.json 还带连续部分分（`f2p` / `p2p` / `partial` 通过率）用于诊断展示，**排名口径只认 0/1**。每次判分的完整产物——reward.json、ctrf.json、test-stdout.txt、run.log、reports/——服务端全部存档，失败测试的逐条原因也会回显给志愿者。
+
 ## 分数可信的五层防线
 
 众包评测最怕的是有人伪造提交。这套系统的防线是从环境到人工复核一层层叠的：
 
 ![五层信任防线](/images/dradar-iq-eval/trust-layers.png)
 
-*图 3：五层防线及各自的责任方。前三层主要发生在志愿者机器上，后两层在服务端。*
+*图 4：五层防线及各自的责任方。前三层主要发生在志愿者机器上，后两层在服务端。*
 
 **第一层，执行环境隔离。** 每道题在独立的一次性 Docker 容器里跑，出站网络走一个固定 SHA-256 的 Squid egress 代理，默认只放行白名单域名（`docker/egress-proxy/start-squid.sh` 里就是 `http_access allow authenticated allowed_domains` 加 `deny all`）。Codex 的 web_search、apps、remote plugin 在生成给容器用的配置层直接关闭（`runner.py:94-102` 的 `ALLOWLIST_TOML`），同一行注释说得很坦白：
 
@@ -141,29 +204,51 @@ print(f"submitted: {ack['submission_id']} (grading happens server-side)")
 
 ## IQ 换算：从单格判分到 150 分制
 
-到这里才轮到"IQ"出场。换算规则本身出奇地简单，全部复杂度都花在保证输入数据可信上了。
+单次判分只产出一个 0/1（DeepSWE）或一个 F1（庞贝）。从单次判分到榜单上的 IQ，中间隔着三层聚合，每层的口径都有公开证据。
 
-**两个基准各产出一个百分比：**
+### 第一层：格子聚合——每题最近 3 次有效判分，等权平均
 
-- DeepSWE 频道：格子的判分结果是 pass/fail，按模型档位聚合出**平均通过率**；
-- 庞贝壁画频道：隐藏评分器把模型提交的邻接边与标准邻接图逐条比对，算 TP/FP/FN，得到每题的 Precision/Recall/F1；总榜主分是 **86 道题的 Macro-F1**（每题 F1 等权平均，87 个 RP group 中留 1 个做公开示例，其余 86 个各出 1 道正式题）。绝对坐标、画布尺度、旋转、拼图图像本身都不参与第一版判分——评的是"碎片之间的邻接拓扑"这个纯推理结果。
+同一道题会被多个志愿者反复跑，每次产生一个独立判分样本；但**只有最近 3 次有效判分进入统计，等权平均**。这不是我推断的，服务端公开接口直接给了参数：大表接口返回 `scoring_mode`（DeepSWE 为 `binary-majority`，庞贝为 `continuous-macro`）、`rolling_window: 3`、`reopen_after_hours: 60`（有效判分后格子冷却 60 小时再重开），判分数据接口的 `mode` 字段就叫 `equal_latest_3`，方法字段写得更直白：
 
-**百分比乘以 1.5 得到 IQ**，满分对齐 150：
+```text
+"iq": "equal-weight latest three valid samples per task; pass_rate * 150"
+```
+
+这个设计的两个直接效果：单次运气好坏被摊薄（一题至少 3 票）；模型变化后，旧样本最多再撑 3 次新判分就被顶出窗口，榜单跟得上模型当前状态——这也是"降智预警"（相对 24/48 小时均值持续下滑）能工作的机制基础。聚合策略本身带版本号（`benchmark_policy_version: deepswe-equal-iq-v2`），口径迭代有迹可查。
+
+### 第二层：频道聚合——两种口径，一个公式
+
+- **DeepSWE**：每题通过率（最近 3 次里通过的比例）跨题平均，得到频道平均通过率；
+- **庞贝壁画**：模型看碎片图、输出它判断的无向直接邻接边；隐藏评分器把预测边与标准邻接图逐条比对，算 TP/FP/FN 得出每题 F1；每题最近 3 次等权平均，再跨 86 题平均，得到 Macro-F1（87 个 RP group 留 1 个做公开示例，其余 86 个各出 1 道正式题）。绝对坐标、画布尺度、旋转、拼图图像本身都不参与第一版判分。
+
+两个频道的百分比乘以 150 就是各自的 IQ。用服务端数据接口的真实快照验一遍（2026-08-25），`passed ÷ total × 150` 与公布的 IQ 严丝合缝：
+
+| 档位（gpt-5.6-sol） | DeepSWE passed/total | 工程 IQ | 庞贝 ΣF1/total | 视觉 IQ |
+|---|---|---|---|---|
+| low | 181/336 | 80.8 | 96.60/177 | 81.9 |
+| medium | 199/336 | 88.8 | 125.24/200 | 93.9 |
+| high | 206/336 | 92.0 | 125.07/191 | 98.2 |
+| ultra | — | — | 182.09/258 | 105.9 |
+
+注意 total 的构成：DeepSWE 满值 336 = 112 题 × 3 个采样位，庞贝满值 258 = 86 题 × 3。total 小于满值，说明该档位还有格子没跑满 3 次——**样本量本身就是"这个 IQ 有多可信"的指示器**。这组数据还顺带回答了"effort 有没有用"：庞贝从 low 的 81.9 一路到 ultra 的 105.9（xhigh 有一次小幅回落），推理档位的收益清晰可见。
+
+### 第三层：综合智能——两个维度等权算术平均
+
+主站当前的口径原文："综合智能的 IQ、费用与耗时均取软件工程能力和视觉空间推理两个维度的**等权算术平均值，即两项相加后除以 2**；只纳入两个维度均有有效成绩的同一模型档位。"公式汇总：
 
 ```text
 软件工程能力 IQ = DeepSWE 平均通过率 × 150
 视觉空间推理 IQ = 庞贝壁画 Macro-F1 × 150
-综合智能 = √(工程 IQ × 视觉 IQ)    # 等权几何平均
+综合智能 = ( 工程 IQ + 视觉 IQ ) ÷ 2    # 等权算术平均
 ```
 
-综合智能只纳入**两个维度都有有效成绩的同一模型档位**，缺一个维度就不参与综合排名。几何平均的取法意味着偏科会被惩罚：一个维度接近 0，综合分就被拉下来，这比算术平均更能逼出"水桶型"模型。
+举个例子：某档位 DeepSWE 平均通过率 60%、壁画 Macro-F1 86%，则工程 IQ = 90、视觉 IQ = 129，综合智能 = 109.5。
 
-例子：某档位 DeepSWE 平均通过率 60%、壁画 Macro-F1 86%，则工程 IQ = 90，视觉 IQ = 129，综合智能 = √(90×129) ≈ 107.8。
+一个值得留意的细节：本文写作当天，主站这处文案刚从"等权几何平均"改成"等权算术平均"。几何平均会重罚偏科（一个维度趋零，综合分被拉垮），算术平均则允许强项补弱项——两种口径下排名可能不同。策略带版本号、会迭代，跨时间读榜单时值得对一眼当前口径。
 
-**在 IQ 之上还有两个动态信号：**
+### IQ 之外的同源指标
 
-- **降智预警**：只展示相对 24/48 小时均值持续明显下滑的模型档位。它依赖前文说的滚动窗口通过率——窗口短，才对"模型今天变笨了"这类社区体感敏感。
-- **历史对比**：主站可以按 IQ、费用、耗时、agent steps、cache 命中率、总 tokens 对多个模型档位做历史曲线对比。
+同一份 latest-3 采样还产出效能侧指标：API 等价均价（DeepSeek 按峰/谷价段折算，Codex 订阅按实际折算成本）、平均耗时、agent steps、cache 命中率、总 tokens，主站可按这些维度做历史曲线对比，还有一个把均价和耗时合成指数的"综合成本 × IQ"效能排行。指标口径同样写在接口的 `method` 字段里，公开可查。
 
 ## 积分体系：和 IQ 分开的另一本账
 
@@ -189,7 +274,8 @@ print(f"submitted: {ack['submission_id']} (grading happens server-side)")
 
 - 志愿者体验链路长（登录、体检、领取、跑题、等判分），20 分钟未启动就放回格子这种规则本质上是在用租约压力换大表数据的实时性；
 - 判分、积分、榜单逻辑全部在服务端闭源，开源仓库只能验证"客户端没有作弊能力"，没法验证"服务端没有暗箱"——它用冻结-复核-奉还的纠错机制替代了完全透明；
-- IQ 换算系数 ×1.5 是对齐"150 满分"的人为约定，跨基准的可比性依赖 Macro-F1 和通过率这两个口径各自的稳定性；壁画频道只有 86 题，单题噪声对 F1 的影响不小；
+- IQ 换算系数 ×150 是对齐满分的人为约定，跨基准可比性依赖 Macro-F1 和通过率两个口径各自的稳定性；庞贝只有 86 题、每题仅取最近 3 个有效样本，单题噪声对 F1 的影响不小；DeepSWE 的 binary 判分还丢弃了 partial 部分分携带的信息量——"修对一半"和"完全没修"同记 0；
+- 聚合策略在演进（几何平均刚改成算术平均），跨时间段比较 IQ 时要留意 `benchmark_policy_version`；
 - DeepSWE 成绩天然绑定 harness 版本（Codex CLI、Pier、Docker 镜像都在变），所以才有强制验版、任务哈希校验这些"防漂移"措施，这也让跨时间段比较需要多看一眼版本标记。
 
 ## 可以借鉴的做法
@@ -197,26 +283,29 @@ print(f"submitted: {ack['submission_id']} (grading happens server-side)")
 如果你想自己搭一套可信的众包评测，这套系统里可以直接搬走的点：
 
 1. **判分权和执行权分离**：执行端 `--disable-verification`，证据（patch/轨迹/运行记录）和结论分开传，结论只能由判分端产出；
-2. **成本也不让客户端自报**：传 token 桶原始计数，价格表留在服务端复算；
-3. **上传先登记内容清单**：所有产物的 SHA-256 先建 intent，防重放也防半截上传污染数据；
-4. **任务内容哈希只覆盖该覆盖的部分**：题面和环境要一致，答案和测试本来就不该进哈希；
-5. **用租约时间差、轨迹审计这类旁路信号做冻结依据**，先冻结再复核，比先计分再追回对榜单的污染小得多；
-6. **滚动窗口通过率**比终身通过率更适合做"降智预警"这类时效性信号。
+2. **F2P/P2P 双白名单 + 隐藏测试**：判分测试只存在于判分环境，agent 看不到；"证明解决了"（F2P）和"证明没改坏"（P2P）分开列；缺席的白名单测试按失败计；
+3. **每题多次采样 + 滚动窗口**：单次判分噪声大，最近 N 次等权平均既摊薄运气，又让指标对模型变化保持敏感；
+4. **成本也不让客户端自报**：传 token 桶原始计数，价格表留在服务端复算；
+5. **上传先登记内容清单**：所有产物的 SHA-256 先建 intent，防重放也防半截上传污染数据；
+6. **任务内容哈希只覆盖该覆盖的部分**：题面和环境要一致，答案和测试本来就不该进哈希；
+7. **用租约时间差、轨迹审计这类旁路信号做冻结依据**，先冻结再复核，比先计分再追回对榜单的污染小得多；
+8. **判分与反作弊职责分离**：作弊信号只记录不改判，交给独立审计流程处理，判分器保持简单可审计。
 
 ## 源码阅读索引
 
-按这个顺序读客户端仓库最省力：
+按这个顺序读最省力：
 
-1. `README.md` —— 产品规则的唯一权威说明（格子状态、倍率、积分、错误码都在这）；
+1. `README.md`（dradar）—— 产品规则的唯一权威说明（格子状态、倍率、积分、错误码都在这）；
 2. `src/dradar/cells.py` —— 格子表结构与筛选逻辑（约 200 行）；
 3. `src/dradar/api_client.py` —— 全部服务端端点，claim/checkout/submissions/intents；
 4. `src/dradar/runner.py` —— `build_pier_command`（L945）与 `run_trial`（L3040），看 `--disable-verification` 和各 harness 分支；
 5. `src/dradar/runloop.py` —— `_run_and_submit`（L2136）与 `_upload_trial`（L1423），看脱敏、intent、幂等补传；
 6. `src/dradar/scrub.py` + `artifact_staging.py` + `submission_intent.py` —— 上传可信链三件套；
 7. `src/dradar/pier_checkpoint.py` —— 30 秒 checkpoint 与恢复校验；
-8. `docker/egress-proxy/start-squid.sh` —— 网络白名单的实际形态。
+8. `docker/egress-proxy/start-squid.sh` —— 网络白名单的实际形态；
+9. deep-swe 任务仓库的 `tasks/<task-id>/tests/` —— `grader.py`、`config.json`、`test.sh`，判分逻辑全公开。
 
-IQ 换算、积分倍率、降智预警的实现不在开源仓库内，规则以主站 FAQ 和榜单页说明为准。
+服务端的 IQ 聚合、积分倍率、降智预警实现不在开源仓库内，但关键口径可以从公开接口直接读到：大表 `https://api.codexradar.com/api/v1/table`（scoring_mode、rolling_window、策略版本），判分数据 `https://api.codexradar.com/api/v1/intelligence-efficiency`（mode、method、逐档位 IQ 与样本数）。
 
 ## 参考链接
 

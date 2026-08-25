@@ -77,7 +77,7 @@
         <mxCell id="bPompeii" value="庞贝壁画 · 视觉空间推理&#xa;预测边 vs 标准邻接图 → TP / FP / FN&#xa;86 题 Macro-F1 × 1.5&#xa;= 视觉空间推理 IQ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
           <mxGeometry x="380" y="50" width="310" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="bGeo" value="等权几何平均&#xa;√( 工程 IQ × 视觉 IQ )&#xa;仅双维度均有成绩才纳入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
+        <mxCell id="bGeo" value="等权算术平均&#xa;( 工程 IQ + 视觉 IQ ) ÷ 2&#xa;仅双维度均有成绩才纳入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
           <mxGeometry x="730" y="50" width="260" height="110" as="geometry" />
         </mxCell>
         <mxCell id="bIq" value="综合智能分&#xa;满分对齐 150（100% = 150）&#xa;雷达天梯发布" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="laneIq">
