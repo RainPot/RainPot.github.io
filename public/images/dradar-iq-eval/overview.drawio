@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="overview">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="分布式雷达评测体系：客户端跑题取证，服务端独立判分" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="340" y="16" width="720" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="laneClient" value="志愿者机器（订阅凭证不出本机）" style="swimlane;startSize=30;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="620" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="cCli" value="dradar CLI&#xa;cells / go / resume / status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="30" y="50" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cClaim" value="领取与心跳&#xa;claim / checkout / heartbeat&#xa;租约代际 resume_generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="320" y="50" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cPier" value="Pier + Docker 一次性容器&#xa;egress 白名单隔离网络&#xa;禁用 web_search / apps" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="30" y="170" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cModel" value="本机已登录模型订阅&#xa;Codex / Claude / Kimi / Grok / ZCode&#xa;OAuth 与 API key 不上传" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="320" y="170" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cArt" value="任务产物&#xa;model.patch + trajectory.json + result.json&#xa;--disable-verification：本地不判分" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="30" y="310" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cScrub" value="上传前处理&#xa;scrub 两道脱敏 · patch 双副本 SHA-256&#xa;upload intent 内容绑定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="laneClient">
+          <mxGeometry x="320" y="310" width="270" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cPending" value="待传账本 pending_uploads.json&#xa;断网恢复后自动补传&#xa;服务端幂等接收" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="laneClient">
+          <mxGeometry x="30" y="440" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cCkpt" value="checkpoint 每 30 秒&#xa;工作区 diff + session + usage&#xa;中断可 resume 续跑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontColor=#333333;" vertex="1" parent="laneClient">
+          <mxGeometry x="320" y="440" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="laneServer" value="DRadar 服务端（判分、积分与榜单权威）" style="swimlane;startSize=30;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="70" width="620" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="sTable" value="格子大表 · 推荐 · 原子领取裁决&#xa;格子 = 任务 × 模型 × 推理档位&#xa;租约 / 并发上限 / 409 冲突码" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="laneServer">
+          <mxGeometry x="30" y="50" width="560" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="sVerifier" value="独立 verifier 重跑判分&#xa;干净容器重放 patch&#xa;客户端自报结果不算数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="laneServer">
+          <mxGeometry x="30" y="170" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="sAudit" value="反作弊与审计&#xa;租约时间差 · 轨迹审计&#xa;可疑先冻结 → 人工复核" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="laneServer">
+          <mxGeometry x="330" y="170" width="260" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="sPoints" value="积分与成本折算&#xa;token 账本计价 · 动态倍率&#xa;降智预警：相对 24/48h 均值持续下滑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="laneServer">
+          <mxGeometry x="30" y="310" width="560" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sPublish" value="有效成绩入库&#xa;滚动窗口通过率 / Macro-F1 更新" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="laneServer">
+          <mxGeometry x="30" y="440" width="560" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eQuery" value="查询 / 领取 / 心跳上报" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="cClaim" target="sTable">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eBack" value="格子快照 · 判分状态回查" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="sTable" target="cClaim">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eUpload" value="上传 patch + 轨迹 + result" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cScrub" target="sVerifier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eGrade" value="有效判分计分" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sVerifier" target="sPoints">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ePub" value="成绩与成本数据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sPoints" target="sPublish">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="laneIq" value="IQ 换算体系（主站 codexradar.com 发布）" style="swimlane;startSize=30;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="1340" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="bSwe" value="DeepSWE · 软件工程&#xa;verifier 重跑 patch → pass / fail&#xa;平均通过率 × 1.5&#xa;= 软件工程能力 IQ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
+          <mxGeometry x="30" y="50" width="310" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="bPompeii" value="庞贝壁画 · 视觉空间推理&#xa;预测边 vs 标准邻接图 → TP / FP / FN&#xa;86 题 Macro-F1 × 1.5&#xa;= 视觉空间推理 IQ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
+          <mxGeometry x="380" y="50" width="310" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="bGeo" value="等权几何平均&#xa;√( 工程 IQ × 视觉 IQ )&#xa;仅双维度均有成绩才纳入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;" vertex="1" parent="laneIq">
+          <mxGeometry x="730" y="50" width="260" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="bIq" value="综合智能分&#xa;满分对齐 150（100% = 150）&#xa;雷达天梯发布" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="laneIq">
+          <mxGeometry x="1030" y="50" width="280" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="eB1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="laneIq" source="bSwe" target="bGeo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eB2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="laneIq" source="bPompeii" target="bGeo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eB3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="laneIq" source="bGeo" target="bIq">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFeed" value="有效成绩进入换算" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sPublish" target="bIq">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1070" y="676" />
+              <mxPoint x="1170" y="676" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="trust-layers">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="760" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="分数可信的五层防线：从执行环境到人工复核" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="220" y="16" width="800" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="l1" value="① 执行环境隔离&#xa;每道题独立一次性 Docker 容器，测完即销毁；egress 代理只放行白名单域名；web_search / apps 在配置层关闭" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="140" y="80" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l2" value="② 客户端不判分&#xa;Pier 以 --disable-verification 运行，本地只产出 patch / trajectory / result；cost_usd 故意置空，价格表只在服务端" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="140" y="200" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" value="③ 上传链路可信&#xa;patch 双副本 SHA-256 清单；scrub 两道敏感信息扫描（无法安全脱敏直接拒传）；upload intent 内容绑定防重放；服务端幂等接收" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="140" y="320" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l4" value="④ 服务端独立重判&#xa;任务自带 verifier 在干净容器里重放 patch，pass / fail 只认服务端结果；任务内容哈希不一致默认拒绝开跑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="140" y="440" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="l5" value="⑤ 审计与复核兜底&#xa;租约时间差校验、轨迹审计（ATIF / bundle）；可疑提交先冻结：积分暂扣、不上榜；人工复核后误伤原数奉还、坐实清零封号" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;align=left;spacingLeft=14;" vertex="1" parent="1">
+          <mxGeometry x="140" y="560" width="760" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="side1" value="客户端负责" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="940" y="105" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="side2" value="客户端负责" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="940" y="225" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="side3" value="客户端 + 服务端" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="940" y="345" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="side4" value="服务端负责" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="940" y="465" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="side5" value="服务端负责" style="text;html=1;fontSize=12;fontStyle=1;align=left;verticalAlign=middle;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="940" y="585" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="结论：客户端产出的只是“证据”，分数只能由服务端独立产生。" style="text;html=1;fontSize=13;fontStyle=2;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="220" y="680" width="800" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
