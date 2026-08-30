@@ -84,6 +84,11 @@
     let moving = false;
 
     const move = () => {
+      // 圆环已隐藏（切屏/失焦）时终止残留循环，避免对着过期坐标继续插值
+      if (!shown) {
+        moving = false;
+        return;
+      }
       const left = parseFloat(outer.style.left || "0");
       const top = parseFloat(outer.style.top || "0");
       const dx = 0.3 * (targetX - left);
@@ -97,16 +102,29 @@
       }
     };
 
+    const showAt = (x: number, y: number) => {
+      shown = true;
+      targetX = x;
+      targetY = y;
+      outer.style.left = `${x}px`;
+      outer.style.top = `${y}px`;
+      outer.style.opacity = "1";
+    };
+
+    const hide = () => {
+      shown = false;
+      outer.style.opacity = "0";
+    };
+
     window.addEventListener(
       "mousemove",
       (e) => {
         targetX = e.clientX;
         targetY = e.clientY;
         if (!shown) {
-          shown = true;
-          outer.style.left = `${targetX}px`;
-          outer.style.top = `${targetY}px`;
-          outer.style.opacity = "1";
+          // 重新进入页面时原地吸附到指针，不做缓动：
+          // 切屏回来圆环若从旧位置滑过来，会先和光标错位一段
+          showAt(targetX, targetY);
           return;
         }
         if (!moving) {
@@ -116,6 +134,24 @@
       },
       { passive: true }
     );
+
+    // 切回窗口后可能不挪鼠标就点击：mousedown 时也吸附一次，避免波纹在光标处而圆环不在
+    window.addEventListener(
+      "mousedown",
+      (e) => {
+        if (!shown) showAt(e.clientX, e.clientY);
+      },
+      { passive: true }
+    );
+
+    // ---- 切屏/最小化/切标签页时指针已不在页面上：mousemove 停发、rAF 暂停，
+    //      圆环会冻结在半路，切回来就与光标错位。这里直接隐藏，下次 mousemove
+    //      走 !shown 分支原地吸附 ----
+    document.documentElement.addEventListener("mouseleave", hide);
+    window.addEventListener("blur", hide);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) hide();
+    });
 
     // ---- hover 可交互元素时圆环收缩 ----
     const ATTENTION = "a, button, input, textarea, select, label, summary, [role='button']";
