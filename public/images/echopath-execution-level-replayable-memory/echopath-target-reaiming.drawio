@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="EchoPath 目标重瞄准">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="IBTR / IMTR：把旧坐标降级成视觉证据" style="text;html=1;align=left;verticalAlign=middle;fontSize=38;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="1500" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="目标不是重新猜“下一步该点什么”，而是判断“这次成功点过的目标能否在当前截图中被安全重定位”。" style="text;html=1;align=left;verticalAlign=middle;fontSize=24;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="1500" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="记忆里的视觉证据&#xa;target crop&#xa;source frame + click ratio" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=28;fontStyle=1;fontColor=#432d52;" vertex="1" parent="1">
+          <mxGeometry x="60" y="260" width="320" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="当前全屏截图&#xa;current observation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=30;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="560" width="320" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="多尺度滑窗匹配&#xa;scale 0.5 … 2.0&#xa;相关性 / 差异度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=30;fontStyle=1;fontColor=#5b3a00;" vertex="1" parent="1">
+          <mxGeometry x="520" y="330" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="Best + Second&#xa;最高分与次高非重叠候选&#xa;Δγ = γ* − γ(2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=28;fontStyle=1;fontColor=#4b3b00;" vertex="1" parent="1">
+          <mxGeometry x="950" y="330" width="320" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="绝对分数达标&#xa;且 margin 足够？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=30;fontStyle=1;fontColor=#4b3b00;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="345" width="260" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="接受&#xa;重算当前屏幕坐标&#xa;再发出 pointer action" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=28;fontStyle=1;fontColor=#234b25;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="160" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="拒绝&#xa;不发出 pointer action&#xa;转 repair / fresh plan" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=28;fontStyle=1;fontColor=#6b1c18;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="650" width="300" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="论文配置：η = 0.78，η_margin = 0.02，scale ∈ [0.5, 2.0]，步长 0.05。重复或近似控件会因 margin 不足而被拒绝。" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9ca3af;fontSize=24;fontColor=#374151;" vertex="1" parent="1">
+          <mxGeometry x="500" y="790" width="830" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="视觉证据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#9673a6;" edge="1" parent="1" source="4" target="6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="13" value="当前屏幕" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#666666;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="630" />
+              <mxPoint x="430" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="14" value="候选分数" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#d79b00;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="判断" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#d6b656;" edge="1" parent="1" source="7" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="是" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;strokeColor=#82b366;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="8" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=24;strokeColor=#b85450;dashed=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="8" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

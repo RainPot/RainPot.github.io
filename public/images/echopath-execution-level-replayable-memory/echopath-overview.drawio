@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="EchoPath 总览">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="EchoPath：把验证过的 GUI 执行变成可调用记忆" style="text;html=1;align=left;verticalAlign=middle;fontSize=38;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="1500" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="首轮负责探索与取证，复用轮只在当前状态兼容时绕过重复规划和 grounding。" style="text;html=1;align=left;verticalAlign=middle;fontSize=24;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="1500" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="首轮：构建记忆" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf2ff;strokeColor=#6c8ebf;fontSize=24;fontStyle=1;fontColor=#1f3b66;" vertex="1" parent="1">
+          <mxGeometry x="50" y="170" width="1500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="任务&#xa;目标" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=30;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="260" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="普通 GUI&#xa;规划" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=30;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="360" y="260" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="ActionLens&#xa;执行并取证" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=30;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="660" y="260" width="270" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="外部工件&#xa;校验通过？" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=30;fontStyle=1;fontColor=#4b3b00;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="260" width="250" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="Memory Repository&#xa;active episode" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=28;fontStyle=1;fontColor=#234b25;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="240" width="230" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="复用：先检索，再决定能不能重放" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eefbf0;strokeColor=#82b366;fontSize=24;fontStyle=1;fontColor=#235b2b;" vertex="1" parent="1">
+          <mxGeometry x="50" y="500" width="1500" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="新任务&#xa;请求" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=30;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="600" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="Intent retrieval&#xa;+ compatibility gate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=28;fontStyle=1;fontColor=#4b3b00;" vertex="1" parent="1">
+          <mxGeometry x="360" y="600" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="参数重绑定&#xa;+ 视觉重瞄准" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=30;fontStyle=1;fontColor=#5b3a00;" vertex="1" parent="1">
+          <mxGeometry x="700" y="600" width="270" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="ActionLens&#xa;确定性执行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=30;fontStyle=1;fontColor=#1f2937;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="600" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="目标工件&#xa;再次校验" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=30;fontStyle=1;fontColor=#234b25;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="600" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="重放被拒绝：&#xa;局部 grounding repair 或普通规划" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=28;fontStyle=1;fontColor=#6b1c18;" vertex="1" parent="1">
+          <mxGeometry x="700" y="800" width="430" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="蓝：执行模块　黄：检索/门控　绿：验证与可复用　红：安全回退" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9ca3af;fontSize=22;fontColor=#374151;" vertex="1" parent="1">
+          <mxGeometry x="60" y="970" width="780" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="18" value="任务进入" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#6b7280;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="动作与证据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#6b7280;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="首轮结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#6b7280;" edge="1" parent="1" source="7" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="通过才入库" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#82b366;" edge="1" parent="1" source="8" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="新任务" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#6b7280;" edge="1" parent="1" source="11" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="匹配 active memory" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#d6b656;" edge="1" parent="1" source="9" target="12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1590" y="440" />
+              <mxPoint x="1590" y="580" />
+              <mxPoint x="500" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="24" value="检索通过" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#d6b656;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="绑定后的动作" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#d79b00;" edge="1" parent="1" source="13" target="14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="最终结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#82b366;" edge="1" parent="1" source="14" target="15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="状态不兼容 / 目标歧义" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;fontSize=22;strokeColor=#b85450;dashed=1;" edge="1" parent="1" source="13" target="16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
