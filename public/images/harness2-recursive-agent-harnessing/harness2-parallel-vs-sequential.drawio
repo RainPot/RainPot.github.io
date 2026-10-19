@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="同样的预算：并行扩宽，串行加深">
+    <mxGraphModel dx="1000" dy="850" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="850" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="同样的预算：并行扩宽，串行加深" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=34;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="900" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="以 k = 2 为例，两种模式各计 8 次执行、6 个改进阶段" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="90" width="900" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="left-title" value="parallel / agg" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=29;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="160" width="420" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="right-title" value="sequential / seq" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=29;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="520" y="160" width="420" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="pbase" value="&lt;b&gt;2 次基础执行&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;共同的 H₀，获得参考证据&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="420" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="pprobe" value="&lt;b&gt;4 个候选，各试跑 1 次&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;INV × 2 + DOM × 2&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="420" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pfinal" value="&lt;b&gt;2 个独立组合，各执行 1 次&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;agg1 / agg2 都读取完整候选池&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="620" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="sbase" value="&lt;b&gt;2 次基础执行&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;共同的 H₀，获得参考证据&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="240" width="420" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sfirst" value="&lt;b&gt;第 1 轮 → c1&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;INV / DOM 试跑后组合并执行&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="420" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ssecond" value="&lt;b&gt;第 2 轮 → c2&lt;/b&gt;&lt;div style=&quot;font-size:22px;margin-top:9px;line-height:1.45&quot;&gt;从 c1 继续，保留此前执行证据&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="620" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="pbase" target="pprobe">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="pprobe" target="pfinal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sbase" target="sfirst">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="sfirst" target="ssecond">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" value="k &gt; 1：parallel 在 agg1、agg2 中选择；sequential 在 c1、c2 中选择" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="780" width="900" height="45" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
