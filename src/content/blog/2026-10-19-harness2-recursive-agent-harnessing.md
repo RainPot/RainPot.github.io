@@ -8,15 +8,17 @@ featured: false
 readingTime: 25
 ---
 
-同一个模型，换一份系统提示词、一个工具使用流程，或者一段数据处理脚本，任务结果就可能不同。Agent 的工程实践已经反复暴露出这个问题：模型能力只解释了一部分表现，围绕模型组织起来的执行配置，同样决定它能把事情做到什么程度。
+同一个模型，换一份系统提示词、一个工具使用流程，或者一段数据处理脚本，任务结果就可能不同。在 Agent 工程中，这种差异反复出现：模型能力只解释了一部分表现，围绕模型组织的执行配置，同样决定它能把事情做到什么程度。
 
 这层配置通常被称为 **harness**，包括 prompt、工具指导、记忆、skills、子代理、脚本和运行时插件。人工维护时，工程师会读失败日志、提出修改、重新执行、确认变化，再决定是否保留。任务一旦跨越不同领域，这套工作就很难靠一份固定模板覆盖。
 
-Google Research 开源的 [harness2][repo] 把这个过程组织成了一个可执行框架：**保持模型权重不变，在当前任务上提出 harness 修改、试跑并比较行为，再把有证据支持的修改经验留给后续任务。** 项目名中的平方，对应两个相连的改进层次：任务内改进执行配置，任务间积累“怎样改配置”的经验。
+Google Research 开源的 [harness2][repo] 把这套改进过程做成了可执行框架：**保持模型权重不变，在当前任务上提出 harness 修改、试跑并比较行为，再把有证据支持的修改经验留给后续任务。** 项目名中的平方，对应两个相连的改进层次：任务内改进执行配置，任务间积累“怎样改配置”的经验。
 
-![Harness² 的两层递归：当前任务从公共基础 harness 出发，经提出修改、同任务试跑和组合后交付；反思把完整配置和经验存入库，指导后续任务的修改](/images/harness2-recursive-agent-harnessing/harness2-two-level-recursion.drawio.png)
+![作者仓库中的 Harness² 总流程原图：蓝色区域依次执行基础任务、提出通用与领域修改、试跑候选和组合配置，右侧反思过程更新后续任务使用的改进经验](/images/harness2-recursive-agent-harnessing/original/harness2_pipeline.png)
 
-*图 1：左侧回答这次任务该怎样执行，右侧回答下一次该怎样修改执行配置。每个新任务仍从公共基础 H₀ 开始。*
+*图 1：作者仓库的总流程原图。来源：[assets/harness2_pipeline.png][repo-pipeline]。原图较宽，可点击放大。*
+
+蓝色区域是当前任务的改进过程：先运行基础 harness，再分别提出通用与领域修改，试跑后交给 Composer 组合。右侧的 Experience Reflector 在任务结束后提炼经验，更新供下一项任务使用的 improvement harness。底部返回下一项任务的箭头表示经验继续发挥作用；结合源码看，新任务仍从公共基础 H₀ 开始，不会直接继承上一个任务的全部执行配置。
 
 下文基于 `google-research/harness2` 的 [`1cfe254e8d25`][commit]，对应 Python 包版本 `0.1.0`，代码核查时间为 **2026 年 10 月 19 日**。论文是 [Harness²: Recursive Agent Harnessing for an Open World][paper]。本文分别标明源码行为、本地验证与作者实验；本地运行覆盖无模型 demo 和工作流回归测试，没有复跑三套模型 benchmark。
 
@@ -38,11 +40,17 @@ total = sum((amount for amount in amounts if amount > 0), Decimal(0))
 
 它给出的结果是 `105.25`，而任务需要的总额是 `85.15`。demo 的编辑器会移除正数过滤条件，把修改后的脚本放回 harness，再通过真正的 Python 子进程执行。随后，系统保存参考轨迹、修改差异、试跑产物和采用结果。
 
-这里可以看到项目的完整工作单位：**修改的是会影响下一次执行的文件，观察的是这些文件改变以后出现的实际行为。** 一句“计算时注意负数”的反思，只有落实到配置或脚本并经过试跑，才有可比较的后果。
+这个例子展示了一次完整的改进：**修改的是会影响下一次执行的文件，观察的是这些文件改变以后出现的实际行为。** 一句“计算时注意负数”的反思，只有落实到配置或脚本并经过试跑，才有可比较的后果。
 
-这个 demo 还有一条必须保留的边界：`DemoProposer` 是预先写好的确定性编辑器，选择器也会直接按源账本计算总额。它能证明调度、执行、取证、采用和经验存储这些接口协同工作，不能证明模型能独立发现这处错误，更不能代表模型 benchmark 的收益。
+这个 demo 有一个限制：`DemoProposer` 是预先写好的确定性编辑器，选择器也会直接按源账本计算总额。它能证明调度、执行、取证、采用和经验存储这些接口协同工作，不能证明模型能独立发现这处错误，更不能代表模型 benchmark 的收益。
 
 ## 2. 八类组件规定了 Agent 可以改什么
+
+![作者仓库的八类组件原图：系统提示词、规则、记忆和 skills 影响上下文，工具指导与脚本影响工具接口，子代理负责委派，插件在工具调用过程中介入](/images/harness2-recursive-agent-harnessing/original/components.png)
+
+*图 2：作者按运行时职责组织的八类组件。来源：[assets/components.png][repo-components]。*
+
+这张图按组件介入运行的位置分组：左侧的 Context construction 决定模型读到什么，右上方的 Tool interface 与 Middleware 影响工具调用和结果返回，右下方的 Orchestration 管理子代理委派。组件放在哪里，会影响它何时生效、占用多少上下文，以及能干预执行的哪一步。图中路径是示意，当前版本的具体目录以下表和源码为准。
 
 Harness² 把可编辑对象收敛成文件树。当前 OpenCode 适配的主要映射如下，定义见 [`OPENCODE_SURFACE`][oc-surface] 与 [组件编辑协议][surface-prompts]：
 
@@ -91,11 +99,11 @@ CLI 选择任务与预算
 
 `BenchmarkAdapter` 的 [协议定义][adapter] 把执行与评分拆成了不同方法：`execute()` 返回运行目录，`trajectory()` 和 `deliverable_text()` 提供可读证据，`score()` 留给之后的评测调用。
 
-这种划分也意味着接入新场景需要实际工程工作。任务从哪里加载、候选怎样进入隔离的环境、怎样判断交付物存在、日志怎样转成统一轨迹，都必须由适配器实现。所谓即插即用，是相对于这些接口已经具备的执行系统而言。
+接入新场景时，仍要实现这些接口。任务从哪里加载、候选怎样进入隔离的环境、怎样判断交付物存在、日志怎样转成统一轨迹，都必须由适配器实现。项目所说的即插即用，前提是执行系统已经具备这些接口。
 
 ## 4. Propose：每处修改都要指出它针对哪段行为
 
-一个任务先在公共基础 harness 下获得参考执行。参考执行提供的是“当前配置怎样工作”的记录，包含动作、观察、错误和交付物；它本身没有正确答案的地位。
+一个任务先在公共基础 harness 下获得参考执行。参考执行提供的是“当前配置怎样工作”的记录，包含动作、观察、错误和交付物；这些记录不能直接当作正确答案。
 
 之后，编辑器分别从两个视角提出候选：
 
@@ -130,13 +138,13 @@ context/
 
 编辑器收到的是一份简短 mission，通过工具按需读取文件。这样避免在单次 prompt 中塞入所有历史，但不意味着每个工具返回都无限长：适配器仍然有观察截断和轨迹呈现的配置。
 
-产物的呈现也存在刻意的限制。`proposer_deliverables="names"` 时，编辑器只收到产物清单；代码解释了原因：某些 benchmark 的试验目录把交付物与 grader 输出放在一起，直接读取整个目录会把评分字段一并带进来。哪些证据能提供给哪个角色，需要在数据边界处处理。
+产物的呈现范围也有限制。`proposer_deliverables="names"` 时，编辑器只收到产物清单；代码解释了原因：某些 benchmark 的试验目录把交付物与 grader 输出放在一起，直接读取整个目录会把评分字段一并带进来。哪些证据能提供给哪个角色，需要在数据边界处处理。
 
 ## 5. Probe 与 Compose：用行为差异约束下一次修改
 
 提出候选以后，框架把候选安装进执行环境，在同一个任务上真正运行。随后，组合器一起读取基础执行、候选文件、差异和对应轨迹。
 
-这一过程的价值，可以用账本例子说明：
+账本例子能说明这一步的价值：
 
 | 证据 | 能支持的判断 |
 | --- | --- |
@@ -147,17 +155,17 @@ context/
 
 相比“候选回答看起来更专业”，这组证据更接近一条可检查的解释：文件改了什么，执行怎样变化，变化为什么符合任务要求。
 
-但它仍然不能自动完成因果证明。候选执行有随机性，也可能一次改动多个组件；基础和候选通常还共享模型偏差。[组合提示词][compose] 中有一句明确提醒：
+这些证据仍不能自动证明因果关系。候选执行有随机性，也可能一次改动多个组件；基础和候选通常还共享模型偏差。[组合提示词][compose] 中有一句明确提醒：
 
 > Agreement is support, not independent proof.
 
-一致可以提供支持，但不能当作独立证明。组合器需要检查具体发生变化的轨迹位置，并同等考虑退化风险。某项改动如果对应过没有交付物的执行，提示词要求明确记录这个事实。
+一致可以提供支持，但不能当作独立证明。组合器需要检查具体发生变化的轨迹位置，并同等考虑退化风险。如果某项改动曾有一次试跑没有交付物，提示词要求明确记录这个事实。
 
 Compose 可以合并多个候选中的局部修改，可以修正冲突，可以采用一份候选，也可以保留当前 harness。**组合完成后还会执行一次**，因此最终进入候选池的是有对应执行结果的组合配置。
 
-### 能改文件，还需要能通过运行接口的校验
+### 配置进入执行前，还要通过接口校验
 
-生成配置与执行配置之间，有一层确定性检查。[`_run_stage()`][stage] 与 [`tree.validate()`][validate] 会处理：
+配置生成后、执行前，框架会做确定性检查。[`_run_stage()`][stage] 与 [`tree.validate()`][validate] 会处理：
 
 - 文件路径是否位于允许的编辑范围，是否存在路径逃逸；
 - 常驻文本是否超出字符预算；
@@ -168,15 +176,17 @@ Compose 可以合并多个候选中的局部修改，可以修正冲突，可以
 
 还有一个容易遗漏的细节：写了 skill 文件，并不等于 Agent 会调用它。`autotrigger()` 会尝试在常驻文本中补充命名该 skill 的触发规则；如果字符预算不够，补充会被跳过，之后的校验仍可能拒绝这个无法被触发的 skill。
 
-当前实现允许无效提案在收到具体错误后重试一次。仍然失败，就沿用当前配置，并在阶段记录中标明 fallback 与错误。这里的校验主要证明配置能被接入和解析，任务正确性仍然要靠执行证据和后续检查。
+当前实现允许无效提案在收到具体错误后重试一次。仍然失败，就沿用当前配置，并在阶段记录中标明 fallback 与错误。这些校验主要检查配置能否接入、解析，任务正确性仍然要靠执行证据和后续检查。
 
-## 6. parallel 与 sequential：k 控制不同的探索形状
+## 6. parallel 与 sequential：k 怎样影响探索过程
 
 `k` 是任务级探索预算。两种模式都先获取 `k` 份基础执行，但使用候选的方式不同。
 
-![k 等于 2 时的两种递归模式：并行模式同时试跑四个候选，再独立组合两份结果；串行模式依次产生 c1 和 c2，后轮从前轮配置继续并读取累积证据](/images/harness2-recursive-agent-harnessing/harness2-parallel-vs-sequential.drawio.png)
+![作者仓库的递归模式原图：左侧 parallel 从同一批基础执行向多个候选展开，右侧 sequential 通过回接箭头把前轮修改带入后轮](/images/harness2-recursive-agent-harnessing/original/harness2_recursion_modes.png)
 
-*图 2：图中只计算递归主体的执行与改进阶段；最终选择和经验提炼另计。串行模式最终可以选择较早的 c1，不强制交付最后一轮。*
+*图 3：作者仓库的并行与串行递归原图。来源：[assets/harness2_recursion_modes.png][repo-recursion]，对应论文 Figure 4 的两种模式。*
+
+两侧的区别在候选之间有没有继承关系。左图各组修改独立提出，组合阶段读取完整候选池；右图的黑色回接箭头表示下一轮继续修改上一轮得到的配置。对照代码，左侧组合产物叫 `agg1 … aggk`，右侧各轮产物叫 `c1 … ck`。最终选择与经验提炼另计；串行模式也可以采用较早的 `c1`，不强制交付最后一轮。
 
 ### parallel：扩大同一轮探索的宽度
 
@@ -193,7 +203,7 @@ Compose 可以合并多个候选中的局部修改，可以修正冲突，可以
 
 [`run_sequential()`][sequential] 会连续执行 `k` 轮。每轮都有 INV、DOM 两份提案、两次试跑、一次组合和组合后的执行；下一轮拿到上一轮配置与积累的证据。
 
-关键的状态传递就是：
+状态通过这一行传给下一轮：
 
 ```python
 current_harness = comp.tree
@@ -217,7 +227,7 @@ $$
 | 2 | 8 | 6 | 从两份组合产物中选择 |
 | 5 | 20 | 15 | 从五份组合产物中选择 |
 
-选择、反思以及阶段重试，不包含在 `R=4k、P=3k` 这两个数字的全部含义里。评估实际成本，需要把相应 token、费用、工具运行和耗时一起汇总。若同时比较两种模式，基础执行会共享；不能简单把两份账本相加当作真实执行总数。
+`R=4k、P=3k` 不包含选择、反思的开销，也不反映阶段内的重试次数。评估实际成本，需要把相应 token、费用、工具运行和耗时一起汇总。若同时比较两种模式，基础执行会共享；不能简单把两份账本相加当作真实执行总数。
 
 ## 7. 选择已有产物，与证明修改有效，是两件事
 
@@ -228,11 +238,11 @@ $$
 - Compose 可以保留当前 harness，但最终选择器不能直接在参考执行和组合产物之间做全量择优。
 - `k=1` 没有额外的盲选检查，会直接采用唯一的组合产物。
 
-因此，不能把这条链路描述成“所有结果中至少选一个不差于基础的”。源码没有提供这样的保底保证。
+因此，源码没有保证最终结果至少不差于基础执行。
 
 ![Harness² 把产物选择与经验提炼分开：选择器根据匿名产物和源材料提交一个结果；反思读取完整修改与轨迹记录，证据充分才保存经验，之后的 benchmark judge 独立评分](/images/harness2-recursive-agent-harnessing/harness2-evidence-and-adoption.drawio.png)
 
-*图 3：选中某份输出，只说明系统采用了它。经验提炼还需要解释修改与行为变化之间的关系。*
+*图 4：本文补充的采用与经验提炼图。选中某份输出，只说明系统采用了它；经验提炼还需要解释修改与行为变化之间的关系。*
 
 ### 反思读取所有候选，不只看最后赢家
 
@@ -246,14 +256,14 @@ $$
 
 | 字段 | 要记录什么 |
 | --- | --- |
-| `cue` | 什么形状的任务或情境适用 |
+| `cue` | 适用于哪类任务或情境 |
 | `lesson` | 应怎样修改哪个 harness 组件 |
 | `evidence` | 哪项修改和哪段行为对照支持这条经验 |
 | `confidence` | 信心及其条件，可选 |
 
 如果没有具体、可迁移的行为对照，反思可以返回 `NO_ENTRY`。[`Library.add()`][library] 在缺少完整经验时不会入库。
 
-这里也有实现层面的限度：程序会检查必填字段以及部分评分泄露特征，但不会用独立因果检验器证明 `evidence` 的论证成立。证据是否足够、归因是否恰当，仍然依赖反思模型遵循提示词。
+当前实现也有限制：程序会检查必填字段以及部分评分泄露特征，但不会用独立因果检验器证明 `evidence` 的论证成立。证据是否足够、归因是否恰当，仍然依赖反思模型遵循提示词。
 
 ## 8. 跨任务复用：保存修改经验，再从公共基础开始
 
@@ -284,17 +294,25 @@ base_tree = harness_tree.read_tree(surface, adapter.base_harness())
 
 默认经验检索依靠领域目录和文件索引，没有在这条路径上引入向量库。论文研究了跨 benchmark 转移，但当前正常在线调度使用的是受领域与历史前缀约束的经验库，两者的实验条件需要区分。
 
+![论文 Figure 7 原图：左侧比较没有执行反馈时用不同经验库直接修改 harness 的结果，右侧比较把 JobBench 经验转移到 WorkBuddy 后的分数变化](/images/harness2-recursive-agent-harnessing/original/library_transfer.png)
+
+*图 5：论文 Figure 7，经验库与跨 benchmark 迁移实验。来源：[论文原图及说明][paper-library]；保留作者的[原始 SVG](/images/harness2-recursive-agent-harnessing/original/library_transfer.svg)，正文使用等比渲染的 PNG。*
+
+左图考察一个更苛刻的条件：编辑器没有当前任务的参考执行和候选试跑，只能直接修改 harness。橙色柱表示不使用经验库，WB-code 从基础的 `73.4` 降到 `63.2`，WB-web 从 `69.9` 降到 `65.0`。引入经验库后，结果回升；深蓝色的 `k=5` 表示经验来自此前探索预算为 5 的任务，并不表示这次又做了 5 轮试跑。这组实验支持的是：过去怎样修改配置、修改后发生了什么，能够帮助编辑器判断当前该改什么。
+
+右图把 JobBench 积累的经验用于 WorkBuddy 的单步改进，Code、Web、Office 分别增加 `0.6`、`0.5`、`2.9` 分。这个实验允许跨 benchmark 读取经验，和前面按领域、按历史顺序运行的默认调度不同。它提供了迁移有效的证据，不能据此认定任意领域之间都能直接复用。
+
 ## 9. 评分被放在后面，但网络泄露仍是现实边界
 
 Harness² 的“无标准答案反馈”，指的是改进链路不接收 benchmark judge 的分数和标准答案。任务指令、源材料、轨迹、程序错误和交付物都仍然是反馈来源。
 
 源码做了几层分离：`RunView` 不携带评分字段；任务源文件会按 `leak_globs` 排除答案路径；证据树与经验会检查部分 grader 字段；[`core/judge.py`][judge] 在采用结果之后，通过独立命令调用 `score()`。
 
-评分失败也有明确语义：记成未评分，不当作零分缓存，汇总时不进入有效评分分母。因此看报告时需要同时看完成数、失败数和已评分数，不能只看一个平均分。
+评分失败会单独处理：记成未评分，不当作零分缓存，汇总时不进入有效评分分母。因此看报告时需要同时看完成数、失败数和已评分数，不能只看一个平均分。
 
-这些代码边界不等于网络隔离。[官方实验指南][experiments] 直接披露：发布版的一次验证运行中，Codex 在没有被指示的情况下下载了 JobBench 对应任务的公开 rubric。当前 release 不限制执行器网络，Codex 的启动参数还会关闭 sandbox。
+这些代码边界不等于网络隔离。[官方实验指南][experiments] 记录：在发布版的一次验证运行中，Codex 没有收到相关指示，却下载了 JobBench 对应任务的公开 rubric。当前 release 不限制执行器网络，Codex 的启动参数还会关闭 sandbox。
 
-这说明，“没有主动把评分文件塞进 prompt”与“执行器无法接触评分文件”之间仍然存在距离。要复现实验，应该在下载依赖之后，对执行阶段的网络出口施加约束，并报告具体策略。该限制来自仓库已有的实证记录，不能仅靠一条禁止寻找答案的 prompt 解决。
+这次运行说明，“没有主动把评分文件塞进 prompt”与“执行器无法接触评分文件”并不是同一层保证。要复现实验，应该在下载依赖之后，对执行阶段的网络出口施加约束，并报告具体策略。仓库记录的这次运行已经暴露了这个限制，不能仅靠一条禁止寻找答案的 prompt 解决。
 
 同理，文件白名单、Python 编译与 hook schema 校验，主要保证组件可装载。接入有外部副作用的业务系统时，还需要单独处理权限与环境恢复。
 
@@ -327,7 +345,7 @@ python -m unittest discover -s tests -v
 | 相同命令再次运行 | 两项均 `skipped`，新增执行与编辑调用均为 0 |
 | 仓库工作流回归测试 | 5 项通过 |
 
-28 次执行的来源也可以算清楚：每个任务共享 2 次基础执行，再分别为两种模式执行各 6 次，共 14 次；两个任务合计 28 次。
+28 次执行的组成是：每个任务共享 2 次基础执行，再分别为两种模式执行各 6 次，共 14 次；两个任务合计 28 次。
 
 这 [5 项回归测试][tests] 覆盖预算和恢复、完整证据与历史前缀、无效提案重试及费用累加、没有经验时不入库，以及选择失败后不调用 judge。测试还修改了已采用的 harness、删除了产物，确认恢复逻辑会检测到变化并重新处理相应任务。
 
@@ -335,11 +353,11 @@ python -m unittest discover -s tests -v
 
 这里验证的是框架协议和确定性示例。OpenCode、Codex 的真实模型执行、容器环境、文档渲染、网络策略与专业任务质量，都需要在相应 benchmark 环境中另行验证。
 
-## 11. 论文收益应该连同配置和成本一起读
+## 11. 论文结果与计算成本
 
 作者在 WorkBuddy-Bench、JobBench 和法律工作 benchmark LAB 上报告结果。执行器包括 Gemini 3.5 Flash 与 GLM-5，初始 harness 包括 OpenCode 与 Codex；论文默认编辑器使用 Claude Opus 4.8。主表的单步配置是 `k=1`，追加递归采用 parallel、`k=5`，均报告三次运行的均值与标准差。[论文实验设置与主表][paper-results]
 
-下面只摘三组能够直接核对的均值，省略标准差；完整波动范围应回到原表查看：
+下表摘录三组可核对的均值，省略标准差；完整波动信息见原表。`k=5` 列由原表的 `k=1` 均值加上 “+ Recursion” 增量得到：
 
 | benchmark 与指标 | 执行器 / harness | 基础 | k=1 | k=5 parallel |
 | --- | --- | --- | --- | --- |
@@ -349,7 +367,15 @@ python -m unittest discover -s tests -v
 
 这三行说明：在作者的特定配置中，任务内改进与增加探索预算都带来了收益。它们使用不同指标，不能合成一个跨 benchmark 的统一成功率。
 
-还需要保留两个条件。其一，默认编辑模型与执行模型不同，不能把全部收益解释为同一个模型在零额外能力下自动变强。其二，主表的 `#Steps` 不能代替整个系统的总成本；执行器、编辑器、选择器与反思都需要计算资源。前面源码中的 `4k/3k` 已经说明，单步改进本身就有额外开销。
+解释这些结果时，还有两个条件。其一，默认编辑模型与执行模型不同，不能把全部收益解释为同一个模型在零额外能力下自动变强。其二，主表的 `#Steps` 不能代替整个系统的总成本；执行器、编辑器、选择器与反思都需要计算资源。前面源码中的 `4k/3k` 已经说明，单步改进本身就有额外开销。
+
+![论文 Figure 6 原图：横轴为每个任务消耗的总 token，纵轴为相对基础 harness 的分数增益，蓝色圆点表示 Harness² 在 k 等于 1 和 5 时的成本与收益](/images/harness2-recursive-agent-harnessing/original/total_cost.png)
+
+*图 6：论文 Figure 6，JobBench 与 WorkBuddy-Bench 的计算量和效果比较。来源：[论文原图及说明][paper-cost]；[原始 SVG](/images/harness2-recursive-agent-harnessing/original/total_cost.svg)按原样保留。*
+
+横轴是每个任务消耗的总计算量，以百万 token 为单位，采用对数刻度；纵轴是相对基础 harness 的分数增益。基础点接近零增益，蓝色圆点是 Harness² 的 `k=1`、`k=5`，蓝线标出图中已测配置的 Pareto 前沿。点越靠右，消耗的 token 越多；越靠上，得分提升越大。这里使用 Gemini 3.5 Flash / OpenCode，计算量包含最终交付前的执行与改进开销。
+
+这张图把代价也展示出来了：从 `k=1` 增加到 `k=5`，两个 benchmark 的分数继续提高，token 消耗也随之增加。在作者比较的这些配置中，Harness² 位于经验 Pareto 前沿，意味着没有另一个已测点同时做到更省计算、得分更高。这个结论受模型、任务集和对比配置约束；token 数也不能直接换算成实际费用或墙钟耗时。
 
 作者另外做了组件消融、同模型编辑与执行，以及经验转移实验。这些实验有助于判断方法的各个部分是否起作用，但不构成部署到任意业务都会增益的保证。本文没有复现论文跑分，也不据此给出线上收益或延迟承诺。
 
@@ -365,7 +391,7 @@ Harness² 提供了一套具体的改进对象：有文件、有差异、有对�
 
 Probe 还隐含着一个使用前提：同一任务允许被重复执行，而且候选之间能建立足够可比的环境。生成本地文件通常容易隔离；发邮件、提交订单、支付、修改共享后台数据，都需要可恢复的测试环境或专门的副作用控制。把 `k` 调大之前，先确认试跑本身是否成立。
 
-这个项目最值得继续研究的，是如何把“改了什么”与“实际改变了什么行为”稳定地对应起来。当前实现已经用文件协议、轨迹对照和经验字段约束这件事；模型归因的可靠性、在线预算，以及带副作用任务的可比执行，仍然决定它能走到哪些实际场景。
+这个项目最值得继续研究的问题，是如何稳定对应“改了什么”和“实际改变了什么行为”。当前实现已经用文件协议、轨迹对照和经验字段约束这件事；模型归因的可靠性、在线预算，以及带副作用任务的可比执行，仍然决定它适用于哪些实际场景。
 
 ## 源码阅读顺序与资料
 
@@ -382,7 +408,9 @@ Probe 还隐含着一个使用前提：同一任务允许被重复执行，而�
 
 项目与实验资料：[GitHub 仓库][repo]、[固定版本][commit]、[论文][paper]、[安装指南][setup]、[实验与网络限制][experiments]。
 
-本文三张机制图的可编辑源文件：[两层递归](/images/harness2-recursive-agent-harnessing/harness2-two-level-recursion.drawio)、[并行与串行](/images/harness2-recursive-agent-harnessing/harness2-parallel-vs-sequential.drawio)、[采用与经验](/images/harness2-recursive-agent-harnessing/harness2-evidence-and-adoption.drawio)。图按本文核查的源码整理；源码版权与许可证见仓库的 Apache-2.0 声明。
+原始图表出自 Ruiyao Xu 等作者的论文和项目仓库。仓库图按原样转载；论文 SVG 仅等比渲染为 PNG，没有改动数据、标签或图例。论文采用 [CC BY 4.0][paper-license]，仓库许可证为 [Apache-2.0][repo-license]；具体文件、版本和来源见[图表来源说明](/images/harness2-recursive-agent-harnessing/original/SOURCES.md)。
+
+中文补充图的可编辑源文件：[两层递归](/images/harness2-recursive-agent-harnessing/harness2-two-level-recursion.drawio)、[并行与串行](/images/harness2-recursive-agent-harnessing/harness2-parallel-vs-sequential.drawio)、[采用与经验](/images/harness2-recursive-agent-harnessing/harness2-evidence-and-adoption.drawio)。这些图依据本文核查的源码整理。
 
 [repo]: https://github.com/google-research/harness2
 [commit]: https://github.com/google-research/harness2/tree/1cfe254e8d25b15f37048c3730134686abe60335
@@ -412,3 +440,10 @@ Probe 还隐含着一个使用前提：同一任务允许被重复执行，而�
 [resume]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/harness2/core/schedule.py#L350
 [setup]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/docs/SETUP.md
 [experiments]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/docs/EXPERIMENTS.md
+[repo-pipeline]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/harness2_pipeline.png
+[repo-components]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/components.png
+[repo-recursion]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/harness2_recursion_modes.png
+[paper-library]: https://arxiv.org/html/2610.14224v1#S4.F7
+[paper-cost]: https://arxiv.org/html/2610.14224v1#S4.F6
+[paper-license]: https://arxiv.org/abs/2610.14224
+[repo-license]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/LICENSE
