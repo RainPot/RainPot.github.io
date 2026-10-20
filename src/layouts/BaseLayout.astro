@@ -50,15 +50,7 @@ const {
       </footer>
     </div>
     <script>
-      // 不蒜子计数：ClientRouter 下静态 <script src> 只在首次整页加载执行一次，
-      // 改为每次页面加载后重新注入脚本，SPA 导航到新页面也能刷新浏览/访客计数
-      document.addEventListener("astro:page-load", () => {
-        document.getElementById("busuanzi-loader")?.remove();
-        const script = document.createElement("script");
-        script.id = "busuanzi-loader";
-        script.src = "https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js";
-        document.body.appendChild(script);
-      });
+      import "../scripts/visitor-stats";
     </script>
   </body>
 </html>
