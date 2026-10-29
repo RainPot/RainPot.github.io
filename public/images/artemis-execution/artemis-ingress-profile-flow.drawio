@@ -1,69 +1,126 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="drawio" version="31.0.2">
-  <diagram name="任务入口与 Profile 分流">
-    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2700" pageHeight="1200" math="0" shadow="0" background="#ffffff">
+<mxfile host="app.diagrams.net" agent="Codewiz" version="24.7.17">
+  <diagram id="artemis-ingress-profile-flow" name="双轨执行与端侧感知底座">
+    <mxGraphModel dx="1000" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="640" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="ARTEMIS：一次任务从 CLI 到设备的进入路径" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontFamily=PingFang SC;fontColor=#1f2937;" vertex="1" parent="1">
-          <mxGeometry x="80" y="30" width="2100" height="40" as="geometry" />
+
+        <!-- Title -->
+        <mxCell id="title" value="ARTEMIS 总体执行链路：设备互斥队列、Flash/Pro 双引擎分流与端侧零冲突感知底座" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="20" y="12" width="920" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="CLI&#xa;uv run artemis run" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="80" y="180" width="220" height="90" as="geometry" />
+
+        <!-- Band 1: Ingress & Lock -->
+        <mxCell id="b1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="48" width="920" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="Daemon / Scheduler&#xa;统一任务队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="380" y="180" width="270" height="90" as="geometry" />
+        <mxCell id="b1_lbl" value="① 统一入口与设备级 FIFO 互斥锁（所有环境变更必须在拿到锁之后发生）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="34" y="54" width="650" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="DeviceExecutionLock&#xa;按设备串行 / FIFO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="730" y="180" width="270" height="90" as="geometry" />
+
+        <mxCell id="n_entry" value="&lt;b&gt;四类调用入口&lt;/b&gt;&lt;br&gt;CLI / Web UI / Python SDK / IDE MCP&lt;br&gt;统一组装为强类型 &lt;code&gt;TaskRequest&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="82" width="240" height="58" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="环境准备&#xa;连接屏幕、解锁、安装应用、锁定包名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1080" y="170" width="300" height="110" as="geometry" />
+
+        <mxCell id="n_lock" value="&lt;b&gt;Daemon 队列与 DeviceExecutionLock&lt;/b&gt;&lt;br&gt;按 &lt;code&gt;device_serial&lt;/code&gt; 严格 FIFO 排队&lt;br&gt;多机并发互不阻塞，单机严禁交叉污染" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="314" y="82" width="270" height="58" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="选择 Profile" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1460" y="160" width="230" height="130" as="geometry" />
+
+        <mxCell id="n_env" value="&lt;b&gt;队首环境准备（Agent._run_task）&lt;/b&gt;&lt;br&gt;唤醒保活租约 · 挂载无障碍 Helper&lt;br&gt;启动 scrcpy 录屏 · 按 Profile 路由引擎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="624" y="82" width="300" height="58" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="FlashRunner&#xa;Observe → Think → Act&#xa;单模型反应式循环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1770" y="70" width="310" height="150" as="geometry" />
+
+        <mxCell id="e_b1_1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;" edge="1" parent="1" source="n_entry" target="n_lock">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="LangGraph Pro&#xa;Planner → Operator → Validator&#xa;Checker / 收敛闭环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1770" y="350" width="310" height="170" as="geometry" />
+        <mxCell id="e_b1_2" value="排到队首" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;strokeWidth=1.5;fontSize=11;fontColor=#334155;labelBackgroundColor=#F8FAFC;" edge="1" parent="1" source="n_lock" target="n_env">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="10" value="MCP ActionSession&#xa;复用进程内动作会话" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2190" y="230" width="280" height="130" as="geometry" />
+
+        <!-- Band 2 Left: Flash Profile -->
+        <mxCell id="b2_flash_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="172" width="445" height="275" as="geometry" />
         </mxCell>
-        <mxCell id="11" value="Android 设备&#xa;动作分发与屏幕观察" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2190" y="650" width="280" height="130" as="geometry" />
+        <mxCell id="b2_flash_lbl" value="②-A Flash 反应式热循环（--profile flash · 约 3–5s / step）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#065F46;" vertex="1" parent="1">
+          <mxGeometry x="34" y="178" width="420" height="24" as="geometry" />
         </mxCell>
-        <mxCell id="12" value="DataEngine Trace&#xa;截图、UI 树、动作、结果、视频" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1600" y="650" width="390" height="130" as="geometry" />
+
+        <mxCell id="f_obs" value="&lt;b&gt;1. 实时观察与增量压缩&lt;/b&gt;&lt;br&gt;获取当前截图 + 精简元素表 &lt;code&gt;[1]..[N]&lt;/code&gt;，擦除历史旧索引" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="38" y="210" width="408" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="13" value="Task.finalize&#xa;输出结果 / 错误 / 运行状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="970" y="650" width="420" height="130" as="geometry" />
+
+        <mxCell id="f_llm" value="&lt;b&gt;2. 单模型 Observe-Think-Act 决策&lt;/b&gt;&lt;br&gt;无 Planner/Checker 图开销；支持 &lt;code&gt;ask_explorer&lt;/code&gt; 与历史召回" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="38" y="270" width="408" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="14" value="快路径" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="80" y="980" width="110" height="36" as="geometry" />
+
+        <mxCell id="f_act" value="&lt;b&gt;3. 轮次快照索引锚定 + 动作执行&lt;/b&gt;&lt;br&gt;同轮多工具调用绑定轮初 &lt;code&gt;indexed_elements&lt;/code&gt;；支持 &lt;code&gt;click_sequence&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="38" y="330" width="408" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="15" value="深路径" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="220" y="980" width="110" height="36" as="geometry" />
+
+        <mxCell id="f_sum" value="&lt;b&gt;4. 动作后 400ms 观察 + 后台异步视觉摘要&lt;/b&gt;&lt;br&gt;&lt;code&gt;VisualStepSummarizer&lt;/code&gt; 后台生成摘要，零阻塞进入下一轮" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="38" y="390" width="408" height="46" as="geometry" />
         </mxCell>
-        <mxCell id="16" value="队列 / 决策" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="360" y="980" width="130" height="36" as="geometry" />
+
+        <!-- Band 2 Right: Pro Profile -->
+        <mxCell id="b2_pro_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="485" y="172" width="455" height="275" as="geometry" />
         </mxCell>
-        <mxCell id="17" value="执行 / 证据" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="520" y="980" width="130" height="36" as="geometry" />
+        <mxCell id="b2_pro_lbl" value="②-B Pro 多智能体状态图闭环（--profile pro · 约 15–40s / step）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#5B21B6;" vertex="1" parent="1">
+          <mxGeometry x="500" y="178" width="430" height="24" as="geometry" />
         </mxCell>
-        <mxCell id="18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="3" target="4"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="4" target="5"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="20" value="设备互斥" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="5" target="6"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="6" target="7"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="22" value="flash" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="7" target="8"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="23" value="pro / default" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" parent="1" source="7" target="9"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="24" value="动作工具" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" edge="1" parent="1" source="8" target="10"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="25" value="动作工具" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="9" target="10"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="26" value="截图 + UI 树" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="11"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="27" value="记录证据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="11" target="12"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="28" value="结束收口" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="12" target="13"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="p_plan" value="&lt;b&gt;Planner + Convergence&lt;/b&gt;&lt;br&gt;维护 &lt;code&gt;task_plan&lt;/code&gt; 语法树&lt;br&gt;&lt;code&gt;[ ] [/] [x]&lt;/code&gt; 与 &lt;code&gt;verify/assert&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="502" y="212" width="202" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_op" value="&lt;b&gt;Perception + Operator&lt;/b&gt;&lt;br&gt;新鲜截图 + 净化元素列表&lt;br&gt;dHash 状态提示 + 动作决策" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="722" y="212" width="202" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_val" value="&lt;b&gt;Validator + Safety Net&lt;/b&gt;&lt;br&gt;单动作 XML/像素预检与自愈&lt;br&gt;多动作 Burst · 失败建 Incident" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="722" y="294" width="202" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_sum" value="&lt;b&gt;Summarizer + 异步镜头&lt;/b&gt;&lt;br&gt;落盘步骤轨迹与视觉转移摘要&lt;br&gt;驱动 L2/L3 历史分块折叠" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="502" y="294" width="202" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p_chk" value="&lt;b&gt;Checker + exit_settlement（只读独立复核）&lt;/b&gt;&lt;br&gt;中途异步校验 &lt;code&gt;EvidenceAnchor&lt;/code&gt;，退出前对照原始目标终审实时屏幕" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="502" y="376" width="422" height="58" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_p1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6D28D9;strokeWidth=1.5;" edge="1" parent="1" source="p_plan" target="p_op">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_p2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6D28D9;strokeWidth=1.5;" edge="1" parent="1" source="p_op" target="p_val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_p3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6D28D9;strokeWidth=1.5;" edge="1" parent="1" source="p_val" target="p_sum">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_p4" value="循环" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6D28D9;strokeWidth=1.5;fontSize=10;fontColor=#5B21B6;labelBackgroundColor=#F5F3FF;" edge="1" parent="1" source="p_sum" target="p_plan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Band 3: Shared Runtime & On-device Substrate -->
+        <mxCell id="b3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="466" width="920" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="b3_lbl" value="③ Flash 与 Pro 共享的底层加速与证据基础设施（避免重复建连与 UIAutomator 阻塞）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#92400E;" vertex="1" parent="1">
+          <mxGeometry x="34" y="472" width="760" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s_ledger" value="&lt;b&gt;共享四区会话账本（TranscriptLedger）&lt;/b&gt;&lt;br&gt;&lt;code&gt;S + F + A + T&lt;/code&gt; 字节级稳定前缀&lt;br&gt;浅文本边（深度 1）与图片边（深度 3/6）擦除&lt;br&gt;共享 &lt;code&gt;search_history / replay_steps&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="504" width="280" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s_mcp" value="&lt;b&gt;进程内持久动作会话（ActionSession）&lt;/b&gt;&lt;br&gt;单任务复用同一进程内 MCP Client/Server&lt;br&gt;独立 Owner Task 隔离超时取消，防通道半截损坏&lt;br&gt;动作与观察解耦（Flash 延后 400ms，Pro 按需）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="336" y="504" width="290" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s_helper" value="&lt;b&gt;端侧无障碍快照服务（Accessibility Helper）&lt;/b&gt;&lt;br&gt;本机回环 &lt;code&gt;/snapshot?fields=xml&lt;/code&gt; 同帧抓图与树&lt;br&gt;不抢占 &lt;code&gt;UiAutomation&lt;/code&gt;，与 Appium/Espresso 共存&lt;br&gt;&lt;code&gt;FallbackScreenClient&lt;/code&gt; 异常时 30s 冷却回退 u2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="648" y="504" width="276" height="100" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

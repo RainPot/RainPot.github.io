@@ -1,369 +1,443 @@
 ---
-title: "ARTEMIS 执行链路拆解：Android Agent 为什么又快又准"
-description: "从源码追踪 ARTEMIS 从 CLI、设备队列、Flash/Pro 分流，到 ScreenIndex、Safety Net、Action Burst、Execution Incident 和 Checker 的完整闭环。"
+title: "ARTEMIS 源码深度拆解：Android Agent 如何同时做到单步秒级响应与 99%+ 准确率"
+description: "基于 google/artemis 最新源码，从宏观双引擎架构到七项底层创新，全面拆解端侧无障碍原子快照、五步 UI 树几何净化、三级渐进定位、Safety Net 200px 坐标自愈、四区 KV Cache 稳定账本与零模型死循环检测。"
 date: "2026-09-21"
 tags: ["ARTEMIS", "Android Agent", "GUI Agent", "源码拆解", "Agent Runtime", "Benchmark"]
 draft: false
 featured: false
-readingTime: 30
+readingTime: 32
 ---
 
-> 项目：[google/artemis](https://github.com/google/artemis)
-> 分析版本：`main@371aa6d`，提交时间 `2026-09-11T19:59:21-07:00`
-> 核心结论：**ARTEMIS 把“快”和“准”拆成了不同层次的问题：快来自减少热路径上的模型往返、传输和上下文成本；准来自新鲜屏幕证据、结构化目标定位、动作前校验、失败事件持久化和退出复核。**
+做真机 Android GUI Agent 时，“快”和“准”往往是一对死敌。
 
-很多 Android Agent 的介绍停在“模型看截图，然后点击”。这个抽象足够解释 demo，却解释不了真实设备上的两个问题：为什么一个 Agent 能连续执行几十步，以及为什么页面刚好发生位移时，它没有立刻点到错误的位置。
+想让执行变快，最直接的做法是砍掉规划、校验和复盘，只留一个多模态模型看图下发点击；但真机界面充满异步加载、滚动惯性、底部导航栏遮挡、自动消失的 Toast 以及没有无障碍节点的 Canvas/Flutter 自绘控件，一旦点偏一步，后面十几步就会在错误页面上越走越远。反过来，想让准确率变高，如果在每一步前后都拉起独立的 Planner、Grounding、Validator、Repair 和 Verifier 多轮对话，单步耗时动辄膨胀到三四十秒，跑到第 50 步时上下文还会被历史截图和冗长的 XML 树撑爆。
 
-ARTEMIS 的答案不在某一个更大的视觉模型里，而在执行链路本身。它把设备调度、屏幕观察、目标定位、动作分发、历史压缩和结果验证拆成了互相约束的环节。下面不按目录介绍模块，而是跟着一次任务从入口走到收口，再回头解释每个环节如何减少延迟或降低误操作。
+Google 开源的 [ARTEMIS][repo] 在 Google Research 的 [AndroidWorld][androidworld] 基准（覆盖 20+ 款真实应用、116 个动态多步任务）上报告了 **99.1%（99%+）的任务完成率**，同时在常规任务上保持 **3–5 秒/步** 的反应速度，并支持 **10 小时以上、100+ 步** 的长程探索不崩。
 
-## 先把 README 里的 99%+ 说清楚
+![AndroidWorld 基准排行榜对比图：Project ARTEMIS 在 116 个动态任务上达到 99.1% Pass@1](/images/artemis-execution/original/androidworld_leaderboard.png)
 
-ARTEMIS 的 README 声称：它在 Google Research 的 AndroidWorld 上取得了 **99%+ completion rate**，覆盖 20 多个应用和 100 多个多步任务。[README 的 Benchmark 小节](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/README.md#benchmarks)同时展示了一张排行榜图片。
+*图 1：项目方公布的 AndroidWorld 基准测试结果（99.1% Pass@1）。来源：[`docs/assets/androidworld_leaderboard.png`][img-leaderboard]。注：仓库当前主要开源了完整运行时代码，未内置 AndroidWorld 评测脚本与原始跑分轨迹，因此本文将 99.1% 作为项目方报告的背景指标，重点从源码实证它如何解决真机执行的延迟与误点问题。*
 
-这个数字值得关注，但不能直接当作本文的实测结论。本文分析的代码快照里，AndroidWorld 相关内容主要出现在 README 和排行榜资源中，没有看到可独立运行的 AndroidWorld 任务集、跑分入口、原始轨迹或复现实验配置。因此，本文会把 99%+ 写成“项目方公开报告的结果”，把源码能够证明的执行机制单独拿出来分析。
+拉取 `google/artemis` 最新源码（本文基于 [`main@351ca84`][commit] 提交，核查时间 **2026 年 10 月 29 日**）通读后会发现，ARTEMIS 的核心思路不是靠某一个更大的多模态模型硬扛，而是遵循了一条非常清晰的工程准则：**凡是能用确定性几何算法、本地哈希和规则在亚毫秒内解决的，绝不调大模型；凡是必须调模型的地方，尽量用前缀缓存、后台异步和局部轻量模型移出热路径；凡是动作真正落到屏幕前的最后一刻，必须用实时证据兜底。**
 
-这一区分很重要：源码可以证明 ARTEMIS 如何执行、如何拦截、如何记录和如何复核；它不能单凭一个仓库快照证明某次 benchmark 在当前环境中可以复现。
+下面先从宏观架构看一次任务是如何从入口流转到真机的，再逐一拆解源码里让它“既快又准”的七个关键设计。
 
-## 一次任务的总路径：先排队，再选择执行引擎
+---
 
-![ARTEMIS 从 CLI 到设备的任务入口与 Profile 分流](/images/artemis-execution/artemis-ingress-profile-flow.drawio.png)
+## 1. 宏观全景：从统一调度入口到双轨引擎与三大支柱
 
-从 CLI 开始，ARTEMIS 并不会马上把一个点击动作发给手机。默认入口会尝试连接统一 Daemon，把任务放入调度队列；只有 Daemon 不可用，或者显式使用 standalone 模式时，才回退到本地执行。[`run_command()` 的调度入口](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/interfaces/cli/commands/run.py#L348-L440)把这层边界写得很清楚：队列不是一个可选的 UI 包装，而是任务真正进入设备执行前的第一层控制面。
+先看官方仓库给出的系统架构总览图与 Web 控制台界面：
 
-CLI 最终会把目标、设备 serial、profile、应用包名、录制和 Checker 配置装进 `TaskRequest`，再调用 SDK：
+![ARTEMIS 官方系统架构图：顶层为 AI IDE 与工作流通过 MCP 接入，中间 Core Engine 包含 FlashRunner 与 GraphRunner，下辖三级渐进定位、动作前 SafetyNet 与在线上下文压缩三大核心模块，底层通过 MCP 驱动物理 Android 设备](/images/artemis-execution/original/artemis_architecture_diagram.png)
 
-```python
-task = agent.new_task(goal)
-if profile:
-    task.using_profile(profile)
-await agent.run_task(request=task.build())
-```
+*图 2：ARTEMIS 官方架构图。来源：[`docs/assets/artemis_architecture_diagram.png`][img-arch]。核心引擎由双运行模式（FlashRunner / GraphRunner）和底层的三大能力支柱（Progressive 3-Layer Grounding、Pre-Touch Pixel Gate & SafetyNet、In-Flight Context Compactor）组成。*
 
-源码位置是 [`execute_task()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/interfaces/cli/commands/run.py#L40-L182)。这段代码本身很短，但它把所有命令行开关汇聚成一个统一的任务对象，后面的运行时不需要再理解 CLI 参数。
+![ARTEMIS Web 可视化控制台：包含视图切换、Flash/Pro 运行状态与录屏回放、实时感知推理流、自然语言 Prompt 输入坞以及任务队列看板](/images/artemis-execution/original/artemis-ui-showcase.png)
 
-### 设备锁为什么放在环境初始化之前
+*图 3：ARTEMIS 可视化测试控制台（`uv run artemis ui`）。来源：[`docs/assets/artemis-ui-showcase.png`][img-ui]。*
 
-`Agent._run_task()` 创建 `ArtemisContext` 后，会为设备建立 `DeviceExecutionLock`。任务只有拿到锁、排到队首，才会连接屏幕、解锁设备、安装应用、准备环境。源码在锁边界旁边明确说明：所有设备变更和 UI 初始化都必须发生在全局 FIFO 队列的队首之后。[`Agent._run_task()` 的锁与环境准备](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/sdk/agent.py#L581-L655)
+如果顺着代码追踪一条自然语言指令（无论来自 CLI `artemis run`、Web 控制台、Python SDK 还是 Claude Code / Antigravity 的 MCP 工具 `mobile_run_task`），它在系统内部的真实流转链路可以用下面这张机制图概括：
 
-这解决的不是模型问题，而是实验和执行的一致性问题。假设两个任务同时连接同一台手机：即使每个 Agent 都能正确识别按钮，第二个任务看到的页面也可能已经被第一个任务改变。把锁放在“连接和初始化”之前，才能保证一个任务看到的屏幕、应用状态和 trace 属于同一个执行上下文。
+![ARTEMIS 总体执行链路：顶层展示四类入口经 Daemon 队列与 DeviceExecutionLock 串行化后初始化环境；中层左右对比 Flash 反应式热循环与 Pro 多智能体状态图闭环；底层展示两者共享的 TranscriptLedger 四区账本、ActionSession 进程内持久会话与端侧 Accessibility Helper](/images/artemis-execution/artemis-ingress-profile-flow.drawio.png)
 
-### Profile 分流发生在真正执行之前
+*图 4：本文根据 `run.py`、`sdk/agent.py`、`flash/runner.py`、`graph/graph.py` 和 `clients/accessibility_client.py` 整理的总体执行链路。*
 
-环境准备完成后，SDK 才根据 `request.profile` 分流：
+在进入算法细节前，先立住宏观上的三个关键设计边界：
 
-```python
-if request.profile and request.profile.lower() == "flash":
-    runner = FlashRunner(context, goal=request.goal, max_turns=max_turns)
-    flash_result = await runner.run(state)
-else:
-    async for chunk in (await get_graph(context)).astream(input=graph_input, ...):
-        ...
-```
+### 1.1 设备互斥锁为什么卡在“连接屏幕和初始化环境”之前？
 
-这段分支来自 [`Agent._run_task()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/sdk/agent.py#L684-L752)。它揭示了 ARTEMIS 的一个关键设计：Flash 不是 Pro 的“少跑几步”，而是一条不同的运行时路径；Pro 也不是 Flash 的“多调用几个工具”，而是 LangGraph 中的多节点闭环。
+很多自动化框架只在实际发 ADB 点击命令时加锁，结果两个任务同时连上一台手机时，任务 B 在初始化阶段清后台、设输入法或拉起首页的动作，直接把任务 A 正在看的页面顶掉了。
 
-## Flash：把每一步压缩成一个反应式热循环
-
-![ARTEMIS Flash 与 Pro 的执行闭环对比](/images/artemis-execution/artemis-flash-pro-loop.drawio.png)
-
-README 将 Flash 描述为单模型反应式循环，并给出约 3–5 秒/step 的项目标称值；Pro 则是约 15–40 秒/step 的多 Agent 图。这里的数字是 README 的项目说明，不是我在本机设备上重新跑出的基准。需要看的不是“快”这个结论，而是 Flash 到底删掉了哪些步骤，以及删掉之后为什么仍然能继续执行。
-
-### FlashRunner 的每轮做了什么
-
-`FlashRunner.run()` 的主循环可以还原成下面的顺序：
-
-1. 初始化 LLM、动作工具、共享 transcript ledger 和可选的 step summarizer；
-2. 通过统一观察接口取得当前截图和 UI 元素列表；
-3. 读取本轮的注入指令，构造当前 observation tail；
-4. 对旧上下文做增量压缩，然后调用模型；
-5. 解析原生 tool call，必要时兼容 JSON code fence；
-6. 按本轮开始时的元素列表解析索引目标；
-7. 执行动作，捕获动作后的截图和 UI 列表；
-8. 把动作记录写入 trace，并把下一帧作为下一轮观察。
-
-对应的代码集中在 [`FlashRunner.run()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/runner.py#L1035-L1174)。模型调用设置了 10 秒软超时和 180 秒硬超时，但正常任务不会因为每轮都要进入 Planner、Checker 或图状态同步而额外增加一层模型往返。[模型调用与动作处理](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/runner.py#L760-L894)
-
-### 为什么 Flash 不会把旧的 `[3]` 误用到新页面
-
-Flash 的速度优化有一个容易被忽略的约束：**索引目标使用本轮观察的快照，不跟着前一个动作刷新后的列表漂移。**
-
-`_process_tool_calls()` 在开始处理工具调用时先保存 `state.indexed_elements`。这一轮后续的 `click(3)`、`focus_and_input_text(3, ...)` 都解析到同一份快照；每个动作执行后，状态仍然会刷新成最新屏幕，供下一轮使用。这样做的原因很实际：一个模型回合里连续动作可能改变页面，若第二个索引立即改用新列表，模型刚刚看到的 `[3]` 就会失去语义。[`_process_tool_calls()` 的快照边界](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/runner.py#L896-L975)
-
-动作执行器还会把索引解析成归一化坐标，并记录目标文本、bounds、resource id 和 class：
+在 [`artemis/sdk/agent.py` 的 `Agent._run_task()`][sdk-agent] 中，ARTEMIS 先根据 `device_serial` 申请跨进程文件与内存锁 `DeviceExecutionLock`，**只有排到 FIFO 队列队首、真正拿到锁之后，才允许执行唤醒屏幕、挂载无障碍服务、安装 APK 和启动 `scrcpy` 录屏**：
 
 ```python
-element = elements[index - 1]
-return [_norm_x(center[0]), _norm_y(center[1])], recorded
+device_lock = DeviceExecutionLock(target_serial)
+# All device mutations and UI initialization MUST happen strictly inside this lock
+# after reaching the head of the global FIFO queue.
+async with device_lock.acquire(trace_id=trace_id, goal=request.goal, ...):
+    await self._prepare_device_environment(context, request)
 ```
 
-这里的 `recorded` 不是装饰信息。它会进入后续 trace 和 Pro 的 Safety Net，成为“模型当时想点什么”的证据。动作执行器的索引解析、坐标归一化和记录字段见 [`McpActionExecutor._resolve_index()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/mcp/action_executor.py#L428-L483)。
+不同 `device_serial` 的手机互不阻塞、完全并发；同一台手机上的任务严格串行，保证单次任务的截图、UI 树、录屏和日志绝对不会被其他任务交叉污染。
 
-### 动作之后为什么能快速拿到下一帧
+### 1.2 Flash 与 Pro 不是“少跑几步”，而是两条共享底座的独立引擎
 
-`McpActionExecutor` 第一次使用动作工具时会创建一个进程内 `ActionSession`。同一个任务的后续动作复用这个 session，而不是每次动作重新创建 MCP client/server。动作成功或某些允许观察的失败发生后，执行器调用 `session.observe(settle_ms=400)`，把截图、UI 列表和元素索引一起更新。[动作执行与动作后观察](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/mcp/action_executor.py#L116-L251)
+拿到设备锁并初始化好 `ArtemisContext` 后，[`Agent._run_task()`][sdk-branch] 根据 `request.profile` 分流到两条截然不同的执行路径：
 
-`ActionSession` 自己还把所有传输调用放到一个 owner task 中，保证 MCP context manager 的生命周期不跨任务漂移。[`ActionSession`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/mcp/action_session.py#L66-L178) 解决的是基础设施级的延迟和取消问题：动作调用不会因为上层协程超时就把底层会话半截取消，下一次可以继续复用或重建一个明确失效的 session。
+- **`--profile flash`（`FlashRunner`，单步约 3–5 秒）**：见 [`artemis/agents/flash/runner.py`][flash-runner]。它完全绕开 LangGraph 状态机、Planner 和 Checker，由单个模型在一个紧凑的 `while` 循环里直接完成“观察实时屏幕 $\rightarrow$ 思考并调用动作工具 $\rightarrow$ 400ms 后抓下一帧”。值得注意的是，[`artemis.jsonc`][config-jsonc] 中 `agent.flash.max_turns` 默认是 `0`（无步数上限），因为它与 Pro 共享了同一套**在线上下文压缩账本**——任务长短本身不再是必须切到 Pro 的理由。
+- **`--profile pro`（LangGraph 多节点闭环，单步约 15–40 秒）**：见 [`artemis/graph/graph.py` 的 `get_graph()`][graph-py]。它把长程复杂任务拆成 `planner` $\rightarrow$ `convergence` $\rightarrow$ `perception` $\rightarrow$ `operator` $\rightarrow$ `execution_check` $\rightarrow$ `validator` $\rightarrow$ `summarizer` $\rightarrow$ `exit_settlement (checker)` 的有向状态图。每一步都有活体 Markdown 计划约束、动作前 Safety Net 校验与退出前的只读终审。
 
-### Action Burst：把“瞬时 UI”从模型时间里拿出来
+两条路径虽然控制流不同，但底层完全复用了同一套**端侧感知客户端（`AccessibilityClient`）**、**进程内动作会话（`ActionSession`）**、**三级定位器（`Explorer`）**和**四区会话账本（`TranscriptLedger`）**。这就引出了本文最核心的问题：这些底层模块到底用了什么巧思，才让执行既快又准？
 
-Flash 支持 `click_sequence`，用于自动消失的控制条、Toast 或连续菜单。Pro 也支持多动作 burst，但两者都遵守同一个基本事实：连续动作之间不能等待下一次模型观察，否则瞬时 UI 可能已经消失。
+---
 
-`click_sequence` 接受已经归一化的坐标对，而不是元素索引。它要求调用方在同一轮里根据当前观察把坐标确定下来，执行器不会在 sequence 中途重新定位元素。[`_resolve_sequence()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/mcp/action_executor.py#L516-L547)
+## 2. 快且准的设计一：端侧无障碍原子快照与进程内 `ActionSession`
 
-这是一项明确的取舍：burst 节省了模型往返和中间截图，但也放弃了每一步之间的安全校验。它适合一组必须连续发生的短动作，不适合把普通的长流程批量塞进一个回合。
+在 Android 真机上做 Agent，第一个隐形的性能杀手不是大模型，而是**截图与 dump 无障碍树（UI Hierarchy）**。
 
-## Pro：把执行过程变成可收敛的闭环
+传统方案普遍依赖 `uiautomator dump`（或 `UIAutomator2`）：
+1. **慢且容易卡死**：`UiAutomation` 在导出布局树前默认会等待主线程进入空闲（Idle）状态。遇到带有轮播图、加载骨架屏、弹幕或视频播放的动态页面时，一次 dump 经常卡满 2～5 秒甚至超时报错。
+2. **独占单例连接**：Android 系统只允许一个进程持有 `UiAutomationConnection`。一旦 Agent 挂上 `UIAutomator2`，手机上的 Appium、Espresso 或 Mobly 测试进程就会因为连接被抢占而直接崩溃。
+3. **帧不同步（撕裂）**：先调 `adb exec-out screencap` 抓图、再调 `uiautomator dump` 导 XML，两次调用相隔几百毫秒，截图里的按钮位置和 XML 里的 `bounds` 经常对不上。
 
-Pro 的图不是“Planner 做计划、Operator 执行动作”这么简单。当前源码中的节点和边是：
+### 2.1 端侧 `AccessibilityClient`：单次 `/snapshot` 同帧抓取 XML 与截图
+
+打开 [`artemis/clients/accessibility_client.py`][acc-client] 可以看到，ARTEMIS 在手机端安装了一个极轻量的无障碍服务 **Artemis Accessibility Helper**（只监听手机本机回环端口，携带 `X-Artemis-Token` 鉴权）。它彻底绕开了 `UiAutomationConnection` 单例限制，并且在 Android 11+ 上提供了 `/snapshot?fields=xml` 原子接口：
+
+```python
+def _snapshot(self) -> dict[str, Any]:
+    """``/snapshot?fields=xml``: hierarchy plus, on Android 11+, the screenshot."""
+    data = json.loads(self._http("/snapshot?fields=xml", timeout=8.0).decode("utf-8"))
+    if not isinstance(data, dict):
+        raise HelperRequestError(200, "/snapshot", "non-object answer")
+    if not data.get("success"):
+        raise HelperEmptyHierarchy(...)
+    return data
+```
+
+一次本机端口转发的 HTTP 请求，端侧服务在同一瞬间把当前窗口的 XML 树和屏幕位图一起打包返回，既消除了“图和树不同步”的时间差，又把单次观察的端侧耗时压到了百毫秒级。
+
+更稳妥的是 [`artemis/clients/screen_client_factory.py`][screen-factory] 里的 `FallbackScreenClient`：默认 `auto` 模式下优先走 Helper；万一 Helper 通道断开或返回空窗口（`HelperEmptyHierarchy`），客户端会自动降级到 `UIAutomator2`，同时设置 **`retry_after: float = 30.0` 秒的冷却窗口**——在接下来的 30 秒内直接使用 `UIAutomator2`，避免每一步都先傻等 5 秒 Helper 超时再回退。
+
+### 2.2 进程内 `ActionSession`：消除跨进程 MCP 建连开销与半截取消故障
+
+在动作执行侧，[`artemis/mcp/action_session.py`][action-session] 将原本每次工具调用都要新建的 MCP Client/Server 会话改造成了单任务复用的进程内持久会话 `ActionSession`。
+
+这里有一个非常细腻的异步工程细节：如果外层给工具调用加了 `asyncio.wait_for(..., timeout=...)`，一旦超时取消直接穿透进底层 MCP 内存管道（in-memory stream），整个会话就会处于半截损坏状态（bricked），后续所有点击都会报通道错误。为此，`ActionSession` 专门启动了一个独立的后台 `_owner_task` 持有上下文管理器，所有工具调用通过队列投递给 Owner 执行，把“单次调用超时”与“底层会话生命周期”彻底隔离开。
+
+---
+
+## 3. 快且准的设计二：送入模型前的五步 UI 树几何净化
+
+拿到原始 XML 树和 OCR 结果后，如果直接把几百个节点原封不动塞进 Prompt，不仅浪费数千 Token，还会引发三种高频误操作：
+- **点中滚出屏幕的半截节点**：ScrollView 里的列表项虽然有一大半已经滑到底部导航栏下面，但它的原始 `bounds` 中心点恰好落在底部导航栏的“首页/我的”图标上，模型一点列表项，结果触发了底栏切换页面；
+- **被悬浮按钮（FAB）挡住**：列表项右侧被右下角悬浮的“新建 `+`”按钮遮盖，模型却毫无察觉；
+- **自绘界面盲区**：Canvas、Flutter、Compose 或内嵌网页里的文字没有无障碍节点。
+
+对照图 5 第一层，我们看 [`artemis/utils/ui_filter.py`][ui-filter]、[`ocr_xml_fusion.py`][ocr-fusion] 和 [`visualization.py`][vis-py] 是如何在 **0 次模型调用** 下用五步几何算法把脏数据洗干净的：
+
+![ARTEMIS 为什么点得既快又准：第一层展示送入模型前的五步确定性 UI 树几何净化；第二层展示 Explorer 的 Level 0 零模型结构化预检与 Level 1/2/3 视觉引擎定位；第三层展示动作下发前的 XML/像素 Safety Net、200px 原地坐标自愈、Execution Incident 与 Fast-Action Burst](/images/artemis-execution/artemis-target-safety-net.drawio.png)
+
+*图 5：本文根据 `ui_filter.py`、`ocr_xml_fusion.py`、`visualization.py`、`explorer.py` 和 `validator/` 整理的感知净化、三级定位与动作前自愈全链路。*
+
+### 3.1 第一步：祖先容器边界递归裁剪（`_clip_bounds`）
+
+在遍历 UI 树时，[`_filter_and_prune()`][ui-filter-prune] 会把父节点的可见 `bounds` 作为 `ancestor_bounds` 一路向下传递。子节点的矩形会被强制裁剪到父容器内部（`left = max(child.left, ancestor.left)` 等），并且连同缓存的 `parsed_bounds` 一起原地更新。裁剪后宽高不足屏幕短边 `0.5%`（至少 5px）的碎片节点会被直接过滤。
+
+### 3.2 第二步：顶/底固定系统栏三重识别与安全钳制（`_clamp_by_fixed_bars`）
+
+即便做了父容器裁剪，全屏滚动容器往往和底部导航栏同级（平铺在 FrameLayout 下）。为此，[`_detect_fixed_system_bars()`][ui-filter-bars] 先用三重守卫识别屏幕顶部状态栏和底部固定导航栏：
+1. 紧贴屏幕上沿（`top <= 0`）或下沿（`bottom >= screen_height`），且宽度占屏幕 **$\ge 95\%$**；
+2. 自身、祖先及所有子孙节点均**不可滚动（`scrollable == false`）**；
+3. 包名为 `com.android.systemui` 或资源 ID 命中 `bottom_navigation / tab_layout / navigation_bar` 且高度在合理比例内。
+
+随后，[`_clamp_by_fixed_bars()`][ui-filter-clamp] 遍历所有候选元素，将与顶/底固定栏重叠的区域切除。如果某个滚动列表项被切掉后**剩余可见高度不足 `20px`（`bottom - top <= max(min_size, 20)`）**，直接返回 `False` 将该露头细条静默丢弃。这一步直接消除了“想点列表最后一行却误触底部导航栏”的经典 Bug。
+
+### 3.3 第三步：父子同文去重与互补兄弟合并
+
+Android 布局经常出现外层 `LinearLayout(clickable=true)` 包着一个 `ImageView` 图标和一个 `TextView("设置")`。如果直接平铺，模型会看到两个甚至三个重叠的节点。
+- [`_prune_parent_child_redundancy()`][ui-filter-redundancy]：若父子节点文本完全相同，擦除子节点重复文本或移除纯文本子节点；
+- [`_merge_complementary_children()`][ui-filter-merge]：若可点击父容器下恰好只有 **1 个文本子节点 + 若干纯装饰图标子节点**（且不含 CheckBox/Switch/EditText 等表单控件），自动将它们合并为一个联合边界节点，并把无描述图片补标为 `[Icon]`。
+
+### 3.4 第四步：双频段 OCR-XML 几何融合与行聚合（`fuse_ocr_with_xml`）
+
+当开启 OCR 补充时，[`fuse_ocr_with_xml()`][ocr-fusion-fn] 不会把 OCR 文本框胡乱塞进根节点：
+1. **排除巨型背景容器**：先剔除面积超过全屏 `10%` 且类名不含 `text/button/edit/search/input` 的巨型容器节点；
+2. **双频段重叠匹配**：计算每个 OCR 框落在 XML 节点内的面积占比（$\text{Intersection} / \text{OCR\_Area}$），分为 **Band 1（$\ge 0.9$）** 和 **Band 2（$\ge 0.7$）** 两档，优先挂载到面积最小的精细 XML 节点上；
+3. **行内聚类与相似度去重**：按垂直中心 `< 10px` 归为同行、水平间距 `< 30px` 合并词块；若聚合后的 OCR 文本已被 XML 原生文本包含或 `SequenceMatcher` 相似度 `> 0.8`，直接丢弃以免重复，否则作为 `ocr_elements` 挂载并为节点类名打上 `[OCR]` 标记。
+
+### 3.5 第五步：非同心互遮挡警告注入与输入框 `Hint / Error` 暴露
+
+最后，在生成喂给模型的 `--- Visible UI Elements ---` 文本列表时，[`visualization.py`][vis-occlusion] 做了两件极其实用的事：
+
+第一，**把空输入框的 `Hint` 和校验报错 `Error` 直接渲染出来**（第 401–418 行）：空输入框没有 `text`，但无障碍服务能读到 `hint="Search settings"` 或表单报错 `error="Password too short"`，代码会将它们格式化为 `[idx] Hint: 'Search settings' | Bounds: ... | Error: 'Password too short'`，让模型一眼看懂为什么表单提交失败。
+
+第二，[`_inject_mutual_occlusion_warnings()`][vis-occlusion] 对所有上榜元素做两两交集检测。怎么区分“正常的父子嵌套”和“悬浮窗/FAB 遮挡”？代码算了一个非常巧妙的几何判据——**圆心偏移度（Concentricity）**：
+
+```python
+center_dist = ((center_i_x - center_j_x) ** 2 + (center_i_y - center_j_y) ** 2) ** 0.5
+max_dim = max(r_i - l_i, r_j - l_j, bot_i - t_i, bot_j - t_j)
+is_concentric = center_dist < (max_dim * 0.20)
+```
+
+只有当一个框完全包住另一个框、外框面积大于内框 2 倍、**且两者中心点距离小于最大边长的 20%（同心嵌套）**时，才算正常的容器包裹；反之，如果像右下角悬浮按钮盖住了长列表项的右端（中心点明显偏移），且重叠面积达到任一元素的 **$\ge 50\%$**，代码就会在该元素行末尾自动追加软告警：
 
 ```text
-START
-  → planner
-  → convergence
-  → perception
-  → operator
-  → execution_check
-       ├─ review_subgoals → convergence
-       └─ execute_decisions → validator → summarizer → convergence
-  → exit_settlement → END
+[12] Text: 'Submit Order' | Bounds: [50,880][950,940] (WARNING: may overlap with [15], possible occlusion)
 ```
 
-完整图定义在 [`get_graph()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/graph/graph.py#L965-L1076)。它的重点不是节点多，而是每个节点承担一种不能互相替代的职责。
+这相当于在完全不消耗视觉 Token 的前提下，提前给大模型戴上了一副防遮挡透视镜。
 
-### Planner：把自然语言目标写成机器可收敛的计划
+---
 
-Planner 把计划写进 `task_plan` note，并用统一的 checkbox grammar 校验。计划至少要有一个顶层 subgoal；状态字符不能超出 grammar；如果模型忘了调用 `save_note` 或 `update_note` 提交计划，Planner 会把错误反馈回去，最多重新尝试三轮，每轮最多处理十次工具迭代。[Planner 的提交和格式校验](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/planner/planner.py#L222-L456)
+## 4. 快且准的设计三：三级渐进式定位（`Explorer`）与具身空间模型
 
-当检查能力打开时，计划还可以声明 `verify` 和 `assert` 条件。这样“点击完成”与“目标满足”就不再是同一件事：前者是动作层事实，后者是验证层事实。
+当界面上的目标可以通过 `[1]..[N]` 索引直接点击时，[`McpActionExecutor._resolve_index()`][resolve-index] 直接查表取出中心坐标并附上 `target_text / target_bounds / target_resource_id` 元数据，耗时为 0。
 
-### Convergence：决定继续循环还是进入退出收口
+但当目标是没有无障碍文本的图标、自绘 Canvas 控件，或者 Operator 主动调用 `ask_explorer` 寻找复杂目标时，[`artemis/agents/explorer/explorer.py`][explorer-py] 设计了如图 5 第二层所示的**三级渐进式定位（Progressive Grounding）**：
 
-`convergence_gate()` 每次都会重新读取计划，而不是相信上一个节点留在内存中的旧副本。它检查：
+### 4.1 Level 0：`ScreenIndex` 结构化精确预检（0 Token，亚毫秒级返回）
 
-- 计划文件是否存在、是否有顶层 subgoal；
-- 所有顶层 subgoal 是否完成；
-- 是否仍有连续监控 `[Loop:continuous]`；
-- 是否还有 pending checkpoint、已有 checker ledger 或开启了 final check；
-- 是否因为 `assert` 失败而 latched halt。
-
-即使所有顶层任务都标记完成，只要还需要 settlement 或 final review，也不会直接结束，而是进入 `exit_settlement`。[收敛判断](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/graph/graph.py#L889-L962)
-
-### Perception 与 Operator：每一轮都重新观察
-
-Pro 的 Operator 不直接使用上一轮的截图。Perception 节点先把当前截图、UI hierarchy 和 OCR 结果放进 state，Operator 再用这一帧构造 minimal element list，保存 `indexed_elements`，并把计划、历史和当前屏幕一起交给模型。[`OperatorNode.__call__()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/operator/operator.py#L863-L984)
-
-Operator 的输出先不是“已经执行”，而是结构化动作决策。`execution_check` 会无条件把这一轮的观察、动作、思考和 subgoal hash 记录到 DataEngine，再决定这轮是只复核计划，还是把动作交给 Validator。[`execution_check_node()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/graph/graph.py#L125-L244)
-
-这个顺序避免了一个常见错误：模型在上下文里说“我已经完成了”，系统就把它当成完成。ARTEMIS 先把模型的意图记录成证据，再让专门的执行层决定动作是否真的被设备接受。
-
-## 目标定位：先用结构化证据，模型只处理剩余的不确定性
-
-这是 ARTEMIS 速度和准确性同时成立的关键。
-
-![ARTEMIS 目标定位、安全网与 Execution Incident 路径](/images/artemis-execution/artemis-target-safety-net.drawio.png)
-
-### ScreenIndex 只建立一次，多个工具共享同一帧
-
-Explorer 每次定位都会先加载当前屏幕：读取截图记录，确定屏幕尺寸，融合 UI hierarchy 与已有 OCR，然后构造一份内存中的 `ScreenIndex`。同一次 Explorer 调用里的结构化预检、文字搜索、坐标审计和视觉工具都使用这份快照，不需要每个工具再去查询 DataEngine。[Explorer 的屏幕加载](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/run_setup.py#L181-L202)
-
-`ScreenIndex` 会丢弃不可见和零面积节点，按“归一化文本 + bounds”去重；同一个位置同时有 UI tree 和 OCR 文本时，优先保留 UI tree，因为它还带有 class、resource id 和交互属性。[`ScreenIndex.from_hierarchy()` 与去重](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/screen_index.py#L129-L210)
-
-精确匹配会再次做重叠去重：
+每次进入 `Explorer.run()`，系统先根据当前帧融合后的 XML/OCR 树构建内存索引 [`ScreenIndex`][screen-index]。在真正发起任何 LLM/VLM 网络请求前，[`run_setup.py`][run-setup] 先对查询词（支持以 `|` 分隔多个目标）跑一次 `_structural_prepass()`：
 
 ```python
-hits = [e for e in self.elements if normalize_text(e.text) == wanted]
-hits.sort(key=lambda e: (e.source != "xml", e.area))
+for part in parts:
+    hits = self.screen_index.exact_matches(part)
+    if len(hits) != 1:
+        unresolved.append(part)
+        continue
+    element = hits[0]
+    ...
 ```
 
-如果查询文本在当前屏幕上只命中一个元素，结构化预检直接生成坐标和 bounds；如果命中零个或多个，就把这一部分留给后续模型消歧。相关实现见 [`exact_matches()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/screen_index.py#L223-L266) 和 [`_structural_prepass()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/explorer.py#L296-L329)。
+`exact_matches()` 会把大小写和空白归一化后相等的候选捞出来，按“XML 节点优先于 OCR 节点、小面积优先于大面积”排序，并将重叠度 $\ge 0.5$ 的同位置重复项折叠为一。**只要某个查询词在当前屏幕上唯一精确命中，代码直接算出 `[0, 1000]` 归一化坐标与 bounds 返回**；如果所有查询词都唯一命中（`if prepass and not unresolved`），整个 `Explorer` 调用直接以 **0 次模型调用** 结束。官方架构图指出，这一层本地 OCR-XML 预检接管了 **85% 以上的常规动作定位**。
 
-因此，Explorer 的第一层不是“让模型看图找按钮”，而是“先问 UI tree：有没有一个唯一且足够明确的答案”。ARTEMIS 在代码中明确记录了这个快路径：
+### 4.2 Level 1：为什么 `flash` 档必须绑定 `gemini-robotics-er-2-preview`？
+
+对于 Level 0 未命中或存在多个同名按钮需要消歧的查询，才进入视觉模型。这里翻看 [`artemis.jsonc`][config-er] 的第 73–83 行注释，会发现一个非常关键的模型选型经验：
+
+```jsonc
+// 👁️ Object Detector & Explorer (Flash Mode): Visual coordinates grounding and bounding boxes
+// CRITICAL REQUIREMENT: Standard LLMs (including standard Gemini Flash, GPT-4o, Claude 3.7)
+// lack sub-pixel spatial coordinate fine-tuning. To achieve accurate [x, y] point and
+// bounding box localization, this node MUST use specialized Gemini ER (Embodied Reasoning
+// / Robotics) models: e.g., "gemini-robotics-er-2-preview".
+```
+
+通用对话大模型擅长语义推理，但直接让它报屏幕上的 `[x, y]` 像素坐标往往会有几十像素的 системати偏差。因此 ARTEMIS 把推理（Operator 用 `gemini-3.8-flash` / `gpt-4o`）和空间打点（`object_detector` 专用具身推理模型 `gemini-robotics-er-2-preview`）彻底解耦。
+
+不仅如此，即使视觉模型返回了候选坐标和标签 `label`，[`Explorer._enrich_candidates()`][explorer-enrich] 也绝不盲信标签，而是用屏幕宽高的 **2%（`LABEL_TOLERANCE_RATIO = 0.02`）** 作为容差框，检验模型报出的 `[x, y]` 是否真的落在该注册元素的 `bounds` 内部——只有点在框内，才允许继承该元素的结构化边界。
+
+### 4.3 Level 2 & 3：`pro`（3 轮）与 `ultra`（8 轮 + 显式缓存）感知循环
+
+如果用户将 Explorer 档位配为 `pro` 或 `ultra`（见 [`tiers.py`][tiers-py]），Explorer 会进入多轮 ReAct 循环，开放模糊文本搜索（`search_ui_tree`）、坐标反向碰撞审计（`inspect_coordinates`，只汇报最内层可交互节点而非外层大框）、局部裁剪放大与像素级图像处理；在 `ultra` 档位下还默认开启 Gemini Explicit Context Caching（`caching=True`），避免 8 轮循环重复计费同一张高清大图。
+
+---
+
+## 5. 快且准的设计四：动作前 Safety Net、200px 坐标自愈与 Fast-Action Burst
+
+这是整套源码里最精彩的部分。
+
+试想一个真实场景：Operator 在 $t_0$ 时刻看到屏幕上的“确认支付”按钮位于 `(540, 1800)`，经过 6 秒钟的模型思考，在 $t_1$ 时刻下发 `tap(540, 1800)`。但就在这 6 秒内：
+- **情况 A（微幅位移）**：上方异步加载出了一行运费说明，“确认支付”按钮往下挤了 80 像素，到了 `(540, 1880)`；
+- **情况 B（弹窗遮挡）**：系统突然弹出了一个权限请求框或促销弹窗，正好盖在 `(540, 1800)` 上；
+- **情况 C（瞬态控件）**：你要点的是视频播放器上点击一下才出现的“全屏”图标，2 秒不点就会自动淡出消失。
+
+如果所有动作都无脑发给 ADB，情况 A 和 B 会立刻点错；如果所有动作都在中间截图再问一遍大模型，情况 C 永远点不到。
+
+ARTEMIS 在 [`artemis/agents/validator/execution_loop.py`][exec-loop] 里用**按动作数量分流的双轨机制**同时解决了这三种情况（对应图 5 第三层）：
+
+### 5.1 单动作轨道：XML 四信号加权 + 200px 原地坐标自愈 + 像素兜底
+
+当 Operator 本轮只输出 **1 个**终结动作时，自动进入 **Vetted Single Action（受检单动作）** 轨道：
+
+**第一步：拉取实时 XML 并支持转场短重试。** [`validate_action_precondition()`][pre-xml] 通过 `session.ui_hierarchy()` 抓取手机此刻的最新布局树。如果页面正处于转场动画导致匹配失败，它最多重试 **3 次，每次间隔 0.4 秒**。
+
+**第二步：四信号加权打分与巨型容器惩罚。** [`_score_element()`][pre-xml-score] 与 `_combine_signals()` 对实时树中的每个候选节点计算综合得分 `score` 和身份得分 `identity_score`：
+- **Resource ID 权重 `W_ID = 0.5`**：完全匹配得 `+1.0`，候选无 ID 得 `+0.3`，ID 冲突直接重罚 **`-0.5`**；
+- **文本相似度权重 `W_TEXT = 0.4`**：归一化精确匹配得 `1.0`，子串包含得 `0.8`，否则取 `SequenceMatcher` 比例；
+- **边界交并比权重 `W_BOUNDS = 0.3`**：计算决策时刻 `target_bounds` 与当前节点 `bounds` 的 IoU；同时检查宽高比例，若宽或高相差超过 **2.5 倍（`size_mismatch`）** 且 ID 不匹配，直接将文本、边界和坐标分清零，防止把小按钮误匹配到包含相同文字的外层大容器；
+- **坐标包含权重 `W_COORD = 0.3`**：原计划点击坐标是否落在该节点矩形内；
+- **距离衰减**：总分再乘以 `decay = max(0.5, 1.0 - dist / 800.0)`。当距离 $\le 150 \times \text{scale\_factor}$ 时通过阈值为 `0.55`，距离更远时要求阈值达到 `0.75`（其中 `scale_factor` 按当前屏幕对角线相对 $1080\times 2400$ 的比例缩放，保证跨分辨率一致）。
+
+**第三步：不超过 200px 的漂移，原地坐标自愈（Coordinate Self-Healing）！** 看 [`precondition_xml.py` 的 `_handle_match_success()`][pre-xml-heal]：
 
 ```python
-if prepass and not unresolved:
-    return json.dumps({"candidates": prepass, "fallback_message": ""})
+def _handle_match_success(
+    action_item: dict, best: dict, target_text, scale_factor: float
+) -> tuple[bool, ValidationErrorCategory, str]:
+    """Handles a passing match: self-heals coordinates for moderate drifts."""
+    if best["distance"] <= 200 * scale_factor:
+        new_coords = best["center"]
+        old_coords = action_item.get("coordinates")
+        if old_coords != new_coords:
+            action_item["coordinates"] = new_coords
+            action_item.pop("normalized_coordinates", None)
+    return True, ValidationErrorCategory.NONE, ""
 ```
 
-这就是为什么简单、确定的目标可以少一次甚至零次模型调用。
+这就是前面“情况 A”的答案：当目标按钮因为上方插入元素而下移了 80 像素时，XML Safety Net 认出它还是同一个按钮（ID 与文本匹配），且位移在 `200 * scale_factor` 像素以内，于是**直接在毫秒级把 `action_item["coordinates"]` 修正成按钮的新中心点并立刻下发点击**——既没点偏，又省掉了打回给 Operator 重新推理一轮的十几秒延迟！
 
-### 不确定时才提升 Explorer tier
+**第四步：Pixel VLM 兜底与 0.7 置信度非对称放行。** 如果动作是纯坐标点击（无 XML 元数据）或 XML 校验未通过，[`precondition_pixel.py`][pre-pixel] 会抓一张实时截图，把决策帧（Image 1）和实时帧（Image 2）在目标坐标处画上红点，交给轻量模型（默认 `gemini-3.5-flash-lite`）对比判断。这里有一个防死锁设计（第 210–235 行）：如果模型判定 `is_present=True`，直接放行；如果判定 `is_present=False`，**只有当模型给出的 `confidence >= 0.7` 时才真正拦截**，低于 0.7 则记为 `PIXEL_BYPASSED` 放行，避免轻量视觉模型偶尔的模糊误判把正常流程卡死。
 
-当前 Explorer tier 是调用方的配置，不是模型自己临时选择的：
+### 5.2 多动作轨道：Fast-Action Burst 抢占瞬态 UI 时间窗口
 
-| Tier | 行为 | 工具与回合上限 |
-| --- | --- | --- |
-| `flash` | 当前截图的一次视觉检测 | 1 回合，无 perception tool |
-| `pro` | UI tree 搜索、坐标审计、视觉检测的短循环 | 最多 3 回合，`ask_perception_tool` |
-| `ultra` | 加入 OCR、放大、像素级图像处理 | 最多 8 回合，开启更多工具和缓存 |
+反过来，面对前面说的“情况 C”（一碰屏幕才出现、2 秒后自动消失的播放器控制条或连续菜单），Operator 可以在单回合里一次性输出 2～4 个动作（Flash 模式下对应 `click_sequence`）。
 
-配置来自 [`tiers.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/tiers.py#L43-L110)。简单文本目标走结构化快路径，Canvas、Compose、Flutter 自绘控件或存在多个相似标签时，才需要更深的视觉推理。
+一旦检测到单轮动作数 $\ge 2$，[`execution_loop.py`][exec-loop] 自动切换到 `burst=True` 模式：
+1. **不做 Safety Net 预检**；
+2. **动作之间不重新截图、不等待页面 settle**；
+3. **每个动作只发一次（`max_local_retries = 1`），背靠背极速连发**；
+4. **首错即停（Fail-Fast）**：一旦序列中第 $k$ 个动作执行报错，立即中止后续动作，将剩余动作标记为 `"Skipped (burst aborted)"`，并抓取失败现场截图转入事故恢复。
 
-即使模型返回了一个 label，ARTEMIS 也不会单独相信这个 label。`_enrich_candidates()` 会检查候选坐标是否落在注册元素的 bounds 内，并使用屏幕宽高的 2% 作为边界容差；不在元素范围内的点不能被自动补成一个可信的结构化目标。[候选边界校验](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/explorer.py#L266-L294)
+---
 
-## Safety Net：动作前先问“我现在还在点刚才那个东西吗？”
+## 6. 快且准的设计五：无独立修复 Agent 的状态化 `Execution Incident`
 
-Explorer 解决的是“刚才看到什么”，Safety Net 解决的是“动作真正发出前，那个东西还在不在”。两者不是同一层。
+很多多智能体框架在动作失败后会唤醒一个专门的 `RepairAgent` 或 `ReflectorAgent`。但这在工程上有两个弊端：第一，每次报错都要多花一次完整的大模型调用延迟和上下文交接成本；第二，修复 Agent 往往不知道 Operator 当时的完整上下文意图，容易“头疼医头”，修完一步又跟主计划脱节。
 
-### 单动作走 XML-first，再走 Pixel fallback
+ARTEMIS 在 [`artemis/agents/validator/incidents.py`][incidents-py] 和 [`operator/prompts.py`][prompts-incident] 中砍掉了独立的修复 Agent，改为**状态化的执行事故单（`Execution Incident`）**。
 
-Validator 的执行循环把动作分成两类：
+当 Safety Net 拦截动作时，[`_classify_failure()`][pre-xml-classify] 会把现场证据归入三类精确诊断之一，并写入 `state.open_incident`：
+- **`target_shifted`（目标大步位移）**：目标身份分很高（`identity_score >= 0.85`），但移动距离超过了自愈上限，直接在 `safety_net_evidence` 中附上**目标的最新归一化坐标与新 bounds**（告诉 Operator：“你要点的东西还在，但挪到新位置了”）；
+- **`target_occupied`（目标被遮挡）**：[`_find_occupant()`][pre-xml-occupant] 找出当前覆盖在原坐标上的最内层非全屏元素，直接在证据里写出**遮挡物的文本和 Resource ID**（例如弹窗按钮名）；
+- **`target_disappeared`（目标已消失）**：自动回查历史步骤，找出该步骤之前的最后一次成功动作（`_last_successful_action_before`），提示 Operator：“如果消失的目标是由上一步动作召唤出来的瞬态菜单，你需要重新触发那一步”。
 
-- 一个 turn-ending action：先执行 Safety Net，再做本地短重试；
-- 两个或更多 action：进入 fast-action burst，连续分发，不做 Safety Net、不做中间截图、不做重试。
+只要还没有任何一个终结动作成功执行，这张 `--- Execution Incident (OPEN) ---` 卡片就会带着累加的 `consecutive_failures` 置顶出现在 Operator 每轮观察尾部；一旦某个动作成功下发，下一轮会自动切换为一张单轮有效的 `--- Execution Incident (CLOSED) ---` 通知，强制 Operator 对照最新屏幕结算刚才受阻的原意图（已完成、仍待办、或已无需执行）。
 
-这个语义写在 [`execution_loop.py` 的模块说明](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/execution_loop.py#L15-L36)，不是根据日志推测出来的。
+---
 
-单动作的 Safety Net 先看动作里是否带有索引目标的 metadata。只要有文本、bounds 或 resource id，优先从 live UI hierarchy 中找候选；XML 检查失败或无法使用时，才拿新截图做像素级 fallback。[Safety Net 的分流](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/execution_loop.py#L76-L127)
+## 7. 快且准的设计六：四区字节稳定账本（`S+F+A+T`）与双边缘无损压缩
 
-XML 候选不是只比较坐标，而是综合多个信号：
+长程任务跑到第 50～100 步时，如何同时保住**低延迟（高 KV Cache 命中率）**、**小上下文（>70% Token 削减）**和**高准确率（不把历史旧元素索引 `[3]` 当成当前屏幕控件）**？
 
-- resource id 权重 `0.5`；
-- text 相似度权重 `0.4`；
-- bounds 重叠权重 `0.3`；
-- 原始坐标是否落在元素内权重 `0.3`。
+答案全在 [`artemis/memory/transcript.py`][transcript-py]、[`context_compressor.py`][compressor-py] 和 [`chunking.py`][chunking-py] 组成的记忆系统里（对应图 6 左列）：
 
-如果屏幕正在转场，XML 预检最多尝试三次，每次间隔 0.4 秒。重试逻辑见 [`validate_action_precondition()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/precondition_xml.py#L40-L93)，信号合成见 [`_combine_signals()`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/precondition_xml.py#L223-L330)。
+![ARTEMIS 长程记忆与验证机制：左列展示 TranscriptLedger 的 S/F/A/T 四区字节稳定布局与差分分词校准；右上展示零模型开销的近距 3 步像素比对与远距 500 步 64-bit dHash 状态扫描；右下展示活体计划守卫、乐观异步中途检查与退出只读终审](/images/artemis-execution/artemis-flash-pro-loop.drawio.png)
 
-Pixel fallback 会重新截图，只裁剪动作目标附近的区域交给视觉模型判断。如果模型判断目标存在，放行动作；如果判断目标消失且置信度至少为 0.7，则拦截；如果“目标不存在”的置信度低于 0.7，则绕过这次像素检查，避免低置信度的视觉误判把任务永远卡住。[像素级 Safety Net 的分支](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/precondition_pixel.py#L155-L260)
+*图 6：本文根据 `memory/transcript.py`、`context_compressor.py`、`chunking.py`、`operator/prompts.py` 和 `graph/checkpoints.py` 整理的长程记忆压缩、零模型死循环检测与异步验证机制。*
 
-### Safety Net 保证的是目标身份，不是业务效果
+### 7.1 为什么把 Prompt 拆成 `S + F + A + T` 四个区域？——为了保住 Prefix KV Cache
 
-通过预检后，普通动作最多本地重试两次，重试间隔 0.5 秒；`launch_app` 只尝试一次。代码特意没有在这里轮询“业务效果”：Validator 的成功只表示设备接受并分发了命令，不表示页面已经达到了用户目标。[本地执行重试](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/execution_loop.py#L130-L158)
+大模型推理的首字延迟（TTFT）和费用很大程度上取决于**前缀缓存（Prefix KV Cache）**能不能命中。只要消息列表前部有任意一个字节发生变化，从变化点往后的所有 KV Cache 就会全部失效。
 
-这条边界看起来保守，实际上让职责更清楚：
+传统的 Agent 每走一步，都会更新 System Prompt 里的 `Current Plan & History`，或者把历史步骤的时间戳渲染成 `"2 minutes ago"`、`"3 minutes ago"`——这意味着**每一轮请求的第 1 条消息都在变，前缀缓存命中率永远是 0%**！
 
-- Safety Net 判断动作目标有没有漂移、被遮挡或消失；
-- 动作执行器记录设备是否接受命令；
-- 下一次观察、Operator 和 Checker 判断页面效果是否满足目标。
+看看 [`transcript.py`][transcript-py] 和 [`prompts.py` 的 M2 模板切分][prompts-m2] 是怎么做的：
+1. **`S` 区（Stable Prefix，静态系统前缀）**：`render_transcript_static_system()` 把原本位于 System Prompt 里的动态 `{{ plan_and_history }}` 替换成一段固定不变的静态指针说明，使得第 1 条 `SystemMessage` 在整场会话中**字节级完全恒定（Byte-identical）**。
+2. **`F` 区（Frozen History，冻结历史区）**：存放已压缩的 L2 分块与 L3 周期（Era），仅在发生分块折叠时追加或更新；且**账本内所有时间戳一律使用相对会话起点的固定偏移 `T+mm:ss`（如 `T+01:25`）**，绝不使用随时间流逝而改变的 `"ago"` 表达。
+3. **`A` 区（Active Window，活动窗口）**：仅追加（Append-only）已提交的近期轮次消息，绝不删除或重排消息顺序，保证 `AIMessage(tool_calls)` 与 `ToolMessage` 配对结构永不破坏。
+4. **`T` 区（Current Tail，当前轮尾部）**：每轮新鲜构建，包含当前截图、当前可见 UI 元素列表、复诵的最新任务计划（`--- Task Plan (recited) ---`）以及标记为 `ephemeral=True` 的单轮提示。
 
-如果把这三件事混成一个 `success=true`，速度快的时候反而更容易产生假成功。
+### 7.2 `ScrubEdgeCompressor` 双边缘单向擦除：为什么模型绝不会点错旧索引？
 
-### Burst 为什么快，也为什么危险
+当本轮结束、消息从 `T` 区提交进 `A` 区后，[`ScrubEdgeCompressor`][compressor-py] 会在 `A` 区上维护两条单向推进、不可逆的擦除边：
 
-当一个 turn 里有两个或更多动作时，Validator 将它们视为一个 burst：
+- **第一条边：浅文本擦除边（`xml_scrub_depth = 1`）**。只要有一帧更新的观察进入上下文（即旧消息深度 $> 1$），压缩器立刻原地切掉旧消息里的 `--- Visible UI Elements ---` 列表、`--- Task Plan (recited) ---` 以及所有登记在 `additional_kwargs["ephemeral_blocks"]` 下的临时提示块（如上一轮的 Incident 卡片、推理提醒、验证反馈）。**这保证了在整个上下文窗口里，永远只有最新一帧 `T` 区携带 `[1]..[N]` 元素索引**，模型在物理上就不可能看到或误引上一页残留的旧 `[3]` 索引！
+- **第二条边：自适应图片擦除边（`image_scrub_depth = 6 -> 3`）**。每一步完成后，后台并发（`max_concurrency=2`）调用轻量模型 `gemini-3.5-flash-lite` 为该步生成客观视觉转移摘要。当 Operator 实测上下文占用率低于 `start_ratio`（35%，对应 80,000 Token 预算的 28,000 Token）时，窗口保留最近 **6 张**原图；一旦达到 35%，擦除边收紧至 **3 张**，更早的截图被后台准备好的 `--- Historical Visual Transition ---` 文字摘要**原位替换**。一旦替换完成，该消息即进入 `frozen` 集合，后续永不重扫或回填。
 
-1. 不做动作前 Safety Net；
-2. 不在动作之间重新截图；
-3. 每个动作只发送一次；
-4. 第一处失败立即中止剩余动作；
-5. 未执行的动作写成 `Skipped (burst aborted)`。
+### 7.3 L2 三带分块、L3 Era 折叠与差分分词率校准
 
-这正是它能处理自动消失控件的原因：动作之间没有新的模型回合，也没有安全校验的额外延迟。但它的适用边界也同样明确：burst 是一组必须连续发生的短动作，不是普通长流程的批处理。
+当活跃轮次继续增长，[`HistoryChunkManager`][chunking-py] 会在里程碑完成、步数达到 3～12 步或触及上下文软/硬水位（70% / 90%）时，将旧轮次压缩进 `F` 区的 **L2 SegmentChunk**。每个 Chunk 严格保留三个频带（Three Bands）：
+- **Band ①（概要与效果）** + **Band ②（区间摘要）**：由单次 `StepCapsuleLens` 生成，且必须通过 `validate_interval_coverage()` 的机器校验——区间并集必须严丝合缝覆盖 `[start_step, end_step]`，不准漏步或重叠；
+- **Band ③（1:1 机械动作账本）**：由确定性代码 `build_action_ledger()` 逐行生成（如 `- Step 4 (T+00:18): tap "Settings" -> dispatched`），且用户中途注入的指令行在任何压缩层级下**永不驱逐（Never Evict）**。如果 Chunk 数量超过 8 个或触及 90% 硬上限，旧 Chunk 会进一步单向折叠为 **L3 Era（周期段落 + 极简步号索引）**，需要细节时再由模型按需调用 `search_history` 或 `replay_steps`。
 
-## Execution Incident：失败不会被一条错误消息冲掉
+这里还有一个针对多语言场景的精妙设计——**差分分词率校准（[`TranscriptLedger.record_prompt_tokens()`][transcript-calib]）**。固定按 `len(text) // 4` 估算 Token 在英文下尚可，但在中文界面下（约 1 字符/Token）会低估近 4 倍，而且每次请求还包含工具 Schema 和大图切片（约 1100～1800 Token）等固定常数项。因此，`TranscriptLedger` 记录相邻两次**图片数量相同**且文本增长超过 `2000` 字符的实测请求，用差分比值 $\sum \Delta\text{chars} / \sum \Delta\text{tokens}$ 将固定常数项精确相消，动态校准当前会话的 `chars_per_token`（限制在 `[1.0, 6.0]` 之间）。
 
-如果 Safety Net 拦截动作，或者设备执行动作失败，Validator 不会启动一个新的 repair agent，也不会只把错误文本丢给模型。它会创建 `open_incident`，写入当前 state 和 step 的 execution report，内容包括：
+---
 
-- 失败种类：Safety Net 拦截还是设备执行错误；
-- 分类：目标移动、目标被遮挡、目标消失等；
-- 失败动作和动作在 burst 中的位置；
-- 连续失败次数；
-- 当前截图和目标位置等证据。
+## 8. 快且准的设计七：零模型死循环检测与“动作分发 $\neq$ 目标达成”的独立终审
 
-下一轮 Operator prompt 会重新渲染这个 incident；incident 保持打开，直到一个 terminal action 成功。成功后，下一轮会收到一条 CLOSED notice，要求 Operator 重新判断原始意图是已经满足、仍然待办，还是已经不需要。[Incident 数据结构](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/incidents.py#L15-L120)，以及 [Operator 的 incident prompt](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/operator/prompts.py#L493-L616)。
+最后看图 6 右列：如何防止 Agent 在同一个死胡同里反复横跳，以及如何防止 Agent 自己宣布“任务圆满完成”其实页面根本没提交成功？
 
-这里的恢复路径很明确：它不是另一个隐藏的 agent，而是下一轮正常 Operator 的输入条件。这样系统不会在失败后丢失“原本想做什么”，也不会因为自动 repair agent 的额外推理把故障路径变成不可解释的分支。
+### 8.1 零模型开销的双层屏幕状态感知（近距像素比对 + 远距 64-bit dHash）
 
-## Checker：在收尾处把“动作完成”与“目标完成”分开
+在组装每轮观察尾部时，[`operator/prompts.py`][prompts-sim] 串联了两个互不干扰、完全不调大模型的本地图像检测器：
 
-Checker 是只读 verifier。它可以读取历史、note 和枚举的只读设备 probe，但不能调用设备动作、写 note 或创建子 Agent。[Checker 模块说明](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/checker/checker.py#L15-L30)
+1. **近距 3 步像素级防卡死（`ScreenshotSimilarityPromptComponent`）**：将当前截图在内存中做一次与历史落盘格式对称的 JPEG（`quality=75`）重编码以消除压缩噪点差异，然后与最近 **3 步**的动作后截图逐像素比对（单通道容差 `8`）。一旦差异像素超过 `3` 个立刻 `break` 提前退出（耗时仅数毫秒）；若发现画面完全未变，立即在尾部注入一行 `Note: the screen is unchanged since step X (pixel-identical).`，提醒模型刚才的点击可能没生效。
+2. **远距 500 步感知哈希重访提示（`HistoricalStateHintPromptComponent` + [`image_hash.py`][image-hash]）**：每一步落盘时，系统都会用 `img.draft("L", (64, 64))` 快速解码并缩放到 $9\times 8$ 灰度网格，计算出 **64 位差分感知哈希（dHash，16 位十六进制字符串）** 存入 `extra_metadata["post_image_dhash"]`。每轮开始时，只要近 3 步没有触发相同画面，它就用整数异或汉明距离（`bin(a ^ b).count("1")`）以 $O(N)$ 扫描过去最多 **500 步**（包括早已折叠进 L2/L3 的历史步骤）。根据在 460 个真机步骤上标定的阈值（同屏汉明距离 $\le 4$，不同屏 $\ge 7$，配置默认阈值 `5`），一旦命中历史页面，立刻注入：
+   ```text
+   Historical state hint: current screen closely resembles the post-action screen from Step 12. Use search_history / replay_steps only if its details are needed.
+   ```
 
-它有两个入口：
+近距靠像素比对抓“原地卡死”，远距靠 64 位 dHash 抓“绕圈回到老页面”，全流程 **0 Token、毫秒级完成**。
 
-- `run_checkpoint_check()`：检查一个已经完成的 subgoal，使用完成时锚定的历史证据，不读取已经变化的 live screen；
-- `run_final_check()`：任务退出时重新抓取最终屏幕，把原始目标、最终计划、历史 verdict ledger 和最终屏幕元素放在一起审计。
+### 8.2 活体计划账本守卫、乐观异步中途检查与退出终审（`Checker`）
 
-最终检查的输入包括最终截图、融合后的 UI 元素列表、历史摘要和 checkpoint ledger。[checkpoint 与 final check](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/checker/checker.py#L669-L859)
+在 Pro 模式下，ARTEMIS 严格区分了三个层面的事实：
+- **Validator 返回 `Dispatched`**：只代表 ADB/设备接受了这条点击指令，代码注释明确写道：`No effect polling: "dispatched" only says the device accepted the command`；
+- **Operator 把计划子目标改成 `[x]`**：只代表执行者自己认为这一步做完了；
+- **Checker 出具 `passed` 裁决**：才代表目标经过只读验证器的独立核实。
 
-Checker 的 release 规则也不由模型自由决定：`verify` verdict 必须是 `passed` 或 `inconclusive` 才允许 release；`assert` 的失败不会被偷偷改写成通过，但不会直接改变这个 verify release 判定。这样模型可以给出证据和建议，真正的放行条件仍由节点代码计算。[release 判定函数](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/checker/checker.py#L79-L118)
+这套约束通过三步落地（见 [`prompts.py`][prompts-bounce]、[`checkpoints.py`][checkpoints-py] 与 [`checker.py`][checker-py]）：
 
-工厂配置默认开启 final check，checkpoint check 默认关闭；也就是说，默认 Pro 路径至少会在退出时做一次针对原始目标的复核，而不是只看计划是否全部打勾。[默认 Agent 配置](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/resources/config/artemis.jsonc#L152-L185)
+1. **活体计划账本本地打回（`render_plan_ledger_bounce()`）**：如果 Operator 下发动作时，`task_plan` 里没有任何里程碑处于进行中 `[/]`，或者同一个叶节点子目标连续多轮动作都没更新状态（`stale_turns`），框架会在本地直接打回该动作，强制它先用 `update_note` 维护好计划账本再执行。
+2. **乐观异步中途检查（Optimistic Async Midway Checkpoints）**：当开启 `midway_checks` 且某个带有 `verify:` 或 `assert:` 的子目标被标为 `[x]` 时，`execution_check_node` 会抓取完成那一刻的证据锚点 `EvidenceAnchor(anchor_step_id, trigger_ts, plan_text)`，在后台启动最多 3 个并发的 `asyncio.Task` 运行 `Checker.run_checkpoint_check()`，**完全不阻塞 Operator 继续往下走下一步**。如果后台 Checker 判定 `verify` 失败，下一轮到达 `execution_check_node` 收获结果时，会自动把该子目标从 `[x]` 翻转回 `[/]`，并把 `[verify failed]` 原因注入 `operator_feedback`。
+3. **退出收口与只读终审（`exit_settlement` + `run_final_check()`）**：当所有顶层子目标都标为完成时，`convergence_gate()` 不会直接结束图循环，而是路由到 `exit_settlement` 节点：先等待所有在途的后台检查点结算完毕，随后默认触发 `run_final_check()`——重新抓取手机的**最终实时屏幕**，连同原始用户目标、最终计划和历史裁决账本（`check_ledger.jsonl`）一起交给只读 Checker 做终审。如果终审发现遗漏，直接把未达成的子目标重新打开并弹回给 Operator 继续补救。
 
-## 历史压缩：速度的另一半是控制上下文，而不是删掉证据
+---
 
-长任务的瓶颈经常不是动作本身，而是模型每一轮都重新携带几十张截图、完整 XML 和已经结束的工具消息。ARTEMIS 的做法不是简单截断历史，而是分层压缩。
+## 9. 核心机制总结：ARTEMIS 是如何打破“快”与“准”矛盾的？
 
-当前默认配置给了一个很具体的形状：
+把上面拆解的源码机制汇总到一张表里，可以清楚看到每一项设计省掉了什么开销、防住了什么错误，以及它的工程边界在哪里：
 
-| 层次 | 默认策略 | 作用 |
-| --- | --- | --- |
-| 当前上下文 | 80,000 token budget；在 35% 后准备压缩，70% 进入软压力，90% 是硬边界 | 控制 Operator prompt 的增长 |
-| 图片边界 | 常态深度 3，放松时深度 6，摘要最多等待 3 步 | 旧截图替换成视觉摘要或证据占位符 |
-| 文本边界 | `xml_scrub_depth=1` | 只有最新 observation 保留可索引 UI 列表 |
-| L2 chunk | 最多 12 步，至少 3 步，目标源文本约 2000 token，最多 8 个 chunk | 把连续步骤折叠成可回忆的阶段 |
-| 主动回忆 | `search_history` 最多 5 条；`replay_steps` 最多 5 步 / 12000 token | 需要时再取回细节 |
-
-配置见 [`artemis.jsonc` 的 memory 段](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/resources/config/artemis.jsonc#L193-L264)。这些数字不是越小越好：太早替换截图会损失视觉证据，太晚压缩又会让模型每轮都背着历史前进。
-
-### 压缩器为什么不会留下过期索引
-
-`ScrubEdgeCompressor` 有两条边：文本边和图片边。文本边经过一个更新的 observation 后，就会从旧消息中移除 UI element list 和 per-turn ephemeral blocks；图片边到达深度后，再把截图原位替换成视觉摘要、失败占位或 DataEngine step 引用。
-
-这样做有两个结果：
-
-1. 历史仍然保留“这一步发生过什么”的可读摘要和证据引用；
-2. 旧消息不会继续携带一个看起来像当前屏幕的 `[3]`，模型无法轻易把旧索引当成新目标。
-
-Flash 的 `VisualStepSummarizer` 在动作记录完成后异步提交摘要任务，主循环不等待；源截图在摘要完成前保持不变，摘要失败则留下带 step 引用的占位符。[Flash 的异步摘要](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/summarizer.py#L139-L257)，与 [增量压缩](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/context_compressor.py#L65-L159)共同完成历史整理。
-
-结果是：主路径不必等待摘要，历史也不会被粗暴清空。
-
-## 为什么它能同时做到快和准
-
-把整条链路压缩成一张表，会更容易看到工程取舍：
-
-| 机制 | 它省掉了什么 | 它保护了什么 | 明确代价 |
+| 创新模块与源码位置 | 为什么“快”（省掉了什么） | 为什么“准”（防住了什么） | 适用边界与工程代价 |
 | --- | --- | --- | --- |
-| ScreenIndex 精确预检 | 简单目标的一次模型调用 | UI tree、bounds、resource id | 只适用于唯一且明确的当前帧目标 |
-| Flash 单模型循环 | Planner、Graph、Checker 的多层往返 | 下一帧观察和 trace | 没有 Pro 的计划、安全网和最终复核 |
-| ActionSession 复用 | 每个动作重新建 MCP 会话 | transport 生命周期和取消边界 | 会话失效时需要整体重建 |
-| Action Burst | 瞬时 UI 中间的模型 RTT、截图和校验 | 连续动作的时间窗口 | 没有 Safety Net、重试和中间截图，首错即停 |
-| Pro Safety Net | 错误目标的设备分发 | 目标身份、漂移和遮挡证据 | 每个单动作增加 UI/XML/像素判断 |
-| Execution Incident | 失败后重新猜测原始意图 | 失败原因、类别、连续次数 | 恢复仍依赖下一轮 Operator 推理 |
-| 异步历史压缩 | 长上下文重复携带图片和 XML | 摘要、step 引用、按需回放 | 摘要模型仍有后台成本 |
-| Checker final review | 把“动作已发出”当“任务成功” | 原始目标与最终屏幕的独立复核 | 退出阶段增加只读检查时间 |
+| **端侧无障碍原子快照**<br>[`accessibility_client.py`][acc-client] | 绕开 `uiautomator dump` 空闲等待，单次 `/snapshot` 毫秒级返回；30s 冷却回退防连环超时 | Android 11+ 同帧原子抓取 XML 与截图，消除图树时间差；不占 `UiAutomation` 单例 | 首次上机需安装 Helper APK（约 3s，可通过 `artemis helper install` 预装） |
+| **五步 UI 树几何净化**<br>[`ui_filter.py`][ui-filter] / [`ocr_xml_fusion.py`][ocr-fusion] | 0 模型开销裁掉越界碎片、合并冗余父子与装饰节点，大幅缩短元素列表长度 | 切除底部导航栏上方 $\le 20\text{px}$ 露头细条防误触；双频段融合 OCR；非同心重叠 $\ge 50\%$ 自动注入遮挡警告 | 纯几何规则无法判断半透明蒙层背后的视觉语义，需配合截图观察 |
+| **三级渐进式目标定位**<br>[`explorer.py`][explorer-py] / [`screen_index.py`][screen-index] | `ScreenIndex` 唯一精确匹配直接走 0 Token 快路径（覆盖 85%+ 常规动作） | 模糊/自绘目标交由具身空间模型 `gemini-robotics-er-2-preview` + 2% 容差框吸附校验 | `flash` 档视觉打点强依赖具备空间微调能力的 ER 模型 |
+| **Safety Net + 200px 坐标自愈**<br>[`precondition_xml.py`][pre-xml] / [`precondition_pixel.py`][pre-pixel] | 目标微幅漂移（$\le 200\text{px}$）时直接原地修正坐标下发，省去打回重跑一轮大模型 | 动作落指前核对实时 XML 四信号与局部裁剪像素，拦截弹窗遮挡与页面跳变；像素置信度 $<0.7$ 放行防死锁 | 每个单动作增加一次实时 XML 读取（及必要时的轻量 VLM 局部比对） |
+| **Fast-Action Burst 连发**<br>[`execution_loop.py`][exec-loop] | 单轮 2–4 个动作跳过 Safety Net、中间截图与重试，背靠背连发 | 赶在自动消失的播放器控制条、Toast、下拉菜单淡出前完成点击 | 放弃了中间步校验，首错即停（`Skipped`），仅限瞬态短序列使用 |
+| **状态化 Execution Incident**<br>[`incidents.py`][incidents-py] / [`prompts.py`][prompts-incident] | 砍掉独立的黑盒 Repair Agent，省去跨 Agent 上下文交接与额外推理轮次 | 将失败精确归类为 `SHIFTED`（附新坐标）/ `OCCUPIED`（附遮挡物）/ `DISAPPEARED`，钉在尾部直至恢复并显式结算 | 恢复决策仍由下一轮 Operator 结合实时屏幕完成 |
+| **`S+F+A+T` 四区账本与双边缘擦除**<br>[`transcript.py`][transcript-py] / [`context_compressor.py`][compressor-py] | 剥离动态计划、固定 `T+mm:ss` 时间戳保住 Prefix KV Cache；后台异步视觉摘要 + L2/L3 折叠削减 >70% Token | `xml_scrub_depth=1` 确保全上下文仅最新帧含 `[1]..[N]` 索引，根除陈旧索引误点；差分校准中英文分词比 | 极早期细节需通过 `search_history` / `replay_steps` 按需二次召回 |
+| **零模型双层循环检测 + 异步 Checker**<br>[`image_hash.py`][image-hash] / [`checkpoints.py`][checkpoints-py] | 近 3 步像素早退比对 + 远 500 步 64-bit dHash 扫描全程 0 Token；中途检查异步并发不阻塞主循环 | 及时点破“画面未变”与“绕回老页面”；退出时 `exit_settlement` 对照原始目标终审实时屏幕，杜绝假成功 | 开启 `final_check`（默认）或 `checkpoints` 会在收尾阶段增加只读复核耗时 |
 
-所以，“又快又准”不是同一条路径上的一个参数，而是两条路径加几层共享基础设施：
+---
 
-- 对简单、确定、瞬时的动作，走 Flash、结构化预检和 burst，把延迟压到热路径之外；
-- 对动态、长程、需要诊断和验证的任务，走 Pro，把额外时间花在计划、Safety Net、incident 和 Checker 上；
-- 两条路径共享动作协议、设备会话、观察结果、trace 和历史压缩，避免重复建设。
+## 10. 源码阅读索引
 
-## 读源码时最容易误判的三件事
+如果你想顺着本文拆解的脉络直接阅读代码，推荐按以下顺序打开文件：
 
-### 1. “模型找到坐标”不等于“目标已经被可靠定位”
+1. **调度入口与双轨分流**：[`artemis/interfaces/cli/commands/run.py`][cli-run] $\rightarrow$ [`artemis/sdk/agent.py`][sdk-agent]（重点看 `DeviceExecutionLock` 与 Flash/Pro 分流） $\rightarrow$ [`artemis/resources/config/artemis.jsonc`][config-jsonc]（全局默认参数与设计注释）。
+2. **端侧感知与进程内动作会话**：[`artemis/clients/accessibility_client.py`][acc-client]（`/snapshot` 原子抓取） $\rightarrow$ [`artemis/clients/screen_client_factory.py`][screen-factory]（30s 冷却回退） $\rightarrow$ [`artemis/mcp/action_session.py`][action-session] $\rightarrow$ [`artemis/mcp/observation.py`][obs-py]。
+3. **五步 UI 树几何净化**：[`artemis/utils/ui_filter.py`][ui-filter]（祖先裁剪、顶底固定栏钳制、父子去重、兄弟合并） $\rightarrow$ [`artemis/utils/ocr_xml_fusion.py`][ocr-fusion]（双频段融合与行聚类） $\rightarrow$ [`artemis/utils/visualization.py`][vis-py]（非同心互遮挡告警与 `Hint/Error` 格式化）。
+4. **三级渐进式定位**：[`artemis/agents/explorer/screen_index.py`][screen-index] $\rightarrow$ [`artemis/agents/explorer/explorer.py`][explorer-py]（`_structural_prepass` 与 `_enrich_candidates`） $\rightarrow$ [`artemis/agents/explorer/tiers.py`][tiers-py]。
+5. **动作前 Safety Net、坐标自愈与事故恢复**：[`artemis/agents/validator/execution_loop.py`][exec-loop] $\rightarrow$ [`artemis/agents/validator/precondition_xml.py`][pre-xml]（四信号打分、200px 坐标自愈、三类失败归因） $\rightarrow$ [`artemis/agents/validator/precondition_pixel.py`][pre-pixel] $\rightarrow$ [`artemis/agents/validator/incidents.py`][incidents-py]。
+6. **四区账本、双边缘压缩与死循环检测**：[`artemis/memory/transcript.py`][transcript-py]（`S+F+A+T` 与差分分词校准） $\rightarrow$ [`artemis/agents/flash/context_compressor.py`][compressor-py]（`ScrubEdgeCompressor`） $\rightarrow$ [`artemis/memory/chunking.py`][chunking-py]（L2 三带与 L3 Era） $\rightarrow$ [`artemis/utils/image_hash.py`][image-hash] & [`artemis/agents/operator/prompts.py`][prompts-sim]。
+7. **Pro 状态图与独立 Checker**：[`artemis/graph/graph.py`][graph-py] $\rightarrow$ [`artemis/graph/checkpoints.py`][checkpoints-py] $\rightarrow$ [`artemis/agents/checker/checker.py`][checker-py]。
 
-模型坐标需要经过候选边界校验；索引目标会附带 UI tree metadata；Pro 单动作还会在发出前重新检查 live screen。真正的定位结果是“坐标 + 目标语义 + 当前证据”，而不是一个裸 `[x, y]`。
+- **项目仓库**：[https://github.com/google/artemis][repo]（Apache-2.0 许可证，本文核查提交：[`351ca84`][commit]）
+- **本文机制图可编辑源文件（`.drawio`）**：[总体执行链路](/images/artemis-execution/artemis-ingress-profile-flow.drawio)、[几何净化与三级定位及 Safety Net](/images/artemis-execution/artemis-target-safety-net.drawio)、[四区账本与死循环检测及 Checker](/images/artemis-execution/artemis-flash-pro-loop.drawio)。
 
-### 2. “动作返回 success”不等于“用户目标完成”
-
-Flash 的动作执行器会在动作后观察，Pro 的 Validator 会记录 dispatch 结果，但 Validator 代码明确不做 effect polling。最终效果要靠下一次屏幕观察、Operator 的计划判断和 Checker 的 verify verdict。
-
-### 3. “Action Burst”不等于“安全批处理”
-
-Burst 故意跳过了 Safety Net、重试和中间截图，它买到的是瞬时 UI 的时间窗口。工程上应该只把必须连续的短动作放进 burst，并保留失败后由 incident 恢复的路径。
-
-## 源码阅读路线
-
-如果你想沿着真实执行路径继续读，建议按下面的顺序打开源码：
-
-1. [`run.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/interfaces/cli/commands/run.py)：CLI 参数、Daemon 调度和本地回退；
-2. [`sdk/agent.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/sdk/agent.py)：设备锁、环境准备和 Flash/Pro 分流；
-3. [`graph/graph.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/graph/graph.py)：Pro 图、收敛和退出收口；
-4. [`agents/flash/runner.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/flash/runner.py)：Flash 主循环和动作快照；
-5. [`agents/explorer/screen_index.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/screen_index.py)：当前屏幕的结构化索引；
-6. [`agents/explorer/explorer.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/explorer/explorer.py)：结构化预检与 Explorer tier；
-7. [`agents/validator/execution_loop.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/execution_loop.py)：单动作、burst、失败中止和 incident；
-8. [`agents/validator/precondition_xml.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/precondition_xml.py) 与 [`precondition_pixel.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/validator/precondition_pixel.py)：动作前校验；
-9. [`agents/checker/checker.py`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/agents/checker/checker.py)：checkpoint 和 final review；
-10. [`resources/config/artemis.jsonc`](https://github.com/google/artemis/blob/371aa6df56880643da57b30da936e9812fb0ec66/artemis/resources/config/artemis.jsonc)：默认 profile、Explorer、Checker 和 history 参数。
-
-## 结尾：真正值得复用的是分层闭环
-
-ARTEMIS 的执行速度，来自它知道哪些判断不应该交给模型：唯一文本匹配、坐标归一化、设备互斥、MCP 会话复用和历史增量压缩，都在模型之外完成。
-
-ARTEMIS 的执行准确性，来自它也知道哪些事情不能只看模型的自信：动作前要看 live UI，漂移后要有像素 fallback，失败要保留 incident，长任务要有计划和收敛条件，退出时要回到原始目标做只读复核。
-
-这套设计可以概括成一句话：**让确定性代码负责缩短路径，让模型负责处理不确定性，让验证层负责阻止“看起来完成”的假象。**
-
-这也是阅读 Android Agent 源码时最应该追踪的主线：不要只问“模型用了什么”，而要问一次动作从哪里产生、经过几次新鲜观察、在哪个边界被拦截、失败后谁接住它，以及最终成功由哪一层定义。
+[repo]: https://github.com/google/artemis
+[commit]: https://github.com/google/artemis/tree/351ca8422f7b5b54e80a9c1ce03a222e02415b6b
+[androidworld]: https://github.com/google-research/android_world
+[img-leaderboard]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/docs/assets/androidworld_leaderboard.png
+[img-arch]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/docs/assets/artemis_architecture_diagram.png
+[img-ui]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/docs/assets/artemis-ui-showcase.png
+[cli-run]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/interfaces/cli/commands/run.py
+[sdk-agent]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/sdk/agent.py#L581-L655
+[sdk-branch]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/sdk/agent.py#L684-L752
+[flash-runner]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/flash/runner.py#L1035-L1174
+[graph-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/graph/graph.py#L965-L1076
+[config-jsonc]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/resources/config/artemis.jsonc
+[config-er]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/resources/config/artemis.jsonc#L73-L83
+[acc-client]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/clients/accessibility_client.py#L15-L340
+[screen-factory]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/clients/screen_client_factory.py#L133-L160
+[action-session]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/mcp/action_session.py#L66-L178
+[obs-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/mcp/observation.py#L40-L133
+[ui-filter]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py
+[ui-filter-prune]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py#L356-L435
+[ui-filter-bars]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py#L437-L512
+[ui-filter-clamp]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py#L514-L574
+[ui-filter-merge]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py#L171-L281
+[ui-filter-redundancy]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ui_filter.py#L284-L354
+[ocr-fusion]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ocr_xml_fusion.py
+[ocr-fusion-fn]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/ocr_xml_fusion.py#L145-L318
+[vis-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/visualization.py
+[vis-occlusion]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/visualization.py#L173-L256
+[resolve-index]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/mcp/action_executor.py#L428-L483
+[explorer-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/explorer/explorer.py
+[explorer-enrich]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/explorer/explorer.py#L266-L330
+[screen-index]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/explorer/screen_index.py#L129-L266
+[run-setup]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/explorer/run_setup.py#L181-L215
+[tiers-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/explorer/tiers.py#L43-L110
+[exec-loop]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/execution_loop.py#L15-L227
+[pre-xml]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_xml.py
+[pre-xml-score]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_xml.py#L223-L356
+[pre-xml-heal]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_xml.py#L359-L387
+[pre-xml-occupant]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_xml.py#L427-L528
+[pre-xml-classify]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_xml.py#L530-L585
+[pre-pixel]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/precondition_pixel.py#L155-L260
+[incidents-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/validator/incidents.py#L15-L120
+[prompts-incident]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/operator/prompts.py#L493-L616
+[prompts-m2]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/operator/prompts.py#L272-L329
+[prompts-bounce]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/operator/prompts.py#L714-L739
+[prompts-sim]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/operator/prompts.py#L871-L1064
+[transcript-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/memory/transcript.py#L15-L368
+[transcript-calib]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/memory/transcript.py#L463-L520
+[compressor-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/flash/context_compressor.py#L65-L220
+[chunking-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/memory/chunking.py#L15-L200
+[image-hash]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/utils/image_hash.py#L15-L80
+[checkpoints-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/graph/checkpoints.py#L15-L155
+[checker-py]: https://github.com/google/artemis/blob/351ca8422f7b5b54e80a9c1ce03a222e02415b6b/artemis/agents/checker/checker.py#L669-L859

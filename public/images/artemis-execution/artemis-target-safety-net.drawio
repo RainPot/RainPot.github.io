@@ -1,88 +1,98 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="drawio" version="31.0.2">
-  <diagram name="目标定位与安全执行">
-    <mxGraphModel dx="1700" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2800" pageHeight="1700" math="0" shadow="0" background="#ffffff">
+<mxfile host="app.diagrams.net" agent="Codewiz" version="24.7.17">
+  <diagram id="artemis-target-safety-net" name="几何净化、三级定位与SafetyNet自愈">
+    <mxGraphModel dx="1000" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="690" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="目标定位不是一次视觉猜测，而是一条逐级收窄的证据链" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontFamily=PingFang SC;fontColor=#1f2937;" vertex="1" parent="1">
-          <mxGeometry x="80" y="30" width="2400" height="60" as="geometry" />
+
+        <!-- Title -->
+        <mxCell id="title" value="ARTEMIS 为什么点得既快又准：五步几何净化、三级渐进定位与动作前 Safety Net 自愈" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="20" y="12" width="920" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="当前屏幕&#xa;截图 + UIAutomator / Helper UI 树 + OCR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="80" y="180" width="330" height="130" as="geometry" />
+
+        <!-- Layer 1: 5-step UI Geometric Purification -->
+        <mxCell id="l1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="48" width="920" height="142" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="ScreenIndex&#xa;可见文本、bounds、resource id、交互属性&#xa;XML 优先，OCR 作为补充" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="520" y="180" width="370" height="130" as="geometry" />
+        <mxCell id="l1_lbl" value="第一层：送入模型前的五步确定性 UI 树几何净化（0 模型开销，消除滑出界外、底部栏遮挡与无文本自绘盲区）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#1E40AF;" vertex="1" parent="1">
+          <mxGeometry x="34" y="54" width="890" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="唯一精确匹配？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1000" y="170" width="250" height="150" as="geometry" />
+
+        <mxCell id="p1" value="&lt;b&gt;1. 祖先容器裁剪&lt;/b&gt;&lt;br&gt;&lt;code&gt;_clip_bounds&lt;/code&gt;&lt;br&gt;按父滚动容器裁剪越界子项，剔除微米噪点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11.5;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="32" y="84" width="168" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="直接候选&#xa;不调用模型&#xa;返回坐标 + bounds + source" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1370" y="90" width="310" height="130" as="geometry" />
+        <mxCell id="p2" value="&lt;b&gt;2. 顶/底系统栏钳制&lt;/b&gt;&lt;br&gt;&lt;code&gt;_clamp_by_fixed_bars&lt;/code&gt;&lt;br&gt;识别固定导航栏，静默丢弃露头 &lt;code&gt;≤20px&lt;/code&gt; 细条" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11.5;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="212" y="84" width="172" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="Explorer 分层&#xa;Flash：1 回合&#xa;Pro：最多 3 回合&#xa;Ultra：最多 8 回合 + OCR / 图像工具" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1370" y="360" width="310" height="170" as="geometry" />
+        <mxCell id="p3" value="&lt;b&gt;3. 父子去重与兄弟合并&lt;/b&gt;&lt;br&gt;&lt;code&gt;ui_filter.py&lt;/code&gt;&lt;br&gt;可点击父节点下唯一文本与图标合并为 &lt;code&gt;[Icon]&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11.5;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="396" y="84" width="172" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="目标候选&#xa;标签 + 归一化坐标 + 边界&#xa;标签必须落在元素内部（约 2% 容差）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1770" y="180" width="340" height="130" as="geometry" />
+        <mxCell id="p4" value="&lt;b&gt;4. 双频段 OCR-XML 融合&lt;/b&gt;&lt;br&gt;&lt;code&gt;fuse_ocr_with_xml&lt;/code&gt;&lt;br&gt;剔除 &gt;10% 巨型容器，按 90%/70% 重叠度行聚合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11.5;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="580" y="84" width="172" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="9" value="Operator 动作&#xa;索引目标 → 归一化 [0,1000] 坐标&#xa;坐标目标必须带 target_description" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2200" y="180" width="360" height="130" as="geometry" />
+        <mxCell id="p5" value="&lt;b&gt;5. 互遮挡告警与 Hint&lt;/b&gt;&lt;br&gt;&lt;code&gt;visualization.py&lt;/code&gt;&lt;br&gt;非同心重叠 ≥50% 注入 &lt;code&gt;WARNING&lt;/code&gt;；暴露 Hint/Error" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3B82F6;strokeWidth=1.5;fontSize=11.5;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="764" y="84" width="164" height="92" as="geometry" />
         </mxCell>
-        <mxCell id="10" value="动作数量？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2670" y="170" width="220" height="150" as="geometry" />
+
+        <!-- Layer 2: Progressive 3-Tier Grounding -->
+        <mxCell id="l2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="206" width="920" height="156" as="geometry" />
         </mxCell>
-        <mxCell id="11" value="单动作&#xa;Safety Net&#xa;XML-first" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=18;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2230" y="650" width="280" height="130" as="geometry" />
+        <mxCell id="l2_lbl" value="第二层：Explorer 渐进式目标定位（先用 0 Token 结构化快路径解决确定目标，仅把模糊目标交给空间视觉模型）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#065F46;" vertex="1" parent="1">
+          <mxGeometry x="34" y="212" width="890" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="12" value="XML 校验&#xa;id .5 / text .4 / bounds .3 / coord .3&#xa;最多 3 次，每次间隔 0.4s" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1730" y="650" width="370" height="140" as="geometry" />
+
+        <mxCell id="g0" value="&lt;b&gt;Level 0：结构化精确预检（0 模型调用 · &lt;1ms）&lt;/b&gt;&lt;br&gt;&lt;code&gt;ScreenIndex._structural_prepass()&lt;/code&gt; 对 &lt;code&gt;|&lt;/code&gt; 分隔查询做归一化精确匹配&lt;br&gt;若唯一命中（XML 优先于 OCR），直接返回 &lt;code&gt;[0,1000]&lt;/code&gt; 坐标与 bounds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="242" width="400" height="104" as="geometry" />
         </mxCell>
-        <mxCell id="13" value="Pixel fallback&#xa;新截图 + 目标裁剪&#xa;缺失置信度 ≥ 0.7 才拦截" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="650" width="330" height="140" as="geometry" />
+
+        <mxCell id="g1" value="&lt;b&gt;Level 1/2/3：未命中或多重歧义时按 Tier 调用视觉引擎&lt;/b&gt;&lt;br&gt;• &lt;b&gt;flash&lt;/b&gt;（1 轮）：调用具身空间模型 &lt;code&gt;gemini-robotics-er-2-preview&lt;/code&gt;&lt;br&gt;• &lt;b&gt;pro&lt;/b&gt;（3 轮）/ &lt;b&gt;ultra&lt;/b&gt;（8 轮 + Context Caching）：UI 树搜索 + 局部放大 + OCR&lt;br&gt;• &lt;b&gt;边界校验&lt;/b&gt;：&lt;code&gt;_enrich_candidates()&lt;/code&gt; 要求点落在元素框 2% 容差内才继承 bounds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="514" y="242" width="412" height="104" as="geometry" />
         </mxCell>
-        <mxCell id="14" value="通过后分发&#xa;普通动作失败最多本地重试 2 次&#xa;Safety Net 只保证目标仍像原来" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="750" y="650" width="350" height="140" as="geometry" />
+
+        <mxCell id="e_g0_g1" value="未命中/歧义" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#059669;strokeWidth=1.5;fontSize=11;fontColor=#065F46;labelBackgroundColor=#ECFDF5;" edge="1" parent="1" source="g0" target="g1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="15" value="Burst&#xa;2+ 动作连续发送&#xa;无 Safety Net、无中间截图、无重试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="2230" y="980" width="330" height="140" as="geometry" />
+
+        <!-- Layer 3: Pre-Execution Safety Net, Coordinate Self-Healing & Burst -->
+        <mxCell id="l3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF1F2;strokeColor=#E11D48;strokeWidth=1.5;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="378" width="920" height="292" as="geometry" />
         </mxCell>
-        <mxCell id="16" value="第一处失败&#xa;剩余动作标记 Skipped&#xa;打开 Execution Incident" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1730" y="980" width="350" height="140" as="geometry" />
+        <mxCell id="l3_lbl" value="第三层：动作真正落指前的双轨执行控制（解决“模型思考的 5–15 秒内屏幕刚好发生位移或弹窗遮挡”）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#9F1239;" vertex="1" parent="1">
+          <mxGeometry x="34" y="384" width="890" height="22" as="geometry" />
         </mxCell>
-        <mxCell id="17" value="下一轮 Operator&#xa;看到失败类别、原因和证据&#xa;下一次成功动作后关闭 incident" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=17;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="980" width="400" height="140" as="geometry" />
+
+        <!-- Single Action Track -->
+        <mxCell id="v_xml" value="&lt;b&gt;单动作轨道 A：实时 XML Safety Net（最多 3 次 × 0.4s 重试）&lt;/b&gt;&lt;br&gt;四信号合成：&lt;code&gt;W_ID=0.5, W_TEXT=0.4, W_BOUNDS=0.3, W_COORD=0.3&lt;/code&gt; × 距离衰减&lt;br&gt;排除宽高比失配 &gt;2.5x 的巨型容器，计算总分 &lt;code&gt;score&lt;/code&gt; 与身份分 &lt;code&gt;identity_score&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E11D48;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="414" width="416" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="18" value="注意：Validator 的成功含义是命令已分发，不等同于业务效果已确认；最终效果由下一帧、Operator 和 Checker 共同判断。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontFamily=PingFang SC;fontColor=#374151;" vertex="1" parent="1">
-          <mxGeometry x="80" y="1320" width="1050" height="90" as="geometry" />
+
+        <mxCell id="v_heal" value="&lt;b&gt;原地坐标自愈（Coordinate Self-Healing）&lt;/b&gt;&lt;br&gt;若 &lt;code&gt;score ≥ 阈值&lt;/code&gt; 且位移 &lt;code&gt;≤ 200 × scale_factor&lt;/code&gt; 像素：&lt;br&gt;直接把动作坐标修正为实时新中心点并下发，&lt;b&gt;省去重跑一轮 Operator！&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;fontSize=12;fontColor=#14532D;" vertex="1" parent="1">
+          <mxGeometry x="514" y="414" width="412" height="74" as="geometry" />
         </mxCell>
-        <mxCell id="19" value="结构化证据" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="80" y="1500" width="150" height="38" as="geometry" />
+
+        <mxCell id="v_pixel" value="&lt;b&gt;Pixel VLM 兜底校验（precondition_pixel.py）&lt;/b&gt;&lt;br&gt;XML 不可用或未过检时，调用 &lt;code&gt;gemini-3.5-flash-lite&lt;/code&gt; 对比决策图与实时图红点位置；仅当判定消失且 &lt;code&gt;confidence ≥ 0.7&lt;/code&gt; 才拦截（低置信度放行防卡死）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E11D48;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="514" width="416" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="20" value="模型补全" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="260" y="1500" width="150" height="38" as="geometry" />
+
+        <mxCell id="v_inc" value="&lt;b&gt;结构化 Execution Incident（无独立黑盒修复 Agent）&lt;/b&gt;&lt;br&gt;拦截后精确归类为 &lt;code&gt;TARGET_SHIFTED&lt;/code&gt;（附新坐标）、&lt;code&gt;TARGET_OCCUPIED&lt;/code&gt;（附遮挡物名称）或 &lt;code&gt;TARGET_DISAPPEARED&lt;/code&gt;，钉在 Operator 尾部直至后续动作成功" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="514" y="514" width="412" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="21" value="执行控制" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="440" y="1500" width="150" height="38" as="geometry" />
+
+        <!-- Multi Action Burst Track -->
+        <mxCell id="v_burst" value="&lt;b&gt;多动作轨道 B：Fast-Action Burst（单轮 2–4 个动作，专克自动消失菜单 / Toast / 播放器控制条）&lt;/b&gt;&lt;br&gt;故意跳过 Safety Net、跳过中间截图、不做本地重试，背靠背极速连发抢占瞬态 UI 时间窗口；一旦某步报错立即中止剩余动作并标为 &lt;code&gt;Skipped (burst aborted)&lt;/code&gt;，交由 Execution Incident 恢复。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9333EA;strokeWidth=1.5;fontSize=12;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="34" y="596" width="892" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="22" value="恢复 / 收口" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontFamily=PingFang SC;" vertex="1" parent="1">
-          <mxGeometry x="620" y="1500" width="170" height="38" as="geometry" />
+
+        <mxCell id="e_v1" value="通过" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16A34A;strokeWidth=1.5;fontSize=11;fontColor=#14532D;labelBackgroundColor=#FFF1F2;" edge="1" parent="1" source="v_xml" target="v_heal">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="23" value="观察" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="3" target="4"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="24" value="查询" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="4" target="5"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="25" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="5" target="6"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="26" value="no / 多个" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="5" target="7"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="27" value="候选合并" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="6" target="8"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="28" value="候选合并" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="7" target="8"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="29" value="动作意图" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="8" target="9"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="30" value="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=1;exitY=0.25;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="11"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="2780" y="500" /></Array></mxGeometry></mxCell>
-        <mxCell id="31" value="2+" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="10" target="15"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="32" value="先校验 XML" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="11" target="12"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="33" value="XML 失败 / bypass" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="12" target="13"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="34" value="通过 / 像素确认" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="13" target="14"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="35" value="分发" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="14" target="17"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="700" y="720" /><mxPoint x="700" y="1050" /></Array></mxGeometry></mxCell>
-        <mxCell id="36" value="失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="15" target="16"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="37" value="恢复上下文" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;fontSize=13;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="16" target="17"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e_v2" value="兜底" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E11D48;strokeWidth=1.5;fontSize=11;fontColor=#9F1239;labelBackgroundColor=#FFF1F2;" edge="1" parent="1" source="v_xml" target="v_pixel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_v3" value="拦截" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=1.5;fontSize=11;fontColor=#92400E;labelBackgroundColor=#FFF1F2;" edge="1" parent="1" source="v_pixel" target="v_inc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
