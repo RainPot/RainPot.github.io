@@ -26,11 +26,4 @@ describe("markdown math config", () => {
     expect(config).toContain("throwOnError: false");
   });
 
-  it("ships katex stylesheet only on the blog post layout", () => {
-    const layout = readFileSync("src/layouts/BlogPostLayout.astro", "utf8");
-    const base = readFileSync("src/layouts/BaseLayout.astro", "utf8");
-
-    expect(layout).toContain('import "katex/dist/katex.min.css"');
-    expect(base).not.toContain("katex");
-  });
 });

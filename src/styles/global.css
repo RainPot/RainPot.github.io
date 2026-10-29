@@ -46,6 +46,15 @@ a {
   color: inherit;
 }
 
+.navigation-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  z-index: 65534;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  pointer-events: none;
+}
+
 .cosmic-background {
   position: fixed;
   inset: 0;
