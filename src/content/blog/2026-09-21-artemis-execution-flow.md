@@ -238,7 +238,7 @@ ARTEMIS 在 [`artemis/agents/validator/execution_loop.py`][exec-loop] 里用**�
 - **文本相似度权重 `W_TEXT = 0.4`**：归一化精确匹配得 `1.0`，子串包含得 `0.8`，否则取 `SequenceMatcher` 比例；
 - **边界交并比权重 `W_BOUNDS = 0.3`**：计算决策时刻 `target_bounds` 与当前节点 `bounds` 的 IoU；同时检查宽高比例，若宽或高相差超过 **2.5 倍（`size_mismatch`）** 且 ID 不匹配，直接将文本、边界和坐标分清零，防止把小按钮误匹配到包含相同文字的外层大容器；
 - **坐标包含权重 `W_COORD = 0.3`**：原计划点击坐标是否落在该节点矩形内；
-- **距离衰减**：总分再乘以 `decay = max(0.5, 1.0 - dist / 800.0)`。当距离 $\le 150 \times \text{scale\_factor}$ 时通过阈值为 `0.55`，距离更远时要求阈值达到 `0.75`（其中 `scale_factor` 按当前屏幕对角线相对 $1080\times 2400$ 的比例缩放，保证跨分辨率一致）。
+- **距离衰减**：总分再乘以 `decay = max(0.5, 1.0 - dist / 800.0)`。当距离 $\le 150 \times \text{scale\_factor}$ 时通过阈值为 `0.55`，距离更远时要求阈值达到 `0.75`（其中 `scale_factor` 按当前屏幕对角线相对 `1080 × 2400` 的比例缩放，保证跨分辨率一致）。
 
 **第三步：不超过 200px 的漂移，原地坐标自愈（Coordinate Self-Healing）！** 看 [`precondition_xml.py` 的 `_handle_match_success()`][pre-xml-heal]：
 
@@ -335,7 +335,7 @@ ARTEMIS 在 [`artemis/agents/validator/incidents.py`][incidents-py] 和 [`operat
 在组装每轮观察尾部时，[`operator/prompts.py`][prompts-sim] 串联了两个互不干扰、完全不调大模型的本地图像检测器：
 
 1. **近距 3 步像素级防卡死（`ScreenshotSimilarityPromptComponent`）**：将当前截图在内存中做一次与历史落盘格式对称的 JPEG（`quality=75`）重编码以消除压缩噪点差异，然后与最近 **3 步**的动作后截图逐像素比对（单通道容差 `8`）。一旦差异像素超过 `3` 个立刻 `break` 提前退出（耗时仅数毫秒）；若发现画面完全未变，立即在尾部注入一行 `Note: the screen is unchanged since step X (pixel-identical).`，提醒模型刚才的点击可能没生效。
-2. **远距 500 步感知哈希重访提示（`HistoricalStateHintPromptComponent` + [`image_hash.py`][image-hash]）**：每一步落盘时，系统都会用 `img.draft("L", (64, 64))` 快速解码并缩放到 $9\times 8$ 灰度网格，计算出 **64 位差分感知哈希（dHash，16 位十六进制字符串）** 存入 `extra_metadata["post_image_dhash"]`。每轮开始时，只要近 3 步没有触发相同画面，它就用整数异或汉明距离（`bin(a ^ b).count("1")`）以 $O(N)$ 扫描过去最多 **500 步**（包括早已折叠进 L2/L3 的历史步骤）。根据在 460 个真机步骤上标定的阈值（同屏汉明距离 $\le 4$，不同屏 $\ge 7$，配置默认阈值 `5`），一旦命中历史页面，立刻注入：
+2. **远距 500 步感知哈希重访提示（`HistoricalStateHintPromptComponent` + [`image_hash.py`][image-hash]）**：每一步落盘时，系统都会用 `img.draft("L", (64, 64))` 快速解码并缩放到 `9 × 8` 灰度网格，计算出 **64 位差分感知哈希（dHash，16 位十六进制字符串）** 存入 `extra_metadata["post_image_dhash"]`。每轮开始时，只要近 3 步没有触发相同画面，它就用整数异或汉明距离（`bin(a ^ b).count("1")`）以 $O(N)$ 扫描过去最多 **500 步**（包括早已折叠进 L2/L3 的历史步骤）。根据在 460 个真机步骤上标定的阈值（同屏汉明距离 $\le 4$，不同屏 $\ge 7$，配置默认阈值 `5`），一旦命中历史页面，立刻注入：
    ```text
    Historical state hint: current screen closely resembles the post-action screen from Step 12. Use search_history / replay_steps only if its details are needed.
    ```
