@@ -67,6 +67,7 @@ const isActive = (href: string, external?: boolean) => {
         rel={item.external ? "noreferrer" : undefined}
         aria-label={item.label}
         aria-current={isActive(item.href, item.external) ? "page" : undefined}
+        data-astro-prefetch={item.external ? undefined : "load"}
       >
         <span class="nav-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">

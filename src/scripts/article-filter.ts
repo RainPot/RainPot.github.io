@@ -120,18 +120,66 @@ function readCardFields(card: HTMLElement): ArticleFilterFields {
   };
 }
 
+// 全文只在实际搜索时下载，同一站内会话的翻页和 tab 切换复用同一个请求。
+const articleBodyIndexes = new Map<string, Promise<Record<string, string>>>();
+
+function loadArticleBodies(url: string): Promise<Record<string, string>> {
+  const cached = articleBodyIndexes.get(url);
+  if (cached) return cached;
+
+  const pending = fetch(url).then(response => {
+    if (!response.ok) throw new Error(`全文搜索请求失败：${response.status}`);
+    return response.json() as Promise<Record<string, string>>;
+  });
+  articleBodyIndexes.set(url, pending);
+  // 失败请求不缓存，后续主动搜索可以重新尝试。
+  void pending.catch(() => articleBodyIndexes.delete(url));
+  return pending;
+}
+
 export function initArticleFilter(root: ParentNode = document) {
   const input = root.querySelector<HTMLInputElement>("[data-article-filter]");
   const cards = [...root.querySelectorAll<HTMLElement>("[data-filter-card]")];
   const count = root.querySelector<HTMLElement>("[data-filter-count]");
   const empty = root.querySelector<HTMLElement>("[data-filter-empty]");
   const pagination = root.querySelector<HTMLElement>("[data-filter-pagination]");
+  const status = root.querySelector<HTMLElement>("[data-filter-status]");
 
   if (!input || cards.length === 0) {
     return;
   }
 
   const entries = cards.map(readCardFields);
+  const indexUrl = input.dataset?.searchIndex;
+  let bodiesLoaded = !indexUrl;
+  let loadingBodies = false;
+
+  const setStatus = (message: string) => {
+    if (!status) return;
+    status.textContent = message;
+    status.hidden = message === "";
+  };
+
+  const ensureSearchBodies = () => {
+    if (bodiesLoaded || !indexUrl) return;
+    setStatus("正在搜索全文…");
+    if (loadingBodies) return;
+    loadingBodies = true;
+    void loadArticleBodies(indexUrl).then(bodies => {
+      entries.forEach((fields, index) => {
+        const body = bodies[cards[index].dataset.filterKey ?? ""];
+        fields.body = typeof body === "string" ? body : "";
+      });
+      bodiesLoaded = true;
+      loadingBodies = false;
+      setStatus("");
+      update();
+    }).catch(() => {
+      loadingBodies = false;
+      setStatus(normalizeFilterText(input.value) ? "全文搜索暂不可用，可继续按标题、标签和摘要查找。" : "");
+    });
+  };
+
   const pageSize = Math.max(1, Number(pagination?.dataset.pageSize) || cards.length);
   // The page number rendered by the server, derived from the URL (e.g. /blog/page/2/).
   const serverPage = Math.max(1, Number(pagination?.dataset.currentPage) || 1);
@@ -164,11 +212,13 @@ export function initArticleFilter(root: ParentNode = document) {
     // Without an active query, defer to the server's URL-based pagination so that
     // opening an article and navigating back restores the same page.
     if (normalizeFilterText(input.value) === "") {
+      setStatus("");
       currentPage = serverPage;
       showServerPage();
       return;
     }
 
+    ensureSearchBodies();
     if (resetPage) currentPage = 1;
 
     const state = getArticleFilterPage(entries, input.value, currentPage, pageSize);

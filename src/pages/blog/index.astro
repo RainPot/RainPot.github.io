@@ -17,9 +17,10 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     </section>
     <label class="filter-shell archive-filter">
       <span>$ grep</span>
-      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="搜索文章" data-article-filter />
+      <input type="search" placeholder="title / tag / keyword" autocomplete="off" aria-label="搜索文章" data-article-filter data-search-index={link("/blog/search-index.json")} />
       <b data-filter-count>{posts.length}/{posts.length}</b>
     </label>
+    <p class="filter-status" data-filter-status role="status" hidden></p>
     <section class="articles archive-list">
       {posts.map((post, index) => (
         <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} pagedOut={index >= POSTS_PER_PAGE} />

@@ -2,7 +2,7 @@
 import ParticlesBackground from "./react/ParticlesBackground";
 ---
 
-<div class="cosmic-background" aria-hidden="true">
-  <ParticlesBackground client:load />
+<div class="cosmic-background" aria-hidden="true" transition:persist="cosmic-background">
+  <ParticlesBackground client:idle />
 </div>
 <div class="scanline" aria-hidden="true"></div>

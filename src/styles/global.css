@@ -17,9 +17,14 @@
   box-sizing: border-box;
 }
 
-/* ClientRouter 默认给整页导航加交叉淡入，关掉保持瞬时切换，光标视觉上完全无感 */
-::view-transition-old(root),
-::view-transition-new(root) {
+/* 过渡快照不参与点击，避免页面已经切换后仍被默认的 250ms 过渡层拦截。 */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
   animation: none;
 }
 
@@ -473,6 +478,13 @@ body.header-condensed .nav-links a:focus-visible .nav-tooltip {
 .filter-shell b {
   color: var(--green);
   font-weight: 700;
+}
+
+.filter-status {
+  max-width: 920px;
+  margin: 0 auto 14px;
+  color: var(--muted);
+  font-size: 0.84rem;
 }
 
 .articles {
