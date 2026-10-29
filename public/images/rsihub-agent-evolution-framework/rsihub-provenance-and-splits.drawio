@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="三划分隔离与防篡改归档判定">
+    <mxGraphModel dx="1000" dy="880" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="880" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="三划分隔离与防篡改归档判定" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=34;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="900" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="区分训练反馈、准入评测与封存锚点，并用多重指纹校验父结点资格" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="90" width="900" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="left-title" value="三层数据划分（Splits）" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="60" y="155" width="420" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="right-title" value="父结点资格校验（valid_parents）" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=27;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="520" y="155" width="420" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="train" value="&lt;b&gt;Train 划分&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;供 Rollout / Analyze / Mutate 试跑&lt;br&gt;允许进入变异反馈包&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="gate" value="&lt;b&gt;Gate 划分&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;驱动标准 Evaluate 与 Gate 准入&lt;br&gt;默认不向 Mutate 暴露详细日志&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="425" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="sealed" value="&lt;b&gt;Sealed 封存划分&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;仅作 gen/0 与最终 Champion 的 Anchor&lt;br&gt;不参与父结点选择，隔绝变异反馈&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="630" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="receipt" value="&lt;b&gt;1. 评测收据与字段保护&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;archive.jsonl 匹配评测哈希收据&lt;br&gt;保护 29 个 STAMPED_FIELDS 不被覆盖&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="220" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="contract" value="&lt;b&gt;2. 固定评测契约对齐&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;evaluator_fingerprint + task_set_hash&lt;br&gt;+ runtime_fingerprint 与基线一致&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="425" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="tag" value="&lt;b&gt;3. Git Tag 与准入闭环&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;refs/tags/gen/N 精确指向评测 commit&lt;br&gt;Gate 已完成且 verdict=keep&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#eee8f7;strokeColor=#9682af;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="520" y="630" width="420" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="train" target="gate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="gate" target="sealed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="receipt" target="contract">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="contract" target="tag">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" value="只有三项校验全部满足，候选才进入 ArchiveView.valid_parents() 参与下一代演化" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=21;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="805" width="900" height="45" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

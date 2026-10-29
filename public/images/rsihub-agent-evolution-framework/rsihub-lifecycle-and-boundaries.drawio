@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="RSIHub：策略阶段与受保护评测边界">
+    <mxGraphModel dx="1000" dy="960" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="960" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="RSIHub：策略阶段与受保护评测边界" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=34;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="900" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="Recipe 组合九个算子槽位，Guardrail 与 Evaluate 由框架强制执行" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="90" width="900" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="select" value="&lt;b&gt;1. Select + Rollout&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;挑选认证父结点 SHA，仅在 Train 划分上收集证据&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="160" width="520" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="mutate" value="&lt;b&gt;2. Analyze* + Mutate&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;提炼轨迹摘要，在声明的 surface 内修改候选文件&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="315" width="520" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="guardrail" value="&lt;b&gt;3. Guardrail · 框架护栏&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;check_paths 校验改动边界 + Validate* / Novelty*&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="470" width="520" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="evaluate" value="&lt;b&gt;4. Evaluate · 框架独占评测&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;干净快照 gen/N 在 Gate 上评测，不挂载算子&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="625" width="520" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="absorb" value="&lt;b&gt;5. Absorb · 准入与沉淀&lt;/b&gt;&lt;div style=&quot;font-size:21px;margin-top:8px;line-height:1.45&quot;&gt;Gate 决定父结点资格 · Record 写标注 · Reflect*&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=26;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="60" y="780" width="520" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="surface" value="&lt;b&gt;默认禁改区&lt;/b&gt;&lt;div style=&quot;font-size:20px;margin-top:8px;line-height:1.45&quot;&gt;evaluator/**&lt;br&gt;archive.jsonl&lt;br&gt;.evolve/**&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=25;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="660" y="450" width="280" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="archive" value="&lt;b&gt;认证账本&lt;/b&gt;&lt;div style=&quot;font-size:20px;margin-top:8px;line-height:1.45&quot;&gt;STAMPED_FIELDS&lt;br&gt;+ SHA-256 收据&lt;/div&gt;" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=25;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacing=16;" vertex="1" parent="1">
+          <mxGeometry x="660" y="665" width="280" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="select" target="mutate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="mutate" target="guardrail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="guardrail" target="evaluate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="evaluate" target="absorb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;dashed=1;dashPattern=6 5;" edge="1" parent="1" source="surface" target="guardrail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.25;" edge="1" parent="1" source="evaluate" target="archive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.75;" edge="1" parent="1" source="absorb" target="archive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="caption" value="蓝色：Recipe 可选算子阶段　橙色：框架独占控制阶段　绿色：受保护边界与账本" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="900" width="900" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
