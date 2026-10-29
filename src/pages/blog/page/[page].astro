@@ -47,10 +47,10 @@ const pageStart = (page - 1) * POSTS_PER_PAGE;
       ))}
     </section>
     <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
-    <nav class="archive-pagination" aria-label="文章分页" data-filter-pagination data-current-page={page} data-page-size={POSTS_PER_PAGE}>
-      <a class="button ghost" href={page === 2 ? link("/blog/") : link(`/blog/page/${page - 1}/`)}>上一页</a>
+    <nav class="archive-pagination" aria-label="文章分页" data-filter-pagination data-archive-base={link("/blog/")} data-current-page={page} data-page-size={POSTS_PER_PAGE}>
+      <a class="button ghost" href={page === 2 ? link("/blog/") : link(`/blog/page/${page - 1}/`)} data-astro-prefetch="false">上一页</a>
       <span>第 {page} / {totalPages} 页</span>
-      {page < totalPages && <a class="button ghost" href={link(`/blog/page/${page + 1}/`)}>下一页</a>}
+      {page < totalPages && <a class="button ghost" href={link(`/blog/page/${page + 1}/`)} data-astro-prefetch="false">下一页</a>}
     </nav>
   </main>
   <script>

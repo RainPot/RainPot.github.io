@@ -27,9 +27,9 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     </section>
     <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>
     {totalPages > 1 && (
-      <nav class="archive-pagination" aria-label="文章分页" data-filter-pagination data-current-page="1" data-page-size={POSTS_PER_PAGE}>
+      <nav class="archive-pagination" aria-label="文章分页" data-filter-pagination data-archive-base={link("/blog/")} data-current-page="1" data-page-size={POSTS_PER_PAGE}>
         <span>第 1 / {totalPages} 页</span>
-        <a class="button ghost" href={link("/blog/page/2/")}>下一页</a>
+        <a class="button ghost" href={link("/blog/page/2/")} data-astro-prefetch="false">下一页</a>
       </nav>
     )}
   </main>
