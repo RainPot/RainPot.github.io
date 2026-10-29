@@ -1,106 +1,169 @@
 ---
-title: "重构 Agent 的外围大脑：Google Harness² 源码核心创新点拆解"
-description: "抛开单纯的模型权重与 Prompt 迷信，Google Research 开源的 Harness² 提供了一种让 Agent 依据执行证据自动升级脚本、规则与工具流的框架。本文深入源码，拆解其 Propose-Probe-Compose 闭环与八大组件机制。"
+title: "Harness² 源码深度拆解：Agent 如何从执行证据中改进运行配置"
+description: "抛开单纯的模型权重与 Prompt 迷信，深入源码解析 google-research/harness2 的两层递归、八类可编辑组件、经验入库、盲选与评测隔离，并探讨其对 GUI Agent 与移动端自动化测试的启示。"
 date: "2026-10-19"
 tags: ["AI Agent", "Agent Harness", "源码拆解", "自我改进", "Agent Memory", "评测"]
 draft: false
 featured: false
-readingTime: 12
+readingTime: 25
 ---
 
-在构建智能体（Agent）的过程中，我们常常发现：同一个底层大模型，搭配不同的提示词模板、工具调用流程或后处理脚本，其在复杂任务上的表现会天差地别。这层围绕模型组织的“执行配置”——业内常称为 **Harness**，是决定 Agent 落地能力的真正护城河。
+同一个大模型，换一份系统提示词、一个工具使用流程，或者一段数据处理脚本，在复杂任务上的结果往往天差地别。在 Agent 工程实践中，这种差异反复出现：**模型能力只是天花板，围绕模型组织的执行配置（Harness），才是决定其能否在特定业务中落地的底盘。**
 
-在传统的 Agent 工程里，Harness 的调优通常是人工的“苦力活”：工程师们翻阅失败的执行日志（Trace），猜测模型哪里理解错了，然后去改写 Prompt、增加一个新工具或是修补一段 Python 脚本，再次跑测。
+这层配置通常包括 Prompt、工具指导、记忆、Skills、子代理、脚本和运行时插件。在以往的工程中，Harness 调优是高度依赖人工的“苦力活”。Google Research 开源的 [Harness² (Recursive Agent Harnessing)][repo] 把这套改进过程做成了**可执行的代码框架**：保持模型权重不变，让 Agent 在当前任务上自主提出 Harness 修改、在沙盒中试跑并获取差异证据，最后把验证有效的修改沉淀为跨任务经验。
 
-为了打破这种人工干预的瓶颈，Google Research 提出了 [Harness² (Recursive Agent Harnessing)][paper]，并开源了其[核心框架代码][repo]。该框架的出发点非常纯粹：**不碰模型权重，完全通过“提议修改 - 试跑获取证据 - 采纳有效经验”的递归机制，让 Agent 学会自动改进自己的执行配置。**
+本文基于 `google-research/harness2` 源码（[`1cfe254e`][commit]），沿着其核心的 `Propose-Probe-Compose` 执行链路，从代码架构、运行开销与设计哲学的维度进行深度拆解，并探讨其在 APP 自动化测试与 GUI Agent 领域的落地价值。
 
-本文基于 `google-research/harness2` 源码（[`1cfe254e`][commit]），从开发者视角剖析它的代码设计与主要创新点。
+![Harness² 总体链路：蓝色区域依次执行基础任务、提出修改、试跑并组合配置，右侧更新后续任务的改进经验](/images/harness2-recursive-agent-harnessing/original/harness2_pipeline.png)
+*图 1：Harness² 的总体链路。蓝色框内是单次任务内的自我改进循环，右侧则是跨任务的经验沉淀。来源：[assets/harness2_pipeline.png][repo-pipeline]*
 
-## 1. 核心创新一：不止于想，基于“执行证据”的 Propose-Probe-Compose 闭环
+## 1. 从一个直观的代码 Bug 开始：负数为什么漏算了？
 
-大模型在“自我反思（Self-Reflection）”时常常会遇到“幻觉”：它可能提出了一个听起来很合理的改进，但实际运行起来却由于 API 错误或者依赖问题而彻底崩溃。Harness² 最核心的创新在于它的 **Propose-Probe-Compose 闭环**：一切改进必须经过试跑（Probe）拿到实际的执行证据。
+要理解 Harness² 是怎么工作的，最快的方式是看源码中自带的 `harness2/demo.py` 账本计算例子。
 
-![Harness² 整体流程图：依次执行基础任务、提出修改、试跑验证并最终组合有效经验](/images/harness2-recursive-agent-harnessing/original/harness2_pipeline.png)
-*图 1：Harness² 总体链路。通过试跑拿到真实证据后，再更新后续任务使用的改进经验。来源：[assets/harness2_pipeline.png][repo-pipeline]*
+假设任务要求 Agent 对 CSV 中所有带符号的金额求和。
+输入的账本源文件包含：
+```text
+100.25
+-20.10
+5.00
+```
+Agent 携带的“基础配置”中有一段用于辅助计算的 Python 脚本，其关键代码如下：
+```python
+# 初始缺陷脚本
+total = sum((amount for amount in amounts if amount > 0), Decimal(0))
+```
+显然，这个脚本带有一个 `if amount > 0` 的过滤条件，导致结果输出 `105.25`，而正确结果应该是 `85.15`。
 
-在源码 `core/recursion.py` 的调度中，一次改进并非简单的 LLM 问答，而是严谨的实验流：
+在传统的纯 Prompt 反思体系下，模型可能会输出一句空洞的：“我下次会注意把负数也加进去”。但这无法影响下一次独立的 Python 脚本调用。
 
-1. **Propose（提出候选）**：框架分别从**通用视角 (INV)** 和**领域视角 (DOM)** 对当前的 Harness 提出修改建议。例如，针对一个算错账的任务，INV 视角可能会指出“模型缺少多步规划”，而 DOM 视角可能会发现“金额过滤脚本漏掉了负数”。
-2. **Probe（试跑验证）**：框架将这些修改后的组件（可能是一段 Python 脚本，也可能是一个系统规则）真正投入执行环境试跑，生成包含了系统标准输出与错误日志的真实 `rollout.md`。
-3. **Compose（组合生效）**：组合器（Composer）不是盲目相信提案，而是要对比基础执行和候选执行的 Diff 与结果。源码中的提示词明确警告：`Agreement is support, not independent proof.`（输出的一致性只提供支持，不是独立证明）。
+而在 Harness² 的工作流中：
+1. **提出差异 (Propose)**：系统识别到基础执行的错误，提议修改这段 Python 脚本，移除正数过滤条件，并生成针对代码文件的 `harness.diff`。
+2. **带入试跑 (Probe)**：框架将修改后的文件部署到沙盒中执行。
+3. **组合确证 (Compose)**：系统获取到了**新的标准输出确实变成了 `85.15`** 这一执行证据。从而正式采纳了这个 Harness 修改。
 
-这个基于“执行证据”的回路，解决了 Agent 自我改进中最致命的“越改越差”问题。
+这个例子深刻揭示了 Harness² 的核心逻辑：**修改的是会影响下一次执行的实体文件（代码、规则文本），观察的是这些文件改变后引发的真实系统行为。** 一句反思，只有落实到配置上并经过试跑验证，才有价值。
 
-## 2. 核心创新二：八类可编辑组件，把执行边界交还给系统
+## 2. 八类核心组件：让大模型接管“执行边界”
 
-只让 Agent 改系统提示词（System Prompt）是远远不够的。复杂业务任务往往需要长篇的领域知识、确定性的计算脚本，甚至是在工具循环（Tool Loop）中进行干预。
+如果只允许修改 System Prompt，Agent 的改进上限是非常低的。Harness² 在 `substrate/opencode.py` 中，将 Agent 运行时的上下文和工具抽象成了一棵**可被大模型随时编辑的文件树**。
 
-Harness² 设计了八类可被动态编辑的组件接口：
+![八类可编辑组件](/images/harness2-recursive-agent-harnessing/original/components.png)
+*图 2：八类组件按运行时职责分布，覆盖从上下文构建、工具接口到中间件与子代编排的全流程。来源：[assets/components.png][repo-components]*
 
-![八类可编辑组件图解：从 Context 到 Orchestration，全方位覆盖 Agent 执行周期](/images/harness2-recursive-agent-harnessing/original/components.png)
-*图 2：八大组件职责图解。组件所处位置决定了其生命周期及上下文占用。来源：[assets/components.png][repo-components]*
+项目明确定义了这八类组件对应的物理文件及其职责：
 
-从源码 `substrate/opencode.py` 来看，Harness² 把配置映射成了真实的文件树结构。Agent 可以按需编辑：
-- **系统提示词 (`systemprompt.md`)**：决定基础角色。
-- **行为规则 (`guardrails.md`)**：持续生效的约束条件。
-- **长期记忆 (`LongTermMEMORY.md`)**：执行时读取的领域知识。
-- **工具指导 (`tool_guidance.md`)**：给模型讲解如何使用现存工具。
-- **子代理 (`AGENT.md`)**：可委派角色及其职责。
-- **按需技能 (`SKILL.md`)**：模块化的工作流，按需加载，节省主上下文。
-- **脚本 (`scripts/*.py`)**：确定性极强的逻辑处理（如数据格式化），这是大模型最容易犯错却最适合用代码接管的地方。
-- **运行时插件 (`plugin/*.ts`)**：在工具调用过程中做 AOP 拦截。
+| 组件 | OpenCode 映射路径 | 影响的核心行为与生命周期 |
+| :--- | :--- | :--- |
+| **系统提示词** | `systemprompt.md` | 基础角色设定，常驻上下文。 |
+| **行为规则** | `guardrails.md` | 持续生效的约束条件与纪律（如：不能随意删除数据库）。 |
+| **长期记忆** | `LongTermMEMORY.md` | 执行时读取的业务领域知识，作为外部挂载内容。 |
+| **工具指导** | `tool_descriptions/tool_guidance.md` | 规定何时、以及怎样编排使用现有工具，影响工具循环。 |
+| **子代理** | `sub_agents/<name>/AGENT.md` | 复杂任务的可委派角色及职责说明。 |
+| **Skills** | `skills/<name>/SKILL.md` | 按需加载的独立流程与操作知识，节约主进程上下文。 |
+| **脚本** | `scripts/<name>.py` | 确定性的计算与辅助逻辑（如数据清洗），由代码而非 LLM 生成内容接管。 |
+| **运行时插件** | `plugin/<name>.ts` | 拦截工具调用，进行中间件级别的校验或数据改写。 |
 
-这就使得“改进”不仅停留在语义层面，更能下沉到代码逻辑与系统架构层面。例如，在项目中一个自带的 Demo 里，求和任务因为初始的 Python 脚本带有 `if amount > 0` 导致负数被漏算。Harness² 通过 Propose 修改这段代码并 Probe 后，发现输出数字终于对了，从而采纳了新的脚本。这种对**可执行代码**的自我修正是纯 Prompt 反思无法企及的。
+**字符预算与硬约束限制**：
+看代码可以发现，在 `OPENCODE_SURFACE` 中，常驻文本（如 prompt、guardrails）的预算上限被严格限制在 **24,000 个字符**，而适配 Codex 的版本则设为 **8,000 个字符**。
+为什么要有这个限制？因为框架鼓励 Agent 把复杂的逻辑抽离成按需加载的 Skill 或独立执行的 Python Script，而不是一味地往 Prompt 里塞垃圾信息导致“注意力丢失”。
 
-## 3. 核心创新三：两种递归搜索策略（Parallel 扩展与 Sequential 深入）
+在正式执行前，`tree.validate()` 会进行严格的确定性检查，比如：脚本是否能编译？技能触发条件是否存在语法错误？是否存在路径逃逸？如果组件修改不合法，在拿到错误后重试一次，若依然失败，则回滚退回当前配置。
 
-在算力预算充裕时，如何更好地在广阔的“配置修改空间”中探索？Harness² 在 `core/recursion.py` 中实现了两种不同的递归探索模式：
+## 3. 深入 Propose-Probe-Compose 源码逻辑
 
-![并行与串行递归模式](/images/harness2-recursive-agent-harnessing/original/harness2_recursion_modes.png)
-*图 3：Parallel（并行展开）与 Sequential（串行深挖）机制对比。来源：[assets/harness2_recursion_modes.png][repo-recursion]*
+打开 `core/prompts.py` 和 `core/recursion.py`，我们可以看到“改进”并非单轮对话，而是有着极其严格的实验证据链。
 
-- **Parallel 模式（扩大探索宽度）**：基于初始状态 $H_0$，同时并行孵化多个独立的修改提案（`k` 份 INV 和 `k` 份 DOM），所有候选各自试跑后，Composer 从整个候选池里择优组合。这种方式不容易陷入局部最优。
-- **Sequential 模式（单线深入）**：类似梯度下降，每一次组合得到新配置 $C_1$ 后，将其作为起点再进行下一轮改进生成 $C_2$。适用于任务特别复杂、需要分步递进修正的场景。
+### 3.1 Context 构建：只给模型看“局部证据”
+`context.build()` 会为编辑会话准备一棵严谨的证据树，包含参考执行 `rollouts/`、产物清单 `deliverables/`，以及当前各种提案的目录 `pool/<label>/`。
+为了防止 Token 溢出，代码中对交付物的展示做了限制（`proposer_deliverables="names"`），只让模型看到修改带来了哪些文件的变化，而非把全部产物文本塞入。
 
-这种工程设计将 Agent 改进过程抽象成了可控的树搜索过程，研究者可以依据任务特性和算力花销（Token 成本）自由调节探索广度与深度。
+### 3.2 两种视角的 Propose
+模型从两个正交视角提交修改：
+- **INV（通用行为视角）**：比如“遇到复杂元素应该先打印 DOM 树”，针对上下文管理、工具编排的跨任务通病。
+- **DOM（领域视角）**：针对当前特定业务的习惯，例如“在这个报销系统中，货币符号前有空格”。
 
-## 4. 核心创新四：跨任务记忆沉淀与严苛的评测隔离
+源码中规定的优先级极其实用：**先找执行轨迹中的分歧 -> 再找反复报错的具体错误 -> 最后考虑可能存在的风险。** 这避免了大模型一上来就无中生有地制定大而空的“最佳实践”。
 
-Harness² 并不只着眼于单次任务的通过率，它还有一个 `Library` 机制，用于跨任务迁移经验。
+### 3.3 Compose 阶段：证据支撑，而非盲信
+当不同视角的候选配置在沙盒中试跑（Probe）后，会来到 `Compose` 阶段。
+在 `prompts.py` 的 `compose()` 提示词中有一句堪称灵魂的准则：
+> *"Agreement is support, not independent proof."*
 
-在执行结束后，通过 `core/selection.py` 与 `core/library.py` 的协同，系统会通过匿名盲选从候选池挑选最终输出（隔绝了参考执行的偏差）。随后，反思模块开始提炼经验，要求填入 `cue`（情境）、`lesson`（修改动作）和最重要的 `evidence`（行为依据）。只有满足完整的归因链条，这段修改后的组件才会被收入经验库。
+意思是，如果两份试跑都生成了正确的文件，这只是提供支持，你需要对比它们的执行轨迹。如果某个候选虽然没报错，但轨迹中丢失了某个必要的安全校验步骤，Composer 需要识别出这种“退化风险”，甚至选择拒绝组合，回退到原始 Harness。
 
-在执行新任务时，系统不再像某些框架那样盲目继承上一轮的脏状态，而是重新从公共基础配置启动，再通过检索 `INDEX.md` 选择性加载适用的修改。这种设计极大减轻了“专用补丁不断累积导致上下文灾难”的问题。
+## 4. 探索成本：Parallel 与 Sequential 模式的调度
 
-![经验库带来的分数增益对比图](/images/harness2-recursive-agent-harnessing/original/library_transfer.png)
-*图 4：经验库的作用。不使用参考执行反馈直接修改（左）效果极差，但有了跨任务的经验库介入后，性能有显著回升。来源：论文 Figure 7。*
+如何在庞大的配置空间里搜索？`core/recursion.py` 设计了由参数 `k` 控制的两种探索模式：
 
-同时，为防止 Agent 为了刷榜而在迭代中直接“白嫖” Benchmark 的标准答案，Harness² 的代码架构做了严格的隔离：
-改进链路坚决不读入 Benchmark Judge 的分数和答案。成功与否的判断，只能基于 `BenchmarkAdapter` 提供的工具返回、应用状态和输出产物本身。这也是评价一个 Agent 是否具备真实业务落地价值的硬标准。
+![并行与串行递归](/images/harness2-recursive-agent-harnessing/original/harness2_recursion_modes.png)
+*图 3：Parallel（并行）从同一基础展开候选池；Sequential（串行）则是步步递进，将前轮修改带入后轮。来源：[assets/harness2_recursion_modes.png][repo-recursion]*
 
-## 5. 落地启示：对 APP 自动化测试与 Mobile QA 的价值
+**1. Parallel (扩大探索宽度)**
+- 从基础配置出发，提出 `k` 个 INV 候选与 `k` 个 DOM 候选。
+- 得到 `2k` 份独立的试跑证据。
+- 发起 `k` 个相互独立的组合会话，并再次执行，最终选择出最优的配置。
+这种方式避免了陷入死胡同，适用于一次性横向寻找最优解。
 
-跳出论文的 Benchmark 刷榜语境，站在 **APP 自动化测试与 Mobile QA** 领域专家的视角来看，Harness² 提供了一套极具杀伤力的工程范式。
+**2. Sequential (沿着配置深度挖掘)**
+- 连续执行 `k` 轮。第二轮的起点是第一轮的产物 `c1`，而不是公共基础配置。
+- 最终候选池包含 `c1` 到 `ck` 的所有中间产物。
+这种方式类似于梯度下降，适用于需要剥洋葱般层层递进解决的深水区任务。
 
-当前的 GUI Agent（如各种 UIAutomator 包装项目或视觉 VLM 测试工具）在实际企业落地的最大痛点是**脆弱性**：弹窗稍有变化、网络加载多等了 2 秒、或者元素的层级变深了，基于固定 Prompt 的 Agent 就会频繁中断。如果按照 Harness² 的思路来重构 QA 基础设施：
+在 `core/ledger.py` 中我们可以看到清晰的数学开销：
+一次任务的真实执行次数 $R = 4k$，改进计算阶段 $P = 3k$。
+也就是说，如果设 $k=5$，为了完成 1 次任务，Agent 会在背后默默启动多达 20 次的沙盒执行、15 次的配置编辑与组合分析。这是一个典型的**用算力（Scaling Inference Compute）换取业务成功率**的策略。
 
-1. **从口头约束转向“脚本与插件沉淀”**：面对一个顽固的“动态弹窗干扰”问题，不要只是告诉大模型“你要关闭弹窗”，而是让 Agent 在试错后，将识别并关闭弹窗的逻辑沉淀为一段稳定的前置 `Script` 或是封装成专门的 `Skill` 配置文件。
-2. **基于“执行截屏与回放（Trace）”的盲选演进**：在自动化用例执行失败时，框架并行提出多种恢复策略（比如尝试点击页面其他空白处、尝试执行滚动、尝试重启 App）。全部 Probe 之后，比较哪个策略确实让 UI 恢复了可用状态，并把这条策略永久加入对应 App 的 `guardrails.md` 中。
-3. **彻底抛弃断言（Assertion）焦虑**：测试工程师无需再手工编写极其脆弱的控件树断言，Agent 通过历次任务积攒的领域知识（Domain Library），能自己生成并迭代最适合当前页面的状态检查规则。
+## 5. 跨任务记忆与严格的“评测隔离” (Benchmark Isolation)
+
+在单次任务里调优后，最关键的一步是把局部经验泛化到后续任务。
+在 `core/selection.py` 中，采用哪份最终产物是**匿名盲选**的，选择器甚至不知道各个产物对应的 Harness 来源。
+
+### 采用与提炼的双轨制
+选中某个输出，只代表它通过了当前测试。但“经验库入库”却极为严苛。
+`core/library.py` 和 `reflect_adoption()` 会检查完整的任务内修改记录。反思模型必须结构化地输出以下字段：
+- `cue`：情境触发词。
+- `lesson`：具体的 Harness 修改动作。
+- `evidence`：具体哪一段执行行为的对照支撑了这条经验。
+- `confidence`：信心度。
+
+如果由于多个组件混杂修改，无法归因出到底是哪行代码起了作用，模型必须如实标记为 `confounded`。如果证据不充分，框架甚至会返回 `NO_ENTRY` 拒绝入库。
+
+![跨任务迁移效果](/images/harness2-recursive-agent-harnessing/original/library_transfer.png)
+*图 4：经验库跨任务转移的效果验证。来源：论文 Figure 7。*
+
+### 坚守网络防线，杜绝“评测泄露”
+整个系统被设计成不向 Agent 暴露 Benchmark 的 Judge 分数和参考答案。
+源码里的 `RunView` 视图主动过滤了得分；`core/judge.py` 被设定为仅在所有选择完毕后，通过独立的离线命令调用 `score()`。
+这个细节非常重要，它保证了 Harness² 所取得的提升（如图 4 所示）是来自于真实的业务验证，而不是大模型靠阅读答案“作弊”得来的。
+
+## 6. 核心落地思考：对 APP 自动化测试与 Mobile QA 的颠覆
+
+在深入拆解完 Harness² 的源码后，作为 GUI Agent 和自动化测试从业者，我认为它提供的思路恰好击中了当前 UI 自动化的核心痛点——**脆弱性**与**重构成本高昂**。
+
+如果你用当前的 VLM Agent 做移动端自动化，最大的噩梦莫过于：今天写好的 Agent，明天因为 App 弹了一个营销弹窗，或者页面加载慢了 2 秒，整个任务就直接 Crash。
+
+Harness² 带来了怎样的降维打击？
+
+1. **从“空洞的 Prompt 安抚”转向“稳定的防御脚本”**
+   当 Agent 发现自己由于广告弹窗导致点击不到目标元素时，以往的做法是把“遇到非预期弹窗先点击右上角关闭”这句话塞进系统提示词。但在 Harness² 架构下，DOM 视角的编辑器（Proposer）会在失败后直接在 `guardrails.md` 里增加明确的触发规则，甚至直接生成一个前置的 Python/JS 检查脚本 (`check_and_close_popup.py`)。大模型把脏活累活交给了确定性的代码。
+2. **利用试跑（Probe）对抗页面漂移**
+   GUI 测试的最大痛点是元素定位符 (XPath/ID) 的过期。通过 Parallel 模式，Agent 在一次失败后，可以并行尝试 5 种不同的定位修改方案（有的基于文本，有的基于视觉 OCR，有的基于相对坐标），在沙盒里分别试跑 `2k` 次。哪种定位策略没有报错且进入了下一级页面，就采纳哪种策略。整个**定位自愈 (Self-Healing)** 过程不再需要人工介入代码库。
+3. **基于验证结果沉淀领域知识库**
+   例如对于小红书、淘宝等不同特征的流式内容瀑布流，Agent 可以在不断滑动加载的过程中，将判断“到底滑动到底没有”的经验总结入库（`EXPERIENCE.md`）。在后续测试另一款具备相似瀑布流的 App 时，Agent 会在启动初期的基线配置中自动挂载相关经验，极大地缩短冷启动试错时间。
 
 ## 总结
 
-Google 的 Harness² 没有在模型结构上炫技，而是下了一步务实的工程好棋：**让机器去干预自己运行时环境的源代码与配置体系**。用“修改配置 - 取证 - 确立因果”的科学实验循环，代替了不可靠的纯 Prompt 自我开导。
+Harness² 是对当前“Prompt Engineering 万能论”的一次严肃拨乱反正。
+它通过极其严谨的代码组织（八大组件表面）、科学的验证链路（Propose-Probe-Compose）以及克制的经验抽象（Evidence-based Library），赋予了 Agent 真正在工程侧**自己修改自己代码与配置**的能力。
 
-无论是开发通用智能体还是专门领域的测试自动化引擎，Harness² 中的八类组件抽象与 Propose-Probe-Compose 闭环，都值得被纳入下一代 Agent 架构的基础设计中。
+尽管这种 `4k` 倍的算力花销在当前线上实时系统（Online Serving）中显得极其昂贵，但如果在**离线测试、RPA 重构、CI/CD 自动化检测**等对延迟不敏感的场景里使用，它将有望颠覆目前手工维护自动化脚本的工作流。
 
 ---
-
-*参考资料与源码约定：本文代码核查时间为 2026 年 10 月 19 日，版本 [`1cfe254e`][commit]。论文：[Harness²: Recursive Agent Harnessing for an Open World][paper]。图表版权归原作者所有，并依据相关协议引用（具体见[SOURCES.md](/images/harness2-recursive-agent-harnessing/original/SOURCES.md)）。*
+*本文代码拆解基于 google-research/harness2 仓库的 [1cfe254e][commit] 版本。引用图表按原样保留自原始项目或由论文 SVG 等比渲染（依据 Apache-2.0 及 CC BY 4.0 协议，详情见 [SOURCES.md](/images/harness2-recursive-agent-harnessing/original/SOURCES.md)）。*
 
 [repo]: https://github.com/google-research/harness2
 [commit]: https://github.com/google-research/harness2/tree/1cfe254e8d25b15f37048c3730134686abe60335
-[paper]: https://arxiv.org/abs/2610.14224
 [repo-pipeline]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/harness2_pipeline.png
 [repo-components]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/components.png
 [repo-recursion]: https://github.com/google-research/harness2/blob/1cfe254e8d25b15f37048c3730134686abe60335/assets/harness2_recursion_modes.png
