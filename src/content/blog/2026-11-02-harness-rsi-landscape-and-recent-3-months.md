@@ -125,6 +125,10 @@ readingTime: 42
 - **核心机制**：将在线自改进形式化为 **Context-to-Harness Skill Compilation（上下文到脚手架的技能编译）**。每完成一个任务，编译器从嘈杂的单次轨迹中剥离实例级细节，提炼出结构化、可复用的 **Skill Harness**，按主题级（Topic-level）与跨领域层级挂载到后续执行中。
 - **验证范围**：在 Terminal-Bench 2、SWE-bench、CL-Bench、$\tau$-bench 和 WebArena-Infinity 五个真实基准上验证了单次经验编译的在线适应能力，并系统消融了哪些上下文信号真正驱动了后续性能提升。
 
+![Evo-Harness 主架构图：从单次带噪执行轨迹到跨任务可复用 Skill Harness 的编译流程](/images/harness-rsi-landscape-and-recent-3-months/fig-evoharness-overview.png)
+
+*图 4：Evo-Harness 主架构图（源自 `arXiv:2608.15071` Fig. 2）。系统从单次任务轨迹中抽取通用与领域信号，编译为结构化的 Skill Harness 供后续任务挂载。*
+
 ### 4.2 ModularRSI：五模块解耦演化与 2,000 题外部演化池（2026-09-14）
 
 - **论文**：[*ModularRSI: Modular and Generalizable Recursive Harness Self-Improvement*](https://arxiv.org/abs/2609.14857)
@@ -136,6 +140,10 @@ readingTime: 42
   3. **Benchmark-Disjoint 演化集**：专门从外部数据源清洗构建了 **2,000 个可执行演化任务**，与下游评测集完全物理隔离。
 - **实验结论**：在完全不接触目标评测集的前提下，演化出的 Harness 在 Terminal-Bench 2.0 和 SWE-bench Verified 上取得稳定的域内与跨域提升，并且可以直接迁移到未参与演化的其他基座大模型上。
 
+![ModularRSI 主架构图：五模块独立演化、同任务成对轨迹分析与集成验证流程](/images/harness-rsi-landscape-and-recent-3-months/fig-modularrsi-overview.png)
+
+*图 5：ModularRSI 主架构图（源自 `arXiv:2609.14857` Fig. 2）。在与评测集物理隔离的演化任务上，五个功能模块分别依据成对轨迹对比独立演化，再统一集成验证。*
+
 ### 4.3 RiseHarness：结合内部运行时监控轨迹，跨框架“抄作业”（2026-10-20）
 
 - **论文**：[*Harness Self-Evolution for Long-Horizon Terminal Agents*](https://arxiv.org/abs/2610.27435)
@@ -146,6 +154,10 @@ readingTime: 42
   2. **Agent 轨迹 + Harness 内部监控轨迹联合诊断**：运行时监控器（Runtime Monitor）同时采集模型动作轨迹与 Harness 内部执行状态，通过一份 **Harness Handbook** 将故障现象精确映射到 Harness 源码模块（命令执行、反馈处理、上下文管理、完成决策）。
   3. **跨框架检索与移植**：定位到机制短板后，RiseHarness 不靠凭空瞎猜，而是去检索其他开源 Harness 框架的现成实现，将其作为设计参考适配到当前模型与执行协议中，经行为检查与多次重复评测通过后合入主干。
 
+![RiseHarness 主架构图：结合 Agent 轨迹与运行时监控定位不稳定任务，并跨开源框架检索移植机制](/images/harness-rsi-landscape-and-recent-3-months/fig-riseharness-overview.png)
+
+*图 6：RiseHarness 主架构图（源自 `arXiv:2610.27435` Fig. 2）。通过联合分析 Flipping Tasks 的模型轨迹与 Harness 内部运行时日志定位缺陷模块，并从外部参考框架库中检索机制进行适配移植。*
+
 ### 4.4 OO-Harness：用面向对象继承管理特化 Harness，运行时动态路由（2026-10-20）
 
 - **论文**：[*Object-Oriented Harness: Evolving Agent Harnesses through Object-Oriented Design*](https://arxiv.org/abs/2610.28380)
@@ -155,6 +167,10 @@ readingTime: 42
   1. **训练期构建类层次树（Class Hierarchy）**：演化 Agent 根据执行记录，以 Base Harness 为基类，通过子类继承（Subclassing & Overriding）不断派生出针对特定任务簇的特化 Harness 子类，既复用父类公共脚手架，又在子类中重写特定钩子。
   2. **测试期 Router 动态分发**：同时积累路由经验（Routing Lessons），在测试时由 **Harness Router** 为新任务实时挑选最匹配的子类实例执行。
 - **实验结论**：在横跨企业业务流、工作区操作与复杂工具调用的三个长周期基准上，OO-Harness 相比基础全局 Harness 取得了最高 **+15 个百分点**的绝对提升。
+
+![OO-Harness 主架构图：通过面向对象继承演化特化 Harness 类层次树，并在测试期通过 Router 动态分发](/images/harness-rsi-landscape-and-recent-3-months/fig-ooharness-overview.png)
+
+*图 7：OO-Harness 主架构图（源自 `arXiv:2610.28380` Fig. 2）。左侧对比扁平全局重写与面向对象继承树演化，右侧展示训练期派生子类与测试期 Router 动态路由。*
 
 ---
 
@@ -172,6 +188,10 @@ readingTime: 42
   3. **Held-out 最终测试集**：全程密封，仅用于最终泛化报告。
 - **实验结论**：在 ITBench SRE、EnterpriseOps-Gym ITSM 和 AutomationBench Finance 三个企业基准上，每个环境仅需接受 **4–12 次修改**，就能比默认 Harness 提升 **20–35 个百分点**。更重要的是，这些收益不仅在留出集上保持稳定，还能**无需重新演化、直接跨 GPT 与 Qwen 模型家族迁移**。轨迹分析表明，主要收益来自修复工具接口歧义、固化环境操作惯例以及减少误报诊断。
 
+![StarHarness 主架构图：可演化的企业级脚手架表面与分层可见性隔离搜索循环](/images/harness-rsi-landscape-and-recent-3-months/fig-starharness-overview.png)
+
+*图 8：StarHarness 主架构图（源自 `arXiv:2608.24804` Fig. 1）。严格分离 Proposer-Visible 诊断集、Proposer-Hidden 筛选集与 Held-out 测试集，在企业工具、MCP 与子智能体接口上执行分层演化。*
+
 ### 5.2 HarnessEvolve：用带答案生成的参考轨迹解决信用分配与遗忘（2026-09-01）
 
 - **论文**：[*HarnessEvolve: Learning from Reference Trajectories for Reliable Agent Self-Evolution*](https://arxiv.org/abs/2609.00829)
@@ -181,6 +201,10 @@ readingTime: 42
   1. **角色四分离**：将执行（Execution）、评估（Evaluation）、优化（Optimization）和准入（Gating）拆给四个相互独立的模块。
   2. **参考轨迹对齐（Reference Trajectory Alignment）**：在训练阶段，先把标准答案提供给系统生成“参考执行轨迹”，再将失败轨迹与参考轨迹逐段对齐，提取精确的误差信号并聚类出系统性故障模式。
   3. **双门控准入（Quality Gate + Performance Gate）**：候选修改必须先过**质量门控**（过滤数据泄漏、硬编码答案和提示词无意义膨胀），再过**性能门控**（要求在当前批次上有提升，且在最近的历史批次上不退化），最后在每个 Epoch 结束时用独立验证集选出最佳快照。
+
+![HarnessEvolve 主架构图：基于参考轨迹对齐的误差归因与质量/性能双门控准入](/images/harness-rsi-landscape-and-recent-3-months/fig-harnessevolve-overview.png)
+
+*图 9：HarnessEvolve 主架构图（源自 `arXiv:2609.00829` Fig. 1）。利用标准答案引导生成参考轨迹并与失败轨迹逐段比对，配合 Quality Gate 与 Performance Gate 拦截捷径作弊与历史回归。*
 
 ### 5.3 RRSI：给 Harness 演化加上退火预算、防刷榜 Critic 与剪枝器（2026-09-21）
 
@@ -192,6 +216,10 @@ readingTime: 42
   2. **防特化审查器（Critic）**：在准入阶段专门审查并拦截那些只对当前 Benchmark 特有格式或题型生效的狭隘修改。
   3. **减法剪枝器（Pruner）**：定期移除那些增益低于噪声门槛、Token 开销过高或已被后续机制替代的冗余修改。
 - **实验结论**：在涵盖代码、工作区操作与工程设计的 8 个基准上，RRSI 在演化集上提升最高 **+6.0 分**，在 **5 个完全未见过的 OOD 基准上提升最高 +4.3 分**，同时生成的 Harness 比无正则化演化节省了 **30% 的策略 Token**。
+
+![RRSI 主架构图：在提议与选择阶段施加退火修改预算、防特化审查与冗余剪枝正则化](/images/harness-rsi-landscape-and-recent-3-months/fig-rrsi-overview.png)
+
+*图 10：RRSI 主架构图（源自 `arXiv:2609.24972` Fig. 1）。将正则化引入 Proposer（修改预算退火与探索引导）和 Selector（防特化 Critic、噪声门槛与减法剪枝器），抑制评测集过拟合。*
 
 ---
 
@@ -218,26 +246,46 @@ readingTime: 42
   3. **Evidence-Preserving Reducer**：用廉价小模型提取长诊断日志中的报错行，但强制执行 `body.includes(quote)` **逐字节子串核验**，校验不过立即回退原日志，杜绝小模型幻觉；
   4. **Online Context Compact**：只在子任务完成边界触发压缩，且显式计算 **Prompt Cache 重写负债（`cacheWriteReadRatio`）与剩余请求视野的盈亏平衡方程**，确认真能省钱才动手压缩。
 
+![SoL-Pi 主架构图：大规模 Auto-Research 搜索循环与四项正交运行时降本原语](/images/harness-rsi-landscape-and-recent-3-months/fig-solpi-overview.png)
+
+*图 11：SoL-Pi 主架构图（源自 `arXiv:2609.20519` Fig. 1）。在 535 个隔离环境中对 152 个优化假设进行递归广度—深度搜索，通过能力保底与效率门禁筛出四项正交降本扩展。*
+
 ### 6.2 SelfSearch：只花 4 美元搜索费的免奖励自修改（2026-09-29）
 
 - **论文**：[*SelfSearch: Reward-Free Search for Self-Improving Agents*](https://arxiv.org/abs/2609.37968)
 - **核心洞察**：现有方法之所以贵，是因为每改一次代码就要去下游 Benchmark 上跑一轮完整评测拿 Reward。SelfSearch 提出了一种反直觉的 **Reward-Free Search**：在搜索阶段**完全不调用下游任务奖励**，而是让 Agent 读取“过去自修改尝试的完整过程记录（包含当时为什么这么改、调用了什么工具、改出了什么结果）”，直接依靠自修改经验迭代种群。
 - **实验结论**：在全部 6 个“模型—基准”组合中，SelfSearch 的种群平均成功率均超过初始 Agent，在 Terminal-Bench 2.1 上单 Agent 最高提升 **+11.2 个百分点**。最夸张的是成本对比：仅凭 **\$4.03** 的搜索开销，它为 DeepSeek V4 Flash 搜出的 Harness 在公开 9-Harness 对比协议下解决了 **82.0%** 的 Terminal-Bench 2.1 任务，直接追平当时得分最高的原生 Codex Harness。
 
+![SelfSearch 主架构图：无需下游奖励评测、依靠自修改历史记录引导的免奖励搜索](/images/harness-rsi-landscape-and-recent-3-months/fig-selfsearch-overview.png)
+
+*图 12：SelfSearch 主架构图（源自 `arXiv:2609.37968` Fig. 1）。对比传统奖励引导搜索（左）与 SelfSearch 免下游奖励搜索（右）：搜索阶段直接复用过往自修改过程的推理与操作记录迭代种群。*
+
 ### 6.3 MESH-Harness：把整包搜索拆成模块池 + Bandit 组合优化（2026-10-04）
 
 - **论文**：[*MESH-Harness: Self-Improving Agent Harnesses via Bandit-Guided Compositional Evolution*](https://arxiv.org/abs/2610.05300)
 - **核心机制**：如果一个 Harness 有 5 个功能角色、每个角色有 5 个候选实现，穷举组合就是 3,125（即 $N = 5^5$）次评测。MESH-Harness 给每个功能模块定义严格的角色接口，维护固定容量的角色候选池（Role-specific Pools），并用共享模块表征 + **全协方差 LinUCB（Full-Covariance LinUCB Bandit）** 预测任意模块组合的表现与探索价值，配合混合起点坐标上升（Mixed-start Coordinate Ascent）挑出最有潜力的完整配置去实测，再用验证轨迹指导局部代码微调。在同等评测预算下，它在文本、检索增强数学推理、代码生成和交互式科学任务上全面击败 Meta-Harness（高出 **2.00–7.01 分**），同时把测试期成本压低了 **44.2%**。
+
+![MESH-Harness 主架构图：角色候选池、全协方差 LinUCB Bandit 组合搜索与局部代码演化](/images/harness-rsi-landscape-and-recent-3-months/fig-meshharness-overview.png)
+
+*图 13：MESH-Harness 主架构图（源自 `arXiv:2610.05300` Fig. 1）。通过角色候选池、共享模块表征与全协方差 LinUCB Bandit 搭配混合起点坐标上升，在受限评测预算下做模块组合搜索与局部精炼。*
 
 ### 6.4 HarnessPro：无标签测试评估 + 帕累托三档预算输出（2026-10-19）
 
 - **论文**：[*HarnessPro: Recursive Harness Self-Improvement with Pareto Optimization for Performance-Cost Trade-offs*](https://arxiv.org/abs/2610.26770)
 - **核心机制**：解决两个现实部署问题：第一，线上没有标准答案和官方单测怎么办？HarnessPro 用 **LLM 自动生成的测试用例**做无标签候选评估；第二，不同业务对账单的敏感度不同，为什么只输出一个 Harness？它用多智能体分别按不同性能—成本倾向提议修改，并通过归一化加权平方距离选择，一次性输出 **`lite`（省钱优先）**、**`medium`（均衡）** 和 **`heavy`（性能优先）** 三档配置供按需部署。
 
+![HarnessPro 主架构图：多智能体性能—成本倾向提议、无标签生成测试评估与三档帕累托前沿选择](/images/harness-rsi-landscape-and-recent-3-months/fig-harnesspro-overview.png)
+
+*图 14：HarnessPro 主架构图（源自 `arXiv:2610.26770` Fig. 2）。结合模型自生成测试的无标签评估与帕累托多目标选择，一次性产出 `lite`、`medium`、`heavy` 三档预算配置。*
+
 ### 6.5 HarnessMM：用受保护的可执行决策图省掉重复推理回调（2026-10-23）
 
 - **论文**：[*HarnessMM: Recursive Self-Improvement for Harness Token Efficiency*](https://arxiv.org/abs/2610.32813)
 - **核心机制**：Agent 在收到工具返回后，哪怕下一步动作其实在更早的调用里就已经完全确定了，传统 Harness 还是会把整段上下文发回给大模型再做一次慢速推理回调（Slow Callback）。HarnessMM（Harness Minus Minus）在模型与工具边界之间加了一个控制器，用 **Executable Decision Graphs（可执行决策图）** 存储精确动作、字面参数、因果依赖与公共守卫条件（Public Guards）。运行时只要观察到的工具回执满足守卫条件，就通过 **Certified Callback Substitution** 直接复用已确定的决策并注销慢回调；一旦遇到新语义分支或证据不足，立即无缝回退给原模型。在 DeepSeek Harness 上，这一机制把单任务 Token 从 96.28k 砍到了 **11.62k（节省 87.93%）**，成功率反而从 71.43% 升至 85.71%。
+
+![HarnessMM 主架构图：可执行决策图演化、受保护决策复用（GDR）与认证回调替换（CCS）](/images/harness-rsi-landscape-and-recent-3-months/fig-harnessmm-overview.png)
+
+*图 15：HarnessMM 主架构图（源自 `arXiv:2610.32813` Fig. 1）。通过演化可执行决策图（EDG），在满足公共守卫条件时执行受保护决策复用（GDR）与认证回调替换（CCS），跳过重复的慢速推理回调。*
 
 ---
 
@@ -253,12 +301,20 @@ readingTime: 42
   1. **反应规范变异（Reaction-Norm Mutation）**：同时读取同一 Agent 在多个任务上的轨迹，识别系统性行为模式后再动手修改；
   2. **跨谱系杂交（Cross-Lineage Hybridization）**：当当前分支在某任务上失败时，引入另一条演化分支在同一任务上的参考轨迹进行杂交重组。理论证明与 SWE-bench / Polyglot 实验均表明，对比演化显著加快了收敛速度并提升了泛化能力。
 
+![MGM 主架构图：对比无性克隆变异（DGM）与孟德尔跨任务反应规范变异及跨分支杂交](/images/harness-rsi-landscape-and-recent-3-months/fig-mgm-overview.png)
+
+*图 16：MGM 主架构图（源自 `arXiv:2608.07645` Fig. 2）。在单轨迹克隆变异之外引入跨任务反应规范变异与跨谱系杂交算子，充分利用档案库中的对比轨迹信号。*
+
 ### 7.2 HSI：单模型三层作用域与“执行关思考、修改开思考”解耦（2026-08-09）
 
 - **论文**：[*Hierarchical Self-Improvement: A Framework for Task-Specific Evolvable Agent Harnesses*](https://arxiv.org/abs/2608.08466)
 - **范围**：元改进
 - **核心机制**：用同一个冻结大模型 $M$ 驱动三层嵌套作用域：底层是按任务族热插拔的 **Task Harness $H$**，中层是重写 $H$ 的 **Evolver**，顶层是在冻结外部锚点下重写 Evolver 策略代码的 **Meta-Evolver**。
 - **非常巧妙的实验设计**：为了严格剥离“模型自己推理变强”和“Harness 演化立功”的贡献，作者采用了 **Thinking-off / Thinking-on** 机制——在执行下游任务时强制关闭模型的思考链（Reasoning），而在修改 Harness 和 Evolver 时开启思考。在 BALROG 基准（DeepSeek-V4-Flash-Preview）上，HSI 在中等难度任务上大幅提升（BabyAI +39.3%、Crafter +33.0%、TextWorld +25.0%、MiniHack +15.0%），同时作者也诚实界定了两条物理边界：**反馈保真度边界（Feedback-Fidelity Bound）**与**基座能力边界（Backbone Capability Bound，如在完全超出模型能力的 NetHack NLE 上提升为 0）**。
+
+![HSI 主架构图：Meta-Evolver、Evolver 与 Task Harness 三层作用域及文件系统状态流转](/images/harness-rsi-landscape-and-recent-3-months/fig-hsi-overview.png)
+
+*图 17：HSI 主架构图（源自 `arXiv:2608.08466` Fig. 2）。通过文件系统串联 Task Harness、Evolver 与 Meta-Evolver 三层作用域，在冻结外部评测锚点下同时演化脚手架与演化策略自身。*
 
 ### 7.3 Metaⁿ：不改元算子以保稳定，靠递归叠加 Solver Stack 涌现深度（2026-08-25）
 
@@ -267,12 +323,20 @@ readingTime: 42
 - **核心洞察**：如果让元层直接修改自己的编辑代码，系统很容易在多层自改后彻底崩溃（因此既往工作实际深度很难超过 2 层）。Meta$^n$ 换了一个思路：**保持元算子 $\Omega$ 完全固定，改为在它的输入栈上做无限递归。**
 - **核心机制**：元算子 $\Omega$ 反复作用于它自己上一轮的产物——读取下方整个 **Solver Stack** 的源码与执行轨迹，向上新写一层“战略预处理层 + 可调用辅助函数库”。因为 $\Omega$ 本身不变，系统永远不会自毁；而因为输入栈严格增长，每一层都在比上一层更高的抽象视角上推理，递归深度由收敛情况自动决定。在全部 8 个基准家族上 Meta$^n$ 均击败既往自改进方法；尤其在专门防技能死记硬背的 **ARC-AGI-2** 上，它是对比方法中**唯一得分大于 0** 的系统，且不同层级在没有提示词规定的情况下自发涌现出了不同的分工角色。
 
+![Metaⁿ 主架构图：固定元算子在递归增长的 Solver Stack 上涌现多层角色与更快收敛](/images/harness-rsi-landscape-and-recent-3-months/fig-metan-overview.png)
+
+*图 18：Metaⁿ 主架构图（源自 `arXiv:2608.24735` Fig. 1）。保持元算子固定、逐层叠加 Solver Stack，使不同深度自发涌现修复器、算法库管理与架构师等角色。*
+
 ### 7.4 VERSE：为什么优化器自进化必须绑死“执行验证”（2026-10-02）
 
 - **论文**：[*VERSE: Verified Self-Evolving Optimizer for Agent Harnesses*](https://arxiv.org/abs/2610.02616)
 - **范围**：元改进
 - **核心发现（全篇最关键的对照结论）**：作者先做了一个受控实验，问了一个尖锐问题：**让 Optimizer 修改自己的提示词和工具，到底有没有用？** 答案是：**如果没有基于执行的验证（Execution-based Verification），优化器自进化完全无法提升性能；但一旦配上执行验证，它立刻取得了全场最高分。**
 - **核心机制**：在 VERSE 中，Optimizer 不仅修改 Executor Harness，还持续修改自己的 **Prompts、Skills、Tools、Hooks 和 Notes**。在正式提交任何候选修改前，Optimizer 必须先在草稿状态下运行验证、回放历史失败案例、对可疑步骤施加扰动测试（Perturb Suspected Steps），并跨轮次追踪修复与回归。在训练过程中，Optimizer 甚至自己写出了用于失败聚类、验证审计和工作流控制的专属小工具。在共享协议下，VERSE 将全部 4 种基线优化器在 SWE-rebench 留出集和 5 语言 OOD 任务上的最高准确率分别从 39.2% / 29.3% 推高到 **42.3% / 37.7%**。
+
+![VERSE 主架构图：轨迹最小化归因、编辑期受控执行验证（确认/回放/扰动）与跨轮审计](/images/harness-rsi-landscape-and-recent-3-months/fig-verse-overview.png)
+
+*图 19：VERSE 主架构图（源自 `arXiv:2610.02616` Fig. 1）。自进化优化器在编辑 Executor Harness 与自身工具/技能时，通过轨迹最小化、编辑期验证/回放/扰动以及跨轮训练审计保障修改有效。*
 
 ### 7.5 Harness²：面向开放世界的两层递归与无标准答案行为对照（2026-10-09）
 
@@ -282,11 +346,19 @@ readingTime: 42
   1. **任务级递归（Task-level Recursion）**：在当前任务上执行对比式的 **Propose–Probe–Compose**——提出候选配置后在同一任务上试跑（Probe），不靠外部判分器，而是直接对照“配置差异 + 两侧实际执行轨迹与产物”来组合配置；
   2. **改进级递归（Harnessing-level Recursion）**：任务结束后，将有明确行为证据支撑的修改提炼进跨任务经验库，更新“持续改进 Harness（Continual Improvement Harness）”，指导未来任务如何诊断和提议修改。在 WorkBuddy-Bench、JobBench 和 Harvey LAB 法律基准上，仅单步递归就带来最高 **+11.5、+4.5 和 +11.8 个百分点**的提升。
 
+![Harness² 主架构图：任务级 Propose–Probe–Compose 递归与跨任务改进级递归双循环](/images/harness-rsi-landscape-and-recent-3-months/fig-harness2-overview.png)
+
+*图 20：Harness² 主架构图（源自 `arXiv:2610.14224` Fig. 2）。内层通过 Propose–Probe–Compose 在无标准答案的开放任务上做行为对照组合，外层跨任务沉淀诊断与修改经验。*
+
 ### 7.6 RSIFlow：按瓶颈动态切换改进工作流，并沉淀为元原则（2026-10-15）
 
 - **论文**：[*RSIFlow: Adaptive Self-Improvement Workflows with an Evolving Meta-Agent*](https://arxiv.org/abs/2610.21791)
 - **范围**：元改进
 - **核心机制**：随着演化推进，Agent 的短板是动态转移的（早期可能是工具不会用，中期变成多跳推理断链，后期变成上下文噪声）。RSIFlow 让 Meta-Agent 先从任务轨迹与环境反馈中诊断当前的性能瓶颈，**动态选择针对特定组件的改进工作流**；随后再把工作流的执行效果提炼为 Meta-Agent 自身的组件级 Skills 和跨组件原则，反过来升级下一轮的工作流编排能力。
+
+![RSIFlow 主架构图：按瓶颈动态选择 Model/Harness/Artifacts 改进工作流并演化 Meta-Agent](/images/harness-rsi-landscape-and-recent-3-months/fig-rsiflow-overview.png)
+
+*图 21：RSIFlow 主架构图（源自 `arXiv:2610.21791` Fig. 1）。Meta-Agent 根据执行记录诊断当前瓶颈并动态调度组件级改进工作流，再将干预成败记录提炼为自身的元技能与通用原则。*
 
 ### 7.7 MetaShare：不仅共享成功经验，更要跨分支广播“带符号收益的失败教训”（2026-10-15）
 
@@ -297,6 +369,10 @@ readingTime: 42
   1. **带符号收益账本（Signed Performance Deltas）**：同时记录成功和失败的代码修改及其对应的分数增减。每一代开始前，同时检索其他分支的高分策略与**高置信度失败案例**，复用有效机制并主动避开已知死路。
   2. **Task-Blind Auditor（盲审注入器）与去冗余重排**：定期检测整个种群中缺失或欠探索的机制类别并主动注入，同时用 Embedding 相似度降权避免检索结果同质化。
   3. **多温度并行提议 + 确定性门控**：多个 Meta-Agent 在不同采样温度下并行提议，背后由确定性选择器校验适用性、作用域、可编译性与补丁体积。在论文审稿、代码、数学批改、机器人奖励设计和金融审计风险评估 5 类任务上，MetaShare 仅用 **1.7–2.9 倍更少的迭代轮次**就追平或超越了 DGM-Hyperagents 的最佳表现。
+
+![MetaShare 主架构图：跨分支共享带符号正负机制经验、盲审注入欠探索机制与确定性门控](/images/harness-rsi-landscape-and-recent-3-months/fig-metashare-overview.png)
+
+*图 22：MetaShare 主架构图（源自 `arXiv:2610.21887` Fig. 1）。通过共享策略池同时记录正收益机制（P+）与负收益机制（P-），结合无评测盲审器补充缺失机制，并经确定性门控筛选补丁。*
 
 ---
 
@@ -311,6 +387,10 @@ readingTime: 42
 - **核心视角转换**：以往的方法都是“在单模型上训练 Harness，训练完了再去别的模型上测泛化”，把模型差异仅仅当成测试期的考核指标。MaD-RSI 提出了 **Model-as-Data（模型即数据）** 视角：**把多个异构大模型的不同失败轨迹直接作为训练期的优化证据，以 Harness 为中心，直接学习一份跨模型共享的通用 Harness。**
 - **为什么有效**：不同模型在同一任务上的失败方式往往暴露了 Harness 在不同能力短板下的脆弱点（比如模型 A 容易漏读长输出，模型 B 容易调错工具参数）。把这些异构失败同时喂给演化循环，逼着优化器写出更具包容性的接口与护栏，既提升了跨模型泛化，又省掉了为每个新模型从头搜一遍 Harness 的高昂算力。
 
+![MaD-RSI 主架构图：对比单模型 Harness 演化与以多模型异构轨迹为优化数据的跨模型演化](/images/harness-rsi-landscape-and-recent-3-months/fig-madrsi-overview.png)
+
+*图 23：MaD-RSI 主架构图（源自 `arXiv:2610.28201` Fig. 1）。将多个异构模型在同一批任务上的执行轨迹作为联合优化信号（Model-as-Data），直接学习可迁移至新模型的通用 Harness。*
+
 ### 8.2 Self-HPO：用当前策略模型当自己的 Harness 提议器，交替做 H-step 与 P-step（2026-10-16）
 
 - **论文**：[*Self-Evolving Coding Agents via Harness-Policy Optimization*](https://arxiv.org/abs/2610.22791)
@@ -321,6 +401,10 @@ readingTime: 42
   2. **P-step（强化学习更新权重）**：在选定的新 Harness 下对策略模型进行 RL 更新；同时，RL 训练过程中暴露出的**高难度任务（Hard Tasks）**自动组成下一轮 H-step 的搜索集，使 Harness 优化始终精确瞄准模型最新的能力短板。
 - **实验结论**：在三个代码基准上，Self-HPO 将 Qwen3.5-35B-A3B 的平均解决率从 **57.8% 提升至 64.8%**，全面击败仅优化 Harness 或仅优化 Policy 的基线，且**联合收益大于两者单独收益之和（超可加性）**；若引入更强的外部模型（如 Claude Opus 4.8）担任 H-step 提议器，还能获得进一步加成。
 
+![Self-HPO 主架构图：交替执行 H-Step（脚手架优化）与 P-Step（策略强化学习更新）](/images/harness-rsi-landscape-and-recent-3-months/fig-selfhpo-overview.png)
+
+*图 24：Self-HPO 主架构图（源自 `arXiv:2610.22791` Fig. 2）。H-Step 由当前策略模型提议并筛选 Harness，P-Step 在新 Harness 下执行强化学习并筛出困难任务驱动下一轮 H-Step。*
+
 ### 8.3 MASS：在无客观标准答案任务上，交替演化多 Agent 拓扑与轨迹 SFT（2026-10-08）
 
 - **论文**：[*Recursive Self-Improvement through Multi-Agent Self-Supervision*](https://arxiv.org/abs/2610.12176)
@@ -330,6 +414,10 @@ readingTime: 42
   1. **多 Agent 工作流演化**：在结构护栏约束下，演化搜索最佳的多角色分工与信息路由图（Orchestration Topology），并用多 Agent 协同评估筛出高质量轨迹；
   2. **自生成轨迹 SFT**：用筛选出的多 Agent 轨迹微调底座模型；变强后的模型在下一轮循环中自然成为更好的工作流提议者与评估者，形成递归自举。
 - **实验结论**：在 Qwen3.6-27B 上运行两轮 MASS 循环后，在 4 个开放式公开基准上实现了 **1.2–1.6 倍**的单位输出 Token 性能提升；且多 Agent 轨迹的训练效率明显更高——用其训练的学生模型击败了使用 **1.4 倍训练 Token** 的单 Agent 轨迹学生模型。
+
+![MASS 主架构图：多智能体工作流自评估/自优化循环与模型性能迭代自举](/images/harness-rsi-landscape-and-recent-3-months/fig-mass-overview.png)
+
+*图 25：MASS 主架构图（源自 `arXiv:2610.12176` Fig. 1）。在无外部标准验证器的任务上，先通过工作区自评估器与工作流自优化器搜索最优多智能体拓扑，再用高质量多智能体轨迹微调模型实现自举。*
 
 ---
 
@@ -346,6 +434,10 @@ readingTime: 42
   2. **批次后自改进（Post-task）**：每个 Batch 结束后修改合成器的 Skills、Prompts 与工作流，仅当新候选能在受控成本增幅内生成**更难且经验证合法**的题目时才予以采纳。
 - **实验结论**：在保持模型权重与验证标准冻结的前提下，跨越数学、代码和科学三大领域演进 **14 轮**后，求解器在新合成题目上的平均准确率从 **100.0% 持续压低到 54.8%**（说明题目难度真实且稳步上升）。用合成出的 10K 数学样本对 27B 学生模型做 SFT 与 GRPO 后，在 APEX 基准上拿到 **62.5% mean@16**，追平部分前沿大模型参考线。
 
+![Frontier Reasoning Data Synthesis 主架构图：初始化、在线技能更新与批次后受控候选准入三阶段流程](/images/harness-rsi-landscape-and-recent-3-months/fig-frontierdata-overview.png)
+
+*图 26：前沿推理数据合成 Harness 共演化架构图（源自 `arXiv:2610.03548` Fig. 1）。涵盖种子与技能初始化（Stage 1）、合成过程中的在线技能更新（Stage 2）以及批次结束后的受控探测与回滚门禁（Stage 3）。*
+
 ### 9.2 RoboRSI：用自顶向下分层技能契约，让实体机器人在 104 轮中学会家务整理（2026-10-08）
 
 - **论文**：[*RoboRSI: Stable, efficient, and reusable robot self-evolution in complex real-world environments*](https://arxiv.org/abs/2610.12424)
@@ -355,11 +447,19 @@ readingTime: 42
   2. **责任分支隔离修改**：执行失败后，先将错误精确归因到具体的责任分支（Responsible Branch），**只允许修改该责任分支内的代码**，经 Manager、Planner、Engineer、Reviewer 四角色协同验证通过后才发布新技能，并将稳定的技能序列固化为新的复合技能。
 - **实验结论**：在一台真实移动机械臂上，RoboRSI 经过 **104 轮演化**自主掌握了多物体家庭桌面清理；在 LIBERO、LIBERO-PRO、LIBERO-Plus 和 RoboTwin 四套仿真基准上全面刷新最高成功率，超越最强基线 **2.7 至 11.0 个百分点**。
 
+![RoboRSI 主架构图：四角色多智能体协同、三层技能树执行、视觉/工具证据诊断与验证发布闭环](/images/harness-rsi-landscape-and-recent-3-months/fig-roborsi-overview.png)
+
+*图 27：RoboRSI 主架构图（源自 `arXiv:2610.12424` Fig. 1）。通过分层技能树与责任分支定界，将机器人自修改限制在局部失效分支内，经验证通过后发布为下一轮可复用技能。*
+
 ### 9.3 RSIV-Harness：面向开放域多轮图表生成的锚点检查与崩溃恢复（2026-10-26）
 
 - **论文**：[*RSIV-Harness: A Recursive Self-Improvement Harness Framework for Open-Domain Conversational Text-to-Visualization*](https://arxiv.org/abs/2610.35316)
 - **范围**：应用分支（多轮 Text-to-Visualization）
 - **核心机制**：用户在做数据分析画图时，往往不知道数据在哪张表里、需求表述模糊，还会在多轮对话里不断追加修改条件。RSIV-Harness 提出了四层自改进架构，并专门设计了 **Anchor Check（锚点检查）与 Memory Check（记忆检查）**：每次根据失败轨迹提议修改 Harness 后，必须先通过锚点与记忆一致性校验，通过则继续精炼，**一旦校验不通过立即回滚恢复到历史最佳已验证 Harness**。作者同步构建了包含 640 个任务的 **ODAC-Vis** 基准，仅单轮 RSIV-Harness 演化就在全部 6 项指标上超越种子 Harness，其中图表可执行率（Executability）暴涨 **+28.02 分**，图表结构准确率提升 **+34.01 分**。
+
+![RSIV-Harness 主架构图：内层 ReAct 数据探索与画图执行循环，外层记忆检查、锚点检查与失败回滚](/images/harness-rsi-landscape-and-recent-3-months/fig-rsivharness-overview.png)
+
+*图 28：RSIV-Harness 主架构图（源自 `arXiv:2610.35316` Fig. 1）。内层执行多轮澄清、数据发现与代码画图，外层通过 Memory Check 与 Anchor Check 决定继续精炼或回滚至历史最佳 Harness。*
 
 ---
 
@@ -369,11 +469,19 @@ readingTime: 42
 
 | 工作 | 时间与来源信息 | 核心定位与工程价值 |
 | --- | --- | --- |
-| **Self-Evolving Agent Harness** | 2026-10-13（[`arXiv:2610.18813`](https://arxiv.org/abs/2610.18813)） | **66 页理论与全景综述**：严格区分更新对象（解释态状态 vs. 工具代码 vs. 仓库级控制流 vs. 插件组合）、提议机制与准入机制；基于持续 PAC 学习（Continual PAC-learning）推导期望泛化界、历史回归预算约束下的能力保持界，以及使用独立新鲜验证集的高概率准入规则。 |
+| **Self-Evolving Agent Harness** | 2026-10-13（[`arXiv:2610.18813`](https://arxiv.org/abs/2610.18813)） | **理论与全景综述**：严格区分更新对象（解释态状态 vs. 工具代码 vs. 仓库级控制流 vs. 插件组合）、提议机制与准入机制；基于持续 PAC 学习（Continual PAC-learning）推导期望泛化界、历史回归预算约束下的能力保持界，以及使用独立新鲜验证集的高概率准入规则。 |
 | **RSIHub** | 2026-10-28（[`arXiv:2610.32253`](https://arxiv.org/abs/2610.32253)，[本站拆解](/blog/2026-10-29-rsihub-agent-evolution-framework/)） | **可组合演化与防篡改评测框架**：将演化拆成 7 阶段生命周期与 9 个可插拔算子槽位，把 `evaluator/**`、`archive.jsonl` 与 `Train/Gate/Sealed` 三层划分锁进受保护运行时，在同一套公平协议下复现并对比了 AHE、Hyperagents、A-Evolve 与 GEPA。 |
 | **Dream-RSI** | 官方站点 `dream-rsi.com`（另见同脉络预印本 [`arXiv:2609.14858`](https://arxiv.org/abs/2609.14858)） | **可回放发现世界**：把已记录的历史发现过程与轨迹档案当作可回放、可推演的搜索世界（Replayable Search World），用来训练和改进后续的探索策略。 |
 | **GEAR** | 官方标注 2026-10 预印本 / GitHub | **通用模块化演化底座**：支持提议（Proposal）、评估（Evaluation）和选择（Selection）算法的自由替换与组合；目前完整的模型权重与 Harness 联合训练闭环仍在持续开发中。 |
 | **PenguinHarness** | GitHub 开源工程平台（本轮未核准到日首次公开时间） | **插件化 RSI 实验台**：统一管理 Benchmark、版本快照和评测记录，除了默认迭代流外，内置了 OPRO、APE、ACE、AWM 等经典提示词与工作流演化插件。 |
+
+![Self-Evolving Agent Harness 综述图：8 类演化搜索结构在 Harness 与 Skill 优化中的对应关系](/images/harness-rsi-landscape-and-recent-3-months/fig-seahsurvey-overview.png)
+
+*图 29：`Self-Evolving Agent Harness` 综述梳理的 8 类演化算法对应关系（源自 `arXiv:2610.18813` Fig. 2），涵盖 `(1+1)` 精英搜索、`(1+λ)` 搜索、档案库搜索、重组交叉、MAP-Elites 质量多样性、协同演化、帕累托选择与 Bandit 预算分配。*
+
+![RSIHub 主架构图：七阶段演化生命周期、九个可插拔算子槽位与防篡改评测边界](/images/harness-rsi-landscape-and-recent-3-months/fig-rsihub-overview.png)
+
+*图 30：RSIHub 工程框架主架构图（源自 `arXiv:2610.32253`）。通过统一的 7 阶段演化生命周期与 `Train/Gate/Sealed` 三层隔离评测，在同一沙箱内公平对比不同 Harness RSI 算法。*
 
 这里特别值得拎出来的是 [`Self-Evolving Agent Harness`（arXiv:2610.18813）](https://arxiv.org/abs/2610.18813) 和 [`RSIHub`（arXiv:2610.32253）](https://arxiv.org/abs/2610.32253) 共同揭示的一个残酷事实：**在没有严格留出集隔离（Sealed Holdout）和回归预算控制的情况下，许多自我演化方法在训练集上的涨分，到了未见过的任务上会出现负迁移（例如 RSIHub 实验里观察到的 Train +4.1%、Sealed -4.1%）。** 这也是为什么未来所有严肃的 Harness RSI 工作都必须把“准入机制（Admission Rule）”放在与“提议机制（Proposal）”同等甚至更高的位置上。
 
