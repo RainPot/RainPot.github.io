@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram id="solpi-guardrails" name="Page-1">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1360" pageHeight="780" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Banner -->
+        <mxCell id="2" value="SoL-Pi 四大机制的触发条件、确定性校验护栏与 Fail-Open 降级边界" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;strokeColor=#0F172A;fontColor=#FFFFFF;fontSize=18;fontStyle=1;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="1280" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Column Headers -->
+        <mxCell id="3" value="机制与源码入口" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#334155;strokeColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="触发条件与准入过滤" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#334155;strokeColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="90" width="310" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="确定性校验护栏 (Deterministic Guardrails)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#334155;strokeColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="90" width="350" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="异常与校验失败时的 Fail-Open 降级" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#334155;strokeColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="990" y="90" width="330" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: Action Fusion -->
+        <mxCell id="10" value="① Action Fusion&#xa;&#xa;action-fusion/&#xa;then-run.ts&#xa;file-queue.ts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#14532D;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="230" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="• 模型调用 edit 或 write 工具&#xa;• 携带可选参数 then_run.command&#xa;• 先规范化路径（解析 file://、@ 前缀&#xa;  及 Windows Git Bash /c/ 盘符）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontColor=#14532D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="150" width="310" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="• withFusedFileQueue 按 realpath 串行化同文件操作&#xa;• assertUnchangedBeforeCommand：写入后计算&#xa;  SHA-256，setImmediate 让出事件循环后再验一次哈希&#xa;• 仅当命令退出码为 0 且非嵌套调用才计入节省" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontColor=#14532D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="150" width="350" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="• 修改失败或执行前文件被外部改动：&#xa;  跳过命令，附加 [then_run:skipped]&#xa;• 命令非零退出：附加 [then_run:failed]&#xa;  但保留已落盘的文件修改与 diff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;fontColor=#7F1D1D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="150" width="330" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: Evidence-Preserving Reducer -->
+        <mxCell id="20" value="② Evidence-Preserving&#xa;Reducer (EPR)&#xa;&#xa;evidence-preserving-&#xa;reducer/receipt.ts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF9C3;strokeColor=#CA8A04;fontColor=#713F12;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="305" width="230" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="• 顶层 bash 或含 then_run 的 edit/write&#xa;• 命令匹配 DIAGNOSTIC_COMMAND 白名单&#xa;• 字节数 ≥ 4,096 B 且字符数 ≤ 600,000&#xa;• 优先读取 pi-bash-*.log 完整未截断文件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;fontColor=#713F12;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="305" width="310" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="• LIKELY_SECRET 正则拦截疑似密钥/Token 日志&#xa;• 退出码信号必须与 event.isError 严格一致&#xa;• validateReceipt：核对 source_sha256、≤12 条证据&#xa;  且每条 quote 必须在原文中 body.includes(quote)&#xa;• 报错日志含 FAILURE_SIGNAL 时必须包含 fatal/failure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;fontColor=#713F12;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="305" width="350" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="• 模型超时(90s)、JSON 非法、引文失真、&#xa;  状态不符或凭据体积 ≥ 原文：&#xa;  全部丢弃凭据，原样返回原始输出&#xa;• 在会话日志记录 fallback 原因供审计" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;fontColor=#7F1D1D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="305" width="330" height="135" as="geometry" />
+        </mxCell>
+
+        <!-- Row 3: ObservationPack -->
+        <mxCell id="30" value="③ ObservationPack&#xa;&#xa;observation-pack/&#xa;observation.ts&#xa;index.ts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="465" width="230" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="• 非报错纯文本 toolResult 且 &gt; 10 KiB&#xa;• 不含 sol_pi_evidence_receipt_v1 标记&#xa;• 前 2 次 Provider 请求发送完整原文&#xa;  (FULL_SENDS = 2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontColor=#1E3A8A;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="465" width="310" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="• O_CREAT|O_EXCL|O_NOFOLLOW 独占写盘防软链攻击&#xa;• 已存在同名对象时逐字节重算 SHA-256 校验完整性&#xa;• 原地修改 message.content 不替换对象引用（防缓存失效）&#xa;• obs_recall 单次限 16 KiB / 400 行，trimUtf8End 防截断" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontColor=#1E3A8A;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="465" width="350" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="• 归档或替换抛错时捕获异常并打印&#xa;  [observationpack] fail-open，保留完整原文&#xa;• 永不篡改 SessionManager 底层历史，&#xa;  支持随时通过 obs_recall 零损分页重读" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;fontColor=#7F1D1D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="465" width="330" height="135" as="geometry" />
+        </mxCell>
+
+        <!-- Row 4: Online Context Compact -->
+        <mxCell id="40" value="④ Online Context&#xa;Compact (OCC)&#xa;&#xa;online-context-compact/&#xa;economics.ts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;fontColor=#4C1D95;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="625" width="230" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="• update_plan 将先前未完成步骤标为 completed&#xa;• 首次直接传入的 completed 步骤仅记为历史&#xa;• 距离上次压缩至少间隔 2 次真实请求&#xa;  （窗口逼近 reserveTokens 保护时可豁免冷却）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#7C3AED;fontColor=#4C1D95;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="625" width="310" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="• 基于投影后真实可见尺寸计算 archiveTokens（防虚报收益）&#xa;• 首次压缩允许 2x 剩余请求视野；后续压缩要求 1.5x&#xa;  边际且连同未还清的 carriedDebtTokens 一并核算盈亏&#xa;• 选中后拦截 Pi 的 threshold 自动压缩，统一在 settled 执行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#7C3AED;fontColor=#4C1D95;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="620" y="625" width="350" height="135" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="• 收益 ≤ 0 或未过盈亏门禁：推迟压缩&#xa;• 原生压缩报 Nothing to compact / 摘要截断：&#xa;  记为 skipped、不计负债，锁定纯计划重试，&#xa;  并自动发送隐藏消息无缝恢复原任务" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;fontColor=#7F1D1D;fontSize=13;align=left;spacingLeft=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="625" width="330" height="135" as="geometry" />
+        </mxCell>
+
+        <!-- Row arrows -->
+        <mxCell id="50" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#16A34A;" edge="1" parent="1" source="10" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#16A34A;" edge="1" parent="1" source="11" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="52" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CA8A04;" edge="1" parent="1" source="20" target="21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CA8A04;" edge="1" parent="1" source="21" target="22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="22" target="23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2563EB;" edge="1" parent="1" source="30" target="31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="57" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2563EB;" edge="1" parent="1" source="31" target="32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="58" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="32" target="33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="59" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#7C3AED;" edge="1" parent="1" source="40" target="41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="60" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#7C3AED;" edge="1" parent="1" source="41" target="42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="61" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DC2626;" edge="1" parent="1" source="42" target="43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
