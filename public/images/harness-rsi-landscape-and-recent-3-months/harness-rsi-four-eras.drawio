@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Harness RSI 演进四阶段">
+    <mxGraphModel dx="1000" dy="1060" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="1060" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Harness RSI 演进四阶段（2023.09 — 2026.10）" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=32;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="25" width="900" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="从单点提示词变异到完整可执行脚手架、受保护评测边界与元优化器演化" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=21;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="78" width="900" height="36" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage1" value="&lt;b&gt;阶段一 · 2023.09 — 2025.11&lt;/b&gt;&lt;div style=&quot;font-size:19px;margin-top:8px;line-height:1.45&quot;&gt;从自改进程序到自修改 Agent&lt;br&gt;Promptbreeder / STOP / ADAS / Gödel Agent / AFlow&lt;br&gt;SICA / DGM / GEPA / ACE / HGM / Live-SWE&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=24;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacingLeft=22;spacingRight=16;" vertex="1" parent="1">
+          <mxGeometry x="50" y="135" width="560" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="tag1" value="&lt;b&gt;更新面扩张&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;单条 Prompt → 工作流图&lt;br&gt;→ Agent 自身源码库&lt;br&gt;→ 演化分支档案 (DGM)&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fillColor=#f5f8fc;strokeColor=#728fb0;strokeWidth=2;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="135" width="290" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage2" value="&lt;b&gt;阶段二 · 2026 年 1 — 6 月&lt;/b&gt;&lt;div style=&quot;font-size:19px;margin-top:8px;line-height:1.45&quot;&gt;完整 Harness 优化与优化器自演化成型&lt;br&gt;MCE / GEA / AutoHarness / Hyperagents / Meta-Harness&lt;br&gt;AHE / Continual / MOSS / DemoEvolve / SIA / RHO / Self-Harness&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=24;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacingLeft=22;spacingRight=16;" vertex="1" parent="1">
+          <mxGeometry x="50" y="345" width="560" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="tag2" value="&lt;b&gt;证据与元层成型&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;文件系统全量轨迹检索&lt;br&gt;Task + Meta 同程序可改&lt;br&gt;三层可观测性与在线演化&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fillColor=#f5f8fc;strokeColor=#728fb0;strokeWidth=2;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="345" width="290" height="175" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage3" value="&lt;b&gt;阶段三 · 2026 年 7 — 9 月&lt;/b&gt;&lt;div style=&quot;font-size:19px;margin-top:8px;line-height:1.45&quot;&gt;模块化、防过拟合泛化与搜索/运行降本&lt;br&gt;RHI / MGM / HSI / Evo-Harness / Metaⁿ / StarHarness&lt;br&gt;HarnessEvolve / ModularRSI / SoL-Pi / RRSI / SelfSearch&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=24;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacingLeft=22;spacingRight=16;" vertex="1" parent="1">
+          <mxGeometry x="50" y="560" width="560" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="tag3" value="&lt;b&gt;约束与成本纪律&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;五模块解耦 + 留出集隔离&lt;br&gt;修改预算正则与剪枝 (RRSI)&lt;br&gt;Token 流量砍半 / 免奖励搜索&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fillColor=#fef9f0;strokeColor=#c49346;strokeWidth=2;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="560" width="290" height="170" as="geometry" />
+        </mxCell>
+
+        <mxCell id="stage4" value="&lt;b&gt;阶段四 · 2026 年 10 月&lt;/b&gt;&lt;div style=&quot;font-size:19px;margin-top:8px;line-height:1.45&quot;&gt;受验证优化器、跨模型共演化与领域分化&lt;br&gt;VERSE / MESH / MASS / RoboRSI / Harness² / RSIFlow / MetaShare&lt;br&gt;Self-HPO / HarnessPro / RiseHarness / MaD-RSI / OO / HarnessMM / RSIV&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=24;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacingLeft=22;spacingRight=16;" vertex="1" parent="1">
+          <mxGeometry x="50" y="770" width="560" height="185" as="geometry" />
+        </mxCell>
+        <mxCell id="tag4" value="&lt;b&gt;闭环验证与生态化&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;优化器自造工具与回放验证&lt;br&gt;跨模型共享 (MaD) + H/P 交替&lt;br&gt;OO 继承 + 决策图省调用&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=PingFang SC;fontSize=22;fontColor=#1f3448;fillColor=#f2f9f5;strokeColor=#719a80;strokeWidth=2;spacing=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="770" width="290" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="stage1" target="stage2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="stage2" target="stage3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#526b81;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="stage3" target="stage4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeColor=#728fb0;strokeWidth=2;dashed=1;dashPattern=6 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="stage1" target="tag1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeColor=#728fb0;strokeWidth=2;dashed=1;dashPattern=6 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="stage2" target="tag2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeColor=#c49346;strokeWidth=2;dashed=1;dashPattern=6 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="stage3" target="tag3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeColor=#719a80;strokeWidth=2;dashed=1;dashPattern=6 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="stage4" target="tag4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="蓝色：早期自修改与完整 Harness 搜索成型　橙色 + 绿色：近 3 个月（2026.08—2026.10）重点展开的 24 项工作" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=19;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="980" width="900" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

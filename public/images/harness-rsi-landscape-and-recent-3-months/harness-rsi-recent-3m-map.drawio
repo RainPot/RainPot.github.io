@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="近3个月24篇工作问题流">
+    <mxGraphModel dx="1000" dy="1040" grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="1040" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="近 3 个月（2026.08 — 2026.10）24 项工作的六大工程问题地图" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=29;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="25" width="900" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="整包自改撞上信用分配、过拟合与算力瓶颈后，研究议程沿六条正交支流分化" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=21;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="78" width="900" height="36" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q1" value="&lt;b&gt;1. 改哪里才不耦合？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;模块化、类层次与经验编译&lt;br&gt;&lt;br&gt;· ModularRSI（五模块独立演化）&lt;br&gt;· OO-Harness（子类继承 + 路由）&lt;br&gt;· Evo-Harness（单次上下文编译 Skill）&lt;br&gt;· RiseHarness（双轨迹 + 手册移植）&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="135" width="430" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q2" value="&lt;b&gt;2. 怎么防止刷榜过拟合？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;正则化、分层数据隔离与参考轨迹对齐&lt;br&gt;&lt;br&gt;· RRSI（修改预算退火 + Critic 剪枝）&lt;br&gt;· StarHarness（可见/隐藏/留出三划分）&lt;br&gt;· HarnessEvolve（参考轨迹对齐 + 双门控）&lt;br&gt;· Self-Evolving Survey / RSIHub&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="520" y="135" width="430" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q3" value="&lt;b&gt;3. 有限预算下怎么搜、怎么跑？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;搜索降本与运行时 Token 裁剪&lt;br&gt;&lt;br&gt;· SelfSearch（免下游奖励自改历史搜索）&lt;br&gt;· MESH-Harness（LinUCB 组合模块池）&lt;br&gt;· HarnessPro（无标签测试 + 三档预算）&lt;br&gt;· SoL-Pi（四项正交原语省半数流量）&lt;br&gt;· HarnessMM（决策图受保护回调替换）&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="405" width="430" height="265" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q4" value="&lt;b&gt;4. 优化器自己怎么变强？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;受验证元进化、递归深度与失败共享&lt;br&gt;&lt;br&gt;· HSI（Task / Evolver / Meta 三层）&lt;br&gt;· Metaⁿ（固定元算子 Ω 叠加求解栈）&lt;br&gt;· VERSE（优化器自造工具 + 执行验证）&lt;br&gt;· Harness²（两层递归 + 行为对照）&lt;br&gt;· RSIFlow · MGM · MetaShare&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="520" y="405" width="430" height="265" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q5" value="&lt;b&gt;5. 换模型或训模型怎么办？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;跨模型共享 Harness 与权重协同训练&lt;br&gt;&lt;br&gt;· MaD-RSI（多异构模型失败轨迹共训）&lt;br&gt;· Self-HPO（H-step 搜脚手架 + P-step RL）&lt;br&gt;· MASS（多 Agent 拓扑演化 + 轨迹 SFT）&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#f3eefc;strokeColor=#8c72b0;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="700" width="430" height="235" as="geometry" />
+        </mxCell>
+
+        <mxCell id="q6" value="&lt;b&gt;6. 走出代码台能落到哪？&lt;/b&gt;&lt;div style=&quot;font-size:18px;margin-top:8px;line-height:1.45&quot;&gt;数据合成、具身机器人与多轮可视化&lt;br&gt;&lt;br&gt;· Frontier Data Synthesis（任务与合成共演化）&lt;br&gt;· RoboRSI（Top-Down 分层技能责任归因）&lt;br&gt;· RSIV-Harness（Anchor/Memory 检查恢复）&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontFamily=PingFang SC;fontSize=23;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacingTop=16;spacingLeft=20;spacingRight=14;" vertex="1" parent="1">
+          <mxGeometry x="520" y="700" width="430" height="235" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="注：2026.07.17 的 RHI 作为进入 8—10 月模块化与成本议程的过渡起点一并在正文衔接讨论。" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=19;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="960" width="900" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
