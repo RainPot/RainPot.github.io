@@ -1,6 +1,10 @@
 ---
 import { Image } from "astro:assets";
+import { imageMetadata } from "astro/assets/utils";
 import type { ImageMetadata } from "astro";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { getPostSlug, type BlogPostLike } from "../lib/blog";
 
 type Props = {
@@ -20,9 +24,8 @@ const slug = getPostSlug(post);
 const body = post.body ?? "";
 // 搜索按字段分开给分，所以这里不再拼成一整段文本
 const filterMeta = [slug, ...tags].join(" ");
-// 导入图片元数据，让两处目录的封面都在构建时压缩，正文仍可使用原图。
+// public 中的图片按需读取，避免批量导入时把未使用的原图复制进构建产物。
 const sourceImages = import.meta.glob<{ default: ImageMetadata }>("../images/**/*.{png,jpg,jpeg,webp,gif,svg,avif}");
-const publicImages = import.meta.glob<{ default: ImageMetadata }>("../../public/images/**/*.{png,jpg,jpeg,webp,gif,svg,avif}");
 const thumbnailSrc = await getThumbnailSrc(body);
 
 async function getThumbnailSrc(markdown: string): Promise<ImageMetadata | string> {
@@ -73,9 +76,18 @@ async function sourceImageSrc(src: string): Promise<ImageMetadata | undefined> {
   try {
     const decodedPath = decodeURIComponent(relativePath);
     const sourceImage = sourceImages[`../images/${decodedPath}`];
-    const publicImage = publicImages[`../../public/images/${decodedPath}`];
-    const loadImage = src.startsWith("/") ? publicImage ?? sourceImage : sourceImage ?? publicImage;
-    return loadImage ? (await loadImage()).default : undefined;
+    if (!src.startsWith("/") && sourceImage) return (await sourceImage()).default;
+
+    const publicPath = resolve("public/images", decodedPath);
+    try {
+      const data = await readFile(publicPath);
+      const metadata = await imageMetadata(data, publicPath);
+      // 原图内容变化时同步更新缩略图地址，避免命中旧构建缓存。
+      const version = createHash("sha256").update(data).digest("hex").slice(0, 12);
+      return { ...metadata, src: `${import.meta.env.BASE_URL}images/${encodeURI(decodedPath)}?v=${version}` };
+    } catch {
+      return sourceImage ? (await sourceImage()).default : undefined;
+    }
   } catch {
     return undefined;
   }
