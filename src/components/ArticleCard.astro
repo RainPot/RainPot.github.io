@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { getPostSlug, type BlogPostLike } from "../lib/blog";
 
 type Props = {
@@ -6,9 +8,10 @@ type Props = {
   href: string;
   large?: boolean;
   pagedOut?: boolean;
+  eager?: boolean;
 };
 
-const { post, href, large = false, pagedOut = false } = Astro.props;
+const { post, href, large = false, pagedOut = false, eager = false } = Astro.props;
 const date = post.data.date.toISOString().slice(0, 10);
 const tags = post.data.tags ?? [];
 const title = post.data.title;
@@ -17,10 +20,12 @@ const slug = getPostSlug(post);
 const body = post.body ?? "";
 // 搜索按字段分开给分，所以这里不再拼成一整段文本
 const filterMeta = [slug, ...tags].join(" ");
-const sourceImages = import.meta.glob<{ default: { src?: string } | string }>("../images/**/*.{png,jpg,jpeg,webp,svg}");
+// 导入图片元数据，让两处目录的封面都在构建时压缩，正文仍可使用原图。
+const sourceImages = import.meta.glob<{ default: ImageMetadata }>("../images/**/*.{png,jpg,jpeg,webp,gif,svg,avif}");
+const publicImages = import.meta.glob<{ default: ImageMetadata }>("../../public/images/**/*.{png,jpg,jpeg,webp,gif,svg,avif}");
 const thumbnailSrc = await getThumbnailSrc(body);
 
-async function getThumbnailSrc(markdown: string): Promise<string> {
+async function getThumbnailSrc(markdown: string): Promise<ImageMetadata | string> {
   const matches = [
     ...markdown.matchAll(/!\[[^\]]*]\(([^)\n]+)\)/g),
     ...markdown.matchAll(/<img\b[^>]*\bsrc=["']([^"']+)["']/gi)
@@ -33,16 +38,16 @@ async function getThumbnailSrc(markdown: string): Promise<string> {
   return "";
 }
 
-async function normalizeImageSrc(src: string): Promise<string> {
+async function normalizeImageSrc(src: string): Promise<ImageMetadata | string> {
   const value = src
     .trim()
     .replace(/^<|>$/g, "")
     .replace(/\s+["'][^"']*["']$/, "");
 
   if (/^(https?:|data:|blob:)/i.test(value)) return value;
-  if (value.startsWith("/")) return value;
   const sourceSrc = await sourceImageSrc(value);
   if (sourceSrc) return sourceSrc;
+  if (value.startsWith("/")) return value;
   if (value.startsWith("../../images/")) return `/images/${value.slice("../../images/".length)}`;
   if (value.startsWith("../images/")) return `/images/${value.slice("../images/".length)}`;
   if (value.startsWith("./images/")) return `/images/${value.slice("./images/".length)}`;
@@ -50,7 +55,7 @@ async function normalizeImageSrc(src: string): Promise<string> {
   return "";
 }
 
-async function sourceImageSrc(src: string): Promise<string> {
+async function sourceImageSrc(src: string): Promise<ImageMetadata | undefined> {
   const pathname = src.split(/[?#]/)[0];
   const relativePath = pathname.startsWith("/images/")
     ? pathname.slice("/images/".length)
@@ -64,13 +69,15 @@ async function sourceImageSrc(src: string): Promise<string> {
             ? pathname.slice("images/".length)
             : "";
 
-  if (!relativePath) return "";
+  if (!relativePath) return undefined;
   try {
-    const loadImage = sourceImages[`../images/${decodeURIComponent(relativePath)}`];
-    const image = loadImage ? (await loadImage()).default : undefined;
-    return typeof image === "string" ? image : image?.src ?? "";
+    const decodedPath = decodeURIComponent(relativePath);
+    const sourceImage = sourceImages[`../images/${decodedPath}`];
+    const publicImage = publicImages[`../../public/images/${decodedPath}`];
+    const loadImage = src.startsWith("/") ? publicImage ?? sourceImage : sourceImage ?? publicImage;
+    return loadImage ? (await loadImage()).default : undefined;
   } catch {
-    return "";
+    return undefined;
   }
 }
 ---
@@ -78,7 +85,19 @@ async function sourceImageSrc(src: string): Promise<string> {
 <a class:list={["article-card", { featured: large, "has-thumbnail": Boolean(thumbnailSrc), "is-page-hidden": pagedOut }]} href={href} data-filter-card data-filter-key={slug} data-filter-title={title} data-filter-meta={filterMeta} data-filter-summary={description} data-spotlight-card>
   {thumbnailSrc && (
     <span class="article-card-thumb" aria-hidden="true">
-      <img src={thumbnailSrc} alt="" loading="lazy" decoding="async" />
+      <Image
+        src={thumbnailSrc}
+        alt=""
+        width={320}
+        height={200}
+        widths={[160, 320, 640, 960]}
+        sizes="(max-width: 560px) calc(100vw - 62px), 156px"
+        format="webp"
+        quality={75}
+        fit="cover"
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
     </span>
   )}
   <div class="article-card-main">

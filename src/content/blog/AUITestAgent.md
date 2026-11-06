@@ -26,7 +26,7 @@ Github项目地址：https://github.com/bz-lab/AUITestAgent
 
   
 
-![demo1](https://github.com/bz-lab/AUITestAgent/raw/main/assets/demo1.png)
+![demo1](/images/auitestagent/demo1.png)
 
   
 

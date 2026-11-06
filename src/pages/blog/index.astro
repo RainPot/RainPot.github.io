@@ -23,7 +23,7 @@ const link = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//,
     <p class="filter-status" data-filter-status role="status" hidden></p>
     <section class="articles archive-list">
       {posts.map((post, index) => (
-        <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} pagedOut={index >= POSTS_PER_PAGE} />
+        <ArticleCard post={post} href={link(`/blog/${getPostSlug(post)}/`)} pagedOut={index >= POSTS_PER_PAGE} eager={index < 2} />
       ))}
     </section>
     <p class="empty-state" data-filter-empty hidden>没有匹配的文章。</p>

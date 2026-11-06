@@ -44,6 +44,7 @@ const pageStart = (page - 1) * POSTS_PER_PAGE;
           post={post}
           href={link(`/blog/${getPostSlug(post)}/`)}
           pagedOut={index < pageStart || index >= pageStart + POSTS_PER_PAGE}
+          eager={index >= pageStart && index < pageStart + 2}
         />
       ))}
     </section>
