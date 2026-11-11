@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="billion-context 总体架构与双模压缩载体闭环">
+    <mxGraphModel dx="1320" dy="1060" grid="1" gridSize="10" page="1" pageWidth="1320" pageHeight="1060" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="billion-context 总体架构与双模压缩载体闭环" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=28;fontColor=#1f3448;fontStyle=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="24" width="1220" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="从宿主接入、协议归一化、acp-kernel 决策核到 Plugin / Proxy 双模摘要载体（KDD #7）" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=19;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="70" width="1220" height="32" as="geometry" />
+        </mxCell>
+
+        <mxCell id="clients" value="&lt;b&gt;1. 三种接入形态（20+ 编码 Agent 宿主）&lt;/b&gt;&lt;div style=&quot;font-size:17px;margin-top:8px;line-height:1.5&quot;&gt;• 原生插件（bili plugin install）：pi / opencode / dsh / claude / kimi / hermes / zcode&lt;br&gt;• 零配置启动器（bili &amp;lt;client&amp;gt;）：独立端口 18787+、环境变量或证书 MITM 拦截&lt;br&gt;• 通用 URL 前缀（/bili/&amp;lt;upstream&amp;gt;）：任意 OpenAI / Anthropic / Gemini / Responses 客户端&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#e8f1fb;strokeColor=#728fb0;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="1220" height="125" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ingress" value="&lt;b&gt;2. 入站分诊与快路径（src/server/）&lt;/b&gt;&lt;div style=&quot;font-size:16px;margin-top:10px;line-height:1.5&quot;&gt;• handle.ts：剥离 ACP 渲染标签、识别协议&lt;br&gt;• lane-decisions.ts：按请求形状 × 会话粘滞选道&lt;br&gt;• 快路径：增量 plugin-turn / v5 水位 / D-lane&lt;br&gt;• prepare-*：转为宿主无关 CoreMessage[]&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#fdf3e2;strokeColor=#c49346;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="315" width="490" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="kernel_box" value="&lt;b&gt;3. 纯函数压缩内核（kernel/ · acp-kernel）&lt;/b&gt;&lt;div style=&quot;font-size:16px;margin-top:10px;line-height:1.5&quot;&gt;• 零宿主依赖：processTurn 与 applyCompression&lt;br&gt;• 单一投影判定：projectUnit 统一推荐与执行&lt;br&gt;• 罗汉塔分层：Tier-1 块 → Tier-2 蒸馏 → Tier-3 凝结&lt;br&gt;• 求解器守护：verif/ 将决策核 TS 编译为 SMT 验证&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#e4f2ea;strokeColor=#719a80;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="315" width="490" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="plugin_mode" value="&lt;b&gt;4A. 插件模式（pluginMode · 宿主执行）&lt;/b&gt;&lt;div style=&quot;font-size:16px;margin-top:10px;line-height:1.5&quot;&gt;• 触发信号：x-bili-plugin 头或已注册原生宿主&lt;br&gt;• 谁执行 compress：Agent 在宿主本地执行&lt;br&gt;• 线上摘要载体：compress 工具调用 + 结果本身&lt;br&gt;• 代理行为：抑制重复工具声明，仅注入增速 Nudge&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#f3eefc;strokeColor=#8c72b0;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="575" width="490" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="proxy_mode" value="&lt;b&gt;4B. 代理模式（proxyMode · 服务端闭环）&lt;/b&gt;&lt;div style=&quot;font-size:16px;margin-top:10px;line-height:1.5&quot;&gt;• 触发信号：普通客户端直连 /bili/（无原生扩展）&lt;br&gt;• 谁执行 compress：代理服务端 src/loop/ 循环拦截执行&lt;br&gt;• 线上摘要载体：acp_summary 改声为 user 消息（#377）&lt;br&gt;• 缓存与兼容：避开 SGLang 单 system 限制，保住前缀缓存&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#fbeaea;strokeColor=#b86b6b;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="780" y="575" width="490" height="185" as="geometry" />
+        </mxCell>
+
+        <mxCell id="storage_upstream" value="&lt;b&gt;5. 统一 SQLite 存储（Schema v11）与上游 LLM 流式网关&lt;/b&gt;&lt;div style=&quot;font-size:17px;margin-top:8px;line-height:1.5&quot;&gt;• 持久化真源：单一 WAL 写者，保存 messages / blocks / messageRefs (mNNNNN) / CCR 原文仓库 / cache-ledger&lt;br&gt;• 出站与审计：Thinking 签名块逐字节透传（#1960），流式剥离正文标签回声，维持 94.2%–97% 前缀缓存命中率&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=20;fontColor=#1f3448;fillColor=#f5f8fc;strokeColor=#728fb0;strokeWidth=2;spacingLeft=22;spacingRight=18;spacingTop=10;spacingBottom=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="830" width="1220" height="125" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="HTTP / WS 模型流量" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#728fb0;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.2;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clients" target="ingress">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e2" value="传入 CoreMessage[] + State" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#c49346;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=1;exitY=0.3;entryX=0;entryY=0.3;" edge="1" parent="1" source="ingress" target="kernel_box">
+          <mxGeometry y="-16" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e3" value="返回剪枝视图 + NudgeDecision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#719a80;strokeWidth=2;dashed=1;dashPattern=6 5;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0;exitY=0.72;entryX=1;entryY=0.72;" edge="1" parent="1" source="kernel_box" target="ingress">
+          <mxGeometry y="16" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e4" value="带 x-bili-plugin 粘滞会话" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8c72b0;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="ingress" target="plugin_mode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e5" value="无插件头普通代理会话" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b86b6b;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="kernel_box" target="proxy_mode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e6" value="落盘状态并转发上游" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#8c72b0;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="plugin_mode" target="storage_upstream">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e7" value="服务端折叠重发并记账" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#b86b6b;strokeWidth=2;fontFamily=PingFang SC;fontSize=15;fontColor=#1f3448;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.8;entryY=0;" edge="1" parent="1" source="proxy_mode" target="storage_upstream">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="蓝色：接入与存储底座　橙色：入站协议分诊　绿色：纯函数 acp-kernel　紫色：插件模式（工具调用载体）　红色：代理模式（user 摘要载体）" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=PingFang SC;fontSize=17;fontColor=#42586e;fontStyle=0;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="50" y="972" width="1220" height="34" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
