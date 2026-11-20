@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Brain Hands Session Decoupling">
+    <mxGraphModel dx="1200" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="660" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="架构演进共识：从「单容器耦合（Pet）」到「脑 / 会话 / 手三元解耦（Cattle）」" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="20" width="1060" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" value="综合 Anthropic Managed Agents（2026.04）与 Mendral（2026.04）的生产实践：Harness 与凭据留在沙盒之外" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="54" width="1060" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- LEFT: Coupled Pet Architecture -->
+        <mxCell id="left_box" value="旧模式：单容器耦合（Harness Inside Sandbox）" style="swimlane;startSize=36;rounded=1;arcSize=6;fillColor=#fef2f2;strokeColor=#ef4444;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#991b1b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="96" width="350" height="530" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l_container" value="单一长驻容器 / 宿主机进程（Pet）" style="swimlane;startSize=30;rounded=1;fillColor=#fee2e2;strokeColor=#dc2626;strokeWidth=1.5;dashed=1;fontSize=13;fontStyle=1;fontColor=#7f1d1d;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="left_box">
+          <mxGeometry x="20" y="54" width="310" height="290" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l_loop" value="Agent Harness Loop&#xa;（调模型 + 维护内存会话）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ef4444;fontSize=13;fontStyle=1;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l_container">
+          <mxGeometry x="20" y="46" width="270" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="l_cred" value="API Keys / OAuth Token&#xa;（明文环境变量，直接暴露于沙盒）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#b91c1c;fontSize=13;fontColor=#7f1d1d;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l_container">
+          <mxGeometry x="20" y="120" width="270" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="l_fs" value="本地文件系统 + 不可信 Bash / 代码执行&#xa;（代码、Skills、MEMORY.md 混居）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ef4444;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l_container">
+          <mxGeometry x="20" y="194" width="270" height="66" as="geometry" />
+        </mxCell>
+
+        <mxCell id="l_pain" value="&lt;b&gt;四大结构性短板：&lt;/b&gt;&#xa;1. 凭据与不可信代码同室，注入即可窃取 Token&#xa;2. 容器崩溃 = 会话丢失，无法当 Cattle 重建&#xa;3. 思考/等待期间不能挂起容器，冷启动拉高 TTFT&#xa;4. 多设备/多会话并发读写记忆演变为分布式锁难题" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#ffffff;strokeColor=#fca5a5;fontSize=13;fontColor=#7f1d1d;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="left_box">
+          <mxGeometry x="20" y="366" width="310" height="144" as="geometry" />
+        </mxCell>
+
+        <!-- Center transition arrow -->
+        <mxCell id="trans_arr" value="" style="shape=flexArrow;endArrow=classic;html=1;fillColor=#cbd5e1;strokeColor=#64748b;width=18;endSize=8;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="392" y="340" as="sourcePoint" />
+            <mxPoint x="438" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- RIGHT: Decoupled Cattle Architecture -->
+        <mxCell id="right_box" value="新共识：Brain / Session / Hands 三元解耦（Harness Outside Sandbox）" style="swimlane;startSize=36;rounded=1;arcSize=6;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#166534;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="450" y="96" width="640" height="530" as="geometry" />
+        </mxCell>
+
+        <!-- Brain (Control Plane) -->
+        <mxCell id="r_brain" value="Brain：无状态 Durable Harness（控制面）" style="swimlane;startSize=30;rounded=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#1e40af;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="right_box">
+          <mxGeometry x="20" y="54" width="360" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="r_loop" value="Agent Loop（可检查点恢复）&#xa;wake(sessionId) / emitEvent()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#3b82f6;fontSize=13;fontStyle=1;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="r_brain">
+          <mxGeometry x="16" y="42" width="328" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="r_vfs" value="路径分发虚拟文件系统（统一 read/write/edit）&#xa;/workspace/* → Sandbox ｜ /memory/*,/skills/* → DB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;fontSize=12;fontColor=#1e3a8a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="r_brain">
+          <mxGeometry x="16" y="114" width="328" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Vault (Credential Plane) -->
+        <mxCell id="r_vault" value="Credential Vault &amp; Proxy&#xa;（OneCLI / 外部密钥库）&#xa;按 Host/Path 注入 Token&#xa;沙盒永不见明文密钥" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#581c87;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="right_box">
+          <mxGeometry x="410" y="54" width="210" height="190" as="geometry" />
+        </mxCell>
+
+        <!-- Session (Durable State) -->
+        <mxCell id="r_session" value="Session：外部持久状态层&#xa;• Append-Only 事件流日志&#xa;• Postgres / SQLite 记忆与 Skills&#xa;• 支持 getEvents() 按需切片回放" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#dcfce7;strokeColor=#16a34a;strokeWidth=2;fontSize=13;fontColor=#14532d;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="right_box">
+          <mxGeometry x="20" y="300" width="280" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Hands (Ephemeral Sandboxes) -->
+        <mxCell id="r_hands" value="Hands：可丢弃隔离沙盒（Cattle）&#xa;• 容器 / Apple VM / WASM / 手机设备&#xa;• 空闲即挂起，执行命令时按需唤醒&#xa;• 通过 execute(name, input) RPC 调用" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#fef3c7;strokeColor=#d97706;strokeWidth=2;fontSize=13;fontColor=#78350f;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="right_box">
+          <mxGeometry x="330" y="300" width="290" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom gains strip -->
+        <mxCell id="r_gains" value="&lt;b&gt;核心工程收益：&lt;/b&gt;① 凭据零暴露（沙盒内无密钥可窃）　② 延迟骤降（Anthropic 实测 p50 TTFT -60%，p95 -90%）　③ 故障自愈（Brain 与 Sandbox 均可随时重建，支持一脑多手）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;fillColor=#ffffff;strokeColor=#86efac;fontSize=13;fontColor=#14532d;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="right_box">
+          <mxGeometry x="20" y="450" width="600" height="62" as="geometry" />
+        </mxCell>
+
+        <!-- Edges inside right_box -->
+        <mxCell id="e1" value="getEvents / emitEvent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;fontSize=12;fontColor=#166534;labelBackgroundColor=#f0fdf4;exitX=0.35;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="right_box" source="r_brain" target="r_session">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="Tool RPC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d97706;strokeWidth=2;fontSize=12;fontColor=#92400e;labelBackgroundColor=#f0fdf4;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="right_box" source="r_brain" target="r_hands">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="出站代理" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9333ea;strokeWidth=2;dashed=1;fontSize=12;fontColor=#6b21a8;labelBackgroundColor=#f0fdf4;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="right_box" source="r_hands" target="r_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

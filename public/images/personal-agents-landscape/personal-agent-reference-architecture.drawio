@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Personal Agent Reference Architecture">
+    <mxGraphModel dx="1200" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="760" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="现代 Personal Agent 六层工程参考架构" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="18" width="1040" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" value="提炼自 OpenClaw、Meta Muse (Hatch)、Hermes Agent、Anthropic Managed Agents 与 NanoClaw+OneCLI 的共性分层" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="40" y="54" width="1040" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 1: Channels & Gateway -->
+        <mxCell id="l1" value="L1 · 多渠道接入与网关层（Gateway &amp; Relay）" style="swimlane;startSize=30;rounded=1;fillColor=#eff6ff;strokeColor=#3b82f6;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#1d4ed8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="92" width="760" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_a" value="IM / 邮件 / 语音 / App&#xa;WhatsApp · Slack · RCS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l1">
+          <mxGeometry x="16" y="40" width="224" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_b" value="统一路由与多端中继&#xa;WebSocket / 会话同步" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l1">
+          <mxGeometry x="268" y="40" width="224" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_c" value="用户鉴权与设备配对&#xa;Zero-Trust Access / Tailscale" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l1">
+          <mxGeometry x="520" y="40" width="224" height="44" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2: Durable Harness & Scheduler -->
+        <mxCell id="l2" value="L2 · 编排与 Durable Harness 层（大脑循环）" style="swimlane;startSize=30;rounded=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#5b21b6;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="216" width="760" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_a" value="增强型 ReAct / 持久循环&#xa;检查点恢复 · 子代理派生" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a78bfa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l2">
+          <mxGeometry x="16" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_b" value="上下文编译与 KV-Cache 稳定&#xa;前缀固化 · 工具状态机掩码" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a78bfa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l2">
+          <mxGeometry x="268" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_c" value="模型路由与回退网关&#xa;多厂商切换 · 成本预算控制" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a78bfa;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l2">
+          <mxGeometry x="520" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 3: Memory & Context Substrate -->
+        <mxCell id="l3" value="L3 · 分层记忆与人格配置层（Context Substrate）" style="swimlane;startSize=30;rounded=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#15803d;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="348" width="760" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_a" value="Markdown 身份与偏好档案&#xa;SOUL / USER / MEMORY.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l3">
+          <mxGeometry x="16" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_b" value="不可变 Session 事件流&#xa;JSONL / R2 / 按需切片检索" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l3">
+          <mxGeometry x="268" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l3_c" value="混合检索引擎与证据溯源&#xa;FTS5 + 向量 + 声明版本覆盖" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l3">
+          <mxGeometry x="520" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 4: Capabilities & Skills -->
+        <mxCell id="l4" value="L4 · 能力扩展层（Skills + MCP + 原语工具）" style="swimlane;startSize=30;rounded=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#b45309;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="760" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_a" value="渐进式 Agent Skills&#xa;SKILL.md 发现 → 按需激活" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fbbf24;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l4">
+          <mxGeometry x="16" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_b" value="标准化连接器协议&#xa;MCP Servers · OpenCLI · AP2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fbbf24;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l4">
+          <mxGeometry x="268" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l4_c" value="极简高频核心原语&#xa;read / write / edit / bash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fbbf24;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l4">
+          <mxGeometry x="520" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 5: Execution Hands & Sandboxes -->
+        <mxCell id="l5" value="L5 · 隔离执行面（Sandboxes &amp; Device Hands）" style="swimlane;startSize=30;rounded=1;fillColor=#ecfeff;strokeColor=#0891b2;strokeWidth=2;fontSize=14;fontStyle=1;fontColor=#0e7490;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="612" width="760" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="l5_a" value="计算与代码沙盒&#xa;Docker · Apple VM · nspawn · WASM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#22d3ee;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l5">
+          <mxGeometry x="16" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l5_b" value="浏览器与 Web 执行&#xa;CDP 代理 · Playwright · 云浏览器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#22d3ee;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l5">
+          <mxGeometry x="268" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="l5_c" value="跨端物理与 GUI 手脚&#xa;手机/桌面 GUI · Home Link 硬件" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#22d3ee;fontSize=13;fontColor=#1e293b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="l5">
+          <mxGeometry x="520" y="42" width="224" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Right Vertical Pillar 1: L6 Security & Trust Boundary -->
+        <mxCell id="sec_pillar" value="横切面 A · 纵深安全与凭据边界" style="swimlane;startSize=32;rounded=1;fillColor=#fef2f2;strokeColor=#dc2626;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#991b1b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="830" y="92" width="250" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="sec_body" value="• &lt;b&gt;Agent Vault 网关&lt;/b&gt;&#xa;  凭据外置，按 Host 注入&#xa;&#xa;• &lt;b&gt;Rule of Two 隔离&lt;/b&gt;&#xa;  切断不可信输入→高危写操作&#xa;&#xa;• &lt;b&gt;细粒度策略与限流&lt;/b&gt;&#xa;  域名白名单 · 消费/删信上限&#xa;&#xa;• &lt;b&gt;HITL 审批与审计&lt;/b&gt;&#xa;  付款/发信/外发必须确认" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=10;fontSize=13;fontColor=#7f1d1d;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="sec_pillar">
+          <mxGeometry x="8" y="38" width="234" height="252" as="geometry" />
+        </mxCell>
+
+        <!-- Right Vertical Pillar 2: L6 Proactive & Self-Evolution -->
+        <mxCell id="pro_pillar" value="横切面 B · 主动调度与自进化" style="swimlane;startSize=32;rounded=1;fillColor=#fdf2f8;strokeColor=#db2777;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#9d174d;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="830" y="416" width="250" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="pro_body" value="• &lt;b&gt;Heartbeat &amp; Cron&lt;/b&gt;&#xa;  定时巡检 · 事件 Webhook 唤醒&#xa;&#xa;• &lt;b&gt;夜间整合（Dream）&lt;/b&gt;&#xa;  复盘对话 → 写回偏好与摘要&#xa;&#xa;• &lt;b&gt;Skill 自动沉淀&lt;/b&gt;&#xa;  复杂成功轨迹提炼为 SKILL.md&#xa;&#xa;• &lt;b&gt;安全回归门控&lt;/b&gt;&#xa;  演化前后校验抗注入，失败回滚" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;spacing=10;fontSize=13;fontColor=#831843;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="pro_pillar">
+          <mxGeometry x="8" y="38" width="234" height="252" as="geometry" />
+        </mxCell>
+
+        <!-- Vertical Flow Arrows between L1-L5 -->
+        <mxCell id="a12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#475569;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=classic;startArrow=classic;" edge="1" parent="1" source="l1" target="l2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#475569;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=classic;startArrow=classic;" edge="1" parent="1" source="l2" target="l3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#475569;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=classic;startArrow=classic;" edge="1" parent="1" source="l3" target="l4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#475569;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;endArrow=classic;startArrow=classic;" edge="1" parent="1" source="l4" target="l5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

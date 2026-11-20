@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Security Boundary and Agent Vault">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1120" pageHeight="610" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="打破「致命三要素」：Personal Agent 纵深安全与凭据外置边界" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="18" width="1060" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="sub" value="遵循 Meta Agents Rule of Two 与 OneCLI / IronClaw / Anthropic Vault 实践：沙盒永不持密钥，高危变更必过策略网关" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="52" width="1060" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Zone 1: Untrusted Zone -->
+        <mxCell id="z1" value="域 1 · 不可信输入与隔离沙盒（零明文密钥）" style="swimlane;startSize=34;rounded=1;fillColor=#fef2f2;strokeColor=#dc2626;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#991b1b;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="20" y="96" width="300" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_in" value="&lt;b&gt;不可信外部内容源&lt;/b&gt;&#xa;网页 / 第三方邮件 / 公开 Issue / PDF&#xa;（可能暗藏间接提示注入 IPI）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontSize=13;fontColor=#7f1d1d;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z1">
+          <mxGeometry x="16" y="50" width="268" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_sb" value="&lt;b&gt;隔离执行沙盒&lt;/b&gt;&#xa;Docker / Apple VM / WASM / bwrap&#xa;• 无宿主机文件系统访问&#xa;• 仅挂载受限工作区目录&#xa;• 默认禁直连外网，仅走代理" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#ffffff;strokeColor=#dc2626;fontSize=13;fontColor=#1e293b;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z1">
+          <mxGeometry x="16" y="168" width="268" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_note" value="即使发生 Prompt Injection，沙盒内&#xa;既无明文 Token，也无法绕过网关外泄" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;dashed=1;fontSize=12;fontColor=#9f1239;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z1">
+          <mxGeometry x="16" y="314" width="268" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_e" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#dc2626;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="z1" source="z1_in" target="z1_sb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Zone 2: Trusted Control & Policy Gateway -->
+        <mxCell id="z2" value="域 2 · 可信控制面、策略引擎与 Agent Vault" style="swimlane;startSize=34;rounded=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#5b21b6;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="400" y="96" width="320" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="z2_guard" value="&lt;b&gt;① 信息流与 Skill 冲突守卫&lt;/b&gt;&#xa;• 检查跨 Skill 数据流与授权上下文&#xa;• 拦截未授权状态修改（防 CoSA）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#ffffff;strokeColor=#8b5cf6;fontSize=13;fontColor=#1e293b;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z2">
+          <mxGeometry x="16" y="50" width="288" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="z2_policy" value="&lt;b&gt;② 确定性策略与限流引擎&lt;/b&gt;&#xa;• Host / Path 白名单校验&#xa;• 频控与预算上限（如每小时删信 ≤ 3）&#xa;• 不可逆动作触发人工审批（HITL）" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#ffffff;strokeColor=#8b5cf6;fontSize=13;fontColor=#1e293b;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z2">
+          <mxGeometry x="16" y="156" width="288" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="z2_vault" value="&lt;b&gt;③ Agent Vault 凭据代理注入&lt;/b&gt;&#xa;• 密钥存加密本地库 / HSM&#xa;• 放行后按目标域名动态注入 Header&#xa;• 响应体脱敏扫描，防密钥回流" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#ede9fe;strokeColor=#7c3aed;strokeWidth=1.5;fontSize=13;fontColor=#4c1d95;lineHeight=140;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z2">
+          <mxGeometry x="16" y="274" width="288" height="88" as="geometry" />
+        </mxCell>
+        <mxCell id="z2_e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7c3aed;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="z2" source="z2_guard" target="z2_policy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="z2_e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7c3aed;strokeWidth=2;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="z2" source="z2_policy" target="z2_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Zone 3: External Services & Human Approval -->
+        <mxCell id="z3" value="域 3 · 敏感外部系统与人工确认" style="swimlane;startSize=34;rounded=1;fillColor=#f0fdf4;strokeColor=#16a34a;strokeWidth=2;fontSize=13;fontStyle=1;fontColor=#15803d;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;container=1;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="800" y="96" width="300" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="z3_hitl" value="&lt;b&gt;用户确认通道（HITL）&lt;/b&gt;&#xa;手机推送 / IM 卡片二次确认&#xa;• 支付下单（带硬性额度上限）&#xa;• 群发邮件 / 删库 / 外发文件" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#fefce8;strokeColor=#ca8a04;strokeWidth=1.5;fontSize=13;fontColor=#713f12;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z3">
+          <mxGeometry x="16" y="50" width="268" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="z3_ext" value="&lt;b&gt;外部敏感账号与服务&lt;/b&gt;&#xa;• Gmail / 日历 / 企业 Slack&#xa;• GitHub 私有库 / 云端盘&#xa;• 支付令牌（AP2 / 虚拟卡）&#xa;• 全量审计日志与一键吊销" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=12;fillColor=#ffffff;strokeColor=#16a34a;fontSize=13;fontColor=#1e293b;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="z3">
+          <mxGeometry x="16" y="216" width="268" height="146" as="geometry" />
+        </mxCell>
+
+        <!-- Cross-zone edges -->
+        <mxCell id="ce1" value="无密钥&#xa;请求" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#475569;strokeWidth=2;fontSize=12;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="z1_sb" target="z2_guard">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="328" />
+              <mxPoint x="360" y="187" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ce2" value="审批&#xa;请求" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ca8a04;strokeWidth=2;dashed=1;fontSize=12;fontColor=#854d0e;labelBackgroundColor=#ffffff;exitX=1;exitY=0.35;entryX=0;entryY=0.5;" edge="1" parent="1" source="z2_policy" target="z3_hitl">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="286" />
+              <mxPoint x="760" y="203" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ce3" value="注入凭据&#xa;转发" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontSize=12;fontColor=#15803d;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.6;" edge="1" parent="1" source="z2_vault" target="z3_ext">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="414" />
+              <mxPoint x="760" y="399" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Bottom Principle Strip -->
+        <mxCell id="rule_strip" value="&lt;b&gt;核心安全原则（Rule of Two）：&lt;/b&gt;同一自主会话中，不得同时具备「① 处理不可信输入」「② 访问敏感私密数据」「③ 变更外部状态或对外通信」三者；若任务必须同时涉及三者，必须拆解隔离或交由确定性网关 + 人工确认（HITL）兜底。" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=14;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=1.5;fontSize=13;fontColor=#1e293b;lineHeight=145;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="20" y="502" width="1080" height="74" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
