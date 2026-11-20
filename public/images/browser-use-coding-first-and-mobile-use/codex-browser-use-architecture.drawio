@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Codex Coding-First Browser Use Architecture">
+    <mxGraphModel dx="1280" dy="860" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="820" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title & Subtitle -->
+        <mxCell id="title" value="Codex Coding-First Browser Use 全链路架构与六层能力栈（2026.11）" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="18" width="1140" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="把浏览器操作重塑为「持久 Node REPL 编程 + 本地桥接服务 + 原生插件接管 + 渐进式能力降级 + 回合级治理」" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="54" width="1140" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Section 1 Header: Execution Pipeline -->
+        <mxCell id="sec1_hdr" value="一、端到端控制与通信链路（持久代码运行时 → 真实浏览器登录态）" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;fontSize=13;fontStyle=1;fontColor=#1e293b;align=left;spacingLeft=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="92" width="1140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Step 1: Model + Persistent Node REPL -->
+        <mxCell id="p1" value="&lt;b style='font-size:13px;color:#1e3a8a;'&gt;1. Codex 模型 + 持久 Node REPL&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11.5px;color:#334155;text-align:left;line-height:1.45;'&gt;• &lt;b&gt;node_repl&lt;/b&gt; 跨轮保留变量/句柄&lt;br/&gt;• 用 for 循环与条件判断批量执行&lt;br/&gt;• 一次调用可批处理多步动作&lt;br/&gt;• Stop/Interrupt 触发 &lt;code&gt;turn_ended&lt;/code&gt;&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#3b82f6;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="136" width="212" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Step 2: browser-client.mjs -->
+        <mxCell id="p2" value="&lt;b style='font-size:13px;color:#0f766e;'&gt;2. browser-client.mjs&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11.5px;color:#334155;text-align:left;line-height:1.45;'&gt;• &lt;code&gt;setupBrowserRuntime()&lt;/code&gt;&lt;br/&gt;• 按 &lt;code&gt;apiManifest&lt;/code&gt; 构造能力裁剪 Proxy&lt;br/&gt;• 统一对象树：&lt;code&gt;Agent → Browser → Tab&lt;/code&gt;&lt;br/&gt;• 回传 &lt;code&gt;side_effects&lt;/code&gt;（通知/JPEG 截图）&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#f0fdfa;strokeColor=#14b8a6;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="266" y="136" width="212" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Step 3: browser-service.mjs -->
+        <mxCell id="p3" value="&lt;b style='font-size:13px;color:#7c2d12;'&gt;3. browser-service.mjs&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11.5px;color:#334155;text-align:left;line-height:1.45;'&gt;• 本地浏览器守护服务（RPC 执行）&lt;br/&gt;• 内置 &lt;b&gt;browser-accessibility.wasm&lt;/b&gt;&lt;br/&gt;• 计算无障碍树增量 Diff 省 Token&lt;br/&gt;• 内置 &lt;code&gt;zxing_reader.wasm&lt;/code&gt; 解析二维码&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f97316;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="502" y="136" width="212" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Step 4: Native Host + Extension -->
+        <mxCell id="p4" value="&lt;b style='font-size:13px;color:#6b21a8;'&gt;4. Native Host + Chrome 扩展&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11.5px;color:#334155;text-align:left;line-height:1.45;'&gt;• &lt;code&gt;com.openai.codexextension&lt;/code&gt;&lt;br/&gt;• Chrome Native Messaging 双向通道&lt;br/&gt;• 挂载 &lt;code&gt;chrome.debugger&lt;/code&gt; 与内容脚本&lt;br/&gt;• &lt;code&gt;openTabs / claimTab&lt;/code&gt; 安全接管&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#a855f7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="738" y="136" width="212" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Step 5: Real Chrome Browser -->
+        <mxCell id="p5" value="&lt;b style='font-size:13px;color:#065f46;'&gt;5. 用户真实 Chrome&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11.5px;color:#334155;text-align:left;line-height:1.45;'&gt;• 直接复用已登录 Cookie 与会话&lt;br/&gt;• 隔离 Agent Tab Group 避免抢焦点&lt;br/&gt;• 同时兼容 &lt;code&gt;iab / cdp / mcpapps&lt;/code&gt;&lt;br/&gt;• 人类可随时接管或一键中断&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#10b981;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="974" y="136" width="196" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows between pipeline steps -->
+        <mxCell id="e1" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=2;" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=2;" edge="1" parent="1" source="p2" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=2;" edge="1" parent="1" source="p3" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=2;" edge="1" parent="1" source="p4" target="p5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 2 Header: 6-Layer Tab API -->
+        <mxCell id="sec2_hdr" value="二、统一 Tab 接口的六层渐进降级策略（按「结构化优先 → 批量代码 → 像素/底层兜底」路由）" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;fontSize=13;fontStyle=1;fontColor=#1e293b;align=left;spacingLeft=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="334" width="1140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 0: WebMCP -->
+        <mxCell id="l0" value="&lt;b style='font-size:12.5px;color:#0369a1;'&gt;L0 · WebMCP&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#0284c7;'&gt;capabilities.get('webmcp')&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #bae6fd;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;网页主动暴露的结构化业务工具（&lt;code&gt;fetchTools / call&lt;/code&gt;）。站点支持时最高优先，直接跳过 DOM 猜测。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#0284c7;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="378" width="176" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 1: AX Tree Diff -->
+        <mxCell id="l1" value="&lt;b style='font-size:12.5px;color:#0f766e;'&gt;L1 · AX 树增量 Diff&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#0d9488;'&gt;tab.ax.write / click&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #99f6e4;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;短程与非重复任务首选。WASM 仅回传增删改 Diff，按 &lt;code&gt;element_index&lt;/code&gt; 批量交互，省 Token 且自带等待。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#f0fdfa;strokeColor=#0d9488;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="223" y="378" width="176" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2: Playwright -->
+        <mxCell id="l2" value="&lt;b style='font-size:12.5px;color:#1d4ed8;'&gt;L2 · Playwright API&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#2563eb;'&gt;tab.playwright.locator&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #bfdbfe;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;&lt;b&gt;长程批量/循环核心&lt;/b&gt;。用 &lt;code&gt;getByRole/Label&lt;/code&gt; 与 &lt;code&gt;for&lt;/code&gt; 循环一次灌入 200+ 条配置；带集合读缓存与 &lt;code&gt;evaluate()&lt;/code&gt;。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;strokeWidth=1.8;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="416" y="378" width="176" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 3: DOM-CUA -->
+        <mxCell id="l3" value="&lt;b style='font-size:12.5px;color:#b45309;'&gt;L3 · DOM-CUA&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#d97706;'&gt;tab.dom_cua&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #fde68a;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;Playwright 与纯视觉的中间层。通过 &lt;code&gt;get_visible_dom()&lt;/code&gt; 提取可见交互节点，用 &lt;code&gt;node_id&lt;/code&gt; 直接点击输入。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#fffbeb;strokeColor=#d97706;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="609" y="378" width="176" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 4: Visual CUA -->
+        <mxCell id="l4" value="&lt;b style='font-size:12.5px;color:#be123c;'&gt;L4 · 视觉坐标 CUA&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#e11d48;'&gt;tab.cua + screenshot&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #fecdd3;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;仅作兜底：面向 Canvas、飞书多维表格、Google Sheets 等无合法 DOM 节点场景，按 &lt;code&gt;(x, y)&lt;/code&gt; 点击拖拽。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#e11d48;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="802" y="378" width="176" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 5: Raw CDP -->
+        <mxCell id="l5" value="&lt;b style='font-size:12.5px;color:#475569;'&gt;L5 · 原始 CDP&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11px;color:#64748b;'&gt;capabilities.get('cdp')&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #cbd5e1;margin:6px 0;'/&gt;&lt;div style='font-size:11px;color:#334155;text-align:left;line-height:1.45;'&gt;最后一层硬核通道：限定在当前 Tab Origin 内，支持 &lt;code&gt;send()&lt;/code&gt; 与游标式 &lt;code&gt;readEvents()&lt;/code&gt; 监听底层事件。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;strokeWidth=1.5;verticalAlign=top;spacingTop=10;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="995" y="378" width="175" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Fallback arrows -->
+        <mxCell id="f1" value="" style="endArrow=classic;html=1;strokeColor=#94a3b8;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="l0" target="l1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" value="" style="endArrow=classic;html=1;strokeColor=#94a3b8;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="l1" target="l2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" value="" style="endArrow=classic;html=1;strokeColor=#94a3b8;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="l2" target="l3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f4" value="" style="endArrow=classic;html=1;strokeColor=#94a3b8;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="l3" target="l4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f5" value="" style="endArrow=classic;html=1;strokeColor=#94a3b8;strokeWidth=1.5;dashed=1;" edge="1" parent="1" source="l4" target="l5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Section 3 Header: Production Governance -->
+        <mxCell id="sec3_hdr" value="三、容易被忽略的生产级治理基座（决定能否在真实登录浏览器里安全长期运行）" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;fontSize=13;fontStyle=1;fontColor=#1e293b;align=left;spacingLeft=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="576" width="1140" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Gov 1 -->
+        <mxCell id="g1" value="&lt;b style='font-size:12.5px;color:#0f172a;'&gt;四级风险确认策略（Confirmations）&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11px;color:#475569;text-align:left;line-height:1.48;'&gt;① 强制人工接管（改密/绕过安全墙）② 动作时必确认（删数据/支付/CAPTCHA/传输敏感数据）③ 支持首轮预授权（登录/上传）④ 免确认（Cookie/下载）。明确隔离网页不可信内容与用户指令。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="620" width="272" height="168" as="geometry" />
+        </mxCell>
+
+        <!-- Gov 2 -->
+        <mxCell id="g2" value="&lt;b style='font-size:12.5px;color:#0f172a;'&gt;安全鉴权交接（browserAuth）&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11px;color:#475569;text-align:left;line-height:1.48;'&gt;密码与 OTP 不进入模型上下文，通过 &lt;code&gt;credential_handle&lt;/code&gt; 注入表单；记录 &lt;code&gt;origin_changed&lt;/code&gt; / &lt;code&gt;iframe_origin&lt;/code&gt; 等提交诊断事件，防跨源凭据钓鱼。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="319" y="620" width="272" height="168" as="geometry" />
+        </mxCell>
+
+        <!-- Gov 3 -->
+        <mxCell id="g3" value="&lt;b style='font-size:12.5px;color:#0f172a;'&gt;回合级 Tab 生命周期与防错接管&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11px;color:#475569;text-align:left;line-height:1.48;'&gt;临时标签页在 &lt;code&gt;turn_ended&lt;/code&gt; 自动回收；只有 &lt;code&gt;markDeliverable()&lt;/code&gt; 或 &lt;code&gt;markHandoff()&lt;/code&gt; 会保留。接管用户 Tab 强制校验 &lt;code&gt;(tabId, title, url)&lt;/code&gt; 三元组，防重启 ID 复用错点。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="608" y="620" width="272" height="168" as="geometry" />
+        </mxCell>
+
+        <!-- Gov 4 -->
+        <mxCell id="g4" value="&lt;b style='font-size:12.5px;color:#0f172a;'&gt;反爬遥测与高价值快捷通道&lt;/b&gt;&lt;br/&gt;&lt;div style='margin-top:6px;font-size:11px;color:#475569;text-align:left;line-height:1.48;'&gt;&lt;code&gt;botDetection&lt;/code&gt; 结构化上报 CAPTCHA/登录阻断（仅录 hostname）；&lt;code&gt;tab.content&lt;/code&gt; 与 &lt;code&gt;pageAssets&lt;/code&gt; 提供文档、字幕与资源打包直出，减少无意义翻页。&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;verticalAlign=top;spacingTop=10;spacingLeft=10;spacingRight=10;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="897" y="620" width="273" height="168" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Browser Use vs MobileUse Structural Gap">
+    <mxGraphModel dx="1280" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="720" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title & Subtitle -->
+        <mxCell id="title" value="为什么 Browser Use 能「Coding-First」，而 MobileUse 撞上三堵结构性硬墙？" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="18" width="1140" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="对比 Web 浏览器与移动端 OS 在运行时、协议标准、权限边界、状态可见性与商业风控五个层面的结构性差异" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="54" width="1140" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Column Headers -->
+        <mxCell id="ch_dim" value="对比维度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#1e293b;fontSize=13;fontStyle=1;fontColor=#ffffff;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="96" width="160" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="ch_web" value="Browser Use（Web 浏览器：天然可编程运行时）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1d4ed8;strokeColor=#1d4ed8;fontSize=13;fontStyle=1;fontColor=#ffffff;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="96" width="468" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="ch_mob" value="MobileUse（手机端 OS：强沙盒 + 碎片化 + 超级 App 围墙）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#be123c;strokeColor=#be123c;fontSize=13;fontStyle=1;fontColor=#ffffff;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="96" width="480" height="38" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: Runtime & Execution Medium -->
+        <mxCell id="r1_d" value="&lt;b&gt;1. 运行时与&lt;br/&gt;统一协议&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:10.5px;color:#64748b;'&gt;第一堵墙：无统一脚本层&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontSize=12;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="148" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_w" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 所有网站共享同一套 &lt;b&gt;HTML + DOM + JS 引擎 + CDP&lt;/b&gt; 底座。&lt;br/&gt;• Playwright / CDP 在互联网训练语料中占比极高，模型天然会写循环、选择器与 &lt;code&gt;evaluate()&lt;/code&gt;，一套代码可通吃全网。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#93c5fd;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="148" width="468" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r1_m" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 原生 View、Flutter、RN、游戏引擎、小程序、WebView 混杂，&lt;b&gt;没有跨 App 通用的 eval / CDP 通道&lt;/b&gt;。&lt;br/&gt;• 手机上用户侧无法像跑 Node REPL 那样向第三方 App 注入业务脚本，只能停留在 UI 事件或官方预置意图。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="148" width="480" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: Perception & Observation -->
+        <mxCell id="r2_d" value="&lt;b&gt;2. 页面观测与&lt;br/&gt;状态保真度&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontSize=12;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="258" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_w" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 可同时读取完整 DOM、AX Tree（含 WASM 增量 Diff）、Network、Console 与 URL 参数，隐式状态可程序化核验。&lt;br/&gt;• 仅 Canvas / 电子表格类页面需要退回视觉坐标。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#93c5fd;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="258" width="468" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r2_m" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• Android View Hierarchy 残缺/脱节严重（自绘控件、弹窗遮挡、无语义 ID），支付与银行页触发 &lt;code&gt;FLAG_SECURE&lt;/code&gt; 直接黑屏。&lt;br/&gt;• iOS 对第三方完全关闭全局无障碍读取，只有系统 Siri 可读授权实体。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="258" width="480" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- Row 3: OS Sandbox & Permission -->
+        <mxCell id="r3_d" value="&lt;b&gt;3. 操作系统&lt;br/&gt;沙盒与权限&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:10.5px;color:#64748b;'&gt;第二堵墙：强权限收口&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontSize=12;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="368" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_w" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 桌面端用户装一个 Chrome 扩展或连本地调试端口，就能把任意 Agent 接入真实浏览器，不需要 OS 厂商特批。&lt;br/&gt;• 后台 Tab Group 可与用户并发操作，互不抢焦点。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#93c5fd;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="368" width="468" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r3_m" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 跨 App 操控权高度收口于 OS：Android &lt;code&gt;EXECUTE_APP_FUNCTIONS&lt;/code&gt; 与 &lt;code&gt;INJECT_EVENTS&lt;/code&gt; 仅授系统特权；iOS 仅允许系统 Siri 调 App Intents。&lt;br/&gt;• 第三方 Agent 若无厂商合作，只能依赖 USB/Wi-Fi 调试（ADB/HDC/WDA）或受限无障碍服务。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="368" width="480" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- Row 4: Ecosystem & Anti-bot -->
+        <mxCell id="r4_d" value="&lt;b&gt;4. 商业利益与&lt;br/&gt;风控对抗&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:10.5px;color:#64748b;'&gt;第三堵墙：超级 App 围墙&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontSize=12;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="478" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_w" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• Web 开放互联传统较强，大量 SaaS/后台/内部系统容忍自动化；虽然亚马逊等头部站点也开始封杀购物 Agent，但 WebMCP 已起步。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#93c5fd;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="478" width="468" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r4_m" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• 超级 App（微信/淘宝/美团/银行）手握广告、交易与支付闭环，视无授权跨 App 代操作为「截流 + 黑产外挂」。&lt;br/&gt;• 2026 年 10 月仍有超 150 款主流 App 拦截非授权手机智能体；实测单次点单暴露约 40% 高敏权限。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="478" width="480" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- Row 5: Convergent Direction -->
+        <mxCell id="r5_d" value="&lt;b&gt;5. 2026 年末&lt;br/&gt;收敛形态&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;fontSize=12;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="588" width="160" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_w" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• &lt;b&gt;Coding-First 成为定局&lt;/b&gt;：持久 REPL + AX Diff / Playwright / CDP 覆盖存量网页，WebMCP 承接增量原生合作站点。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#6ee7b7;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="206" y="588" width="468" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="r5_m" value="&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;• &lt;b&gt;消费者侧走「双轨制」&lt;/b&gt;：系统意图/端侧 MCP 为主 + 受控后台虚拟屏 GUI 兜底；&lt;br/&gt;• &lt;b&gt;开发与 QA 侧走「Coding-First 飞地」&lt;/b&gt;：ADB/HDC/WDA + &lt;code&gt;mobile-mcp&lt;/code&gt; + &lt;code&gt;mobilewright&lt;/code&gt; 确定性脚本化。&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#6ee7b7;spacingLeft=12;spacingRight=12;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="690" y="588" width="480" height="96" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

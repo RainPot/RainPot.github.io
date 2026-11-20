@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="MobileUse OEM Landscape 2026">
+    <mxGraphModel dx="1280" dy="860" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="820" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title & Subtitle -->
+        <mxCell id="title" value="2026 年手机端 MobileUse 全景：四大技术路线、厂商进展与生态博弈" style="text;html=1;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="18" width="1140" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="从「豆包手机」撞墙到 Google 双轨制、Apple App Intents、华为鸿蒙 HMAF、国产 OEM 混战与微信受控开放" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontColor=#475569;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="54" width="1140" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Route 1: Pure Contract / Native Protocol -->
+        <mxCell id="c1" value="&lt;b style='font-size:14px;color:#1e3a8a;'&gt;路线一：纯契约 / 强生态协议派&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11.5px;color:#3b82f6;'&gt;「只执行 App 明确声明的工具，拒绝无授权屏幕模拟」&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #bfdbfe;margin:8px 0;'/&gt;&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;&lt;b&gt;• Apple（iOS / Siri AI Developer Preview）&lt;/b&gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;- App Intents 升级：&lt;code&gt;ToolIntent&lt;/code&gt; + &lt;code&gt;App Skills&lt;/code&gt; + &lt;code&gt;GenerableEntity&lt;/code&gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;- 屏幕上下文须由 App 主动绑定 View 到实体，严禁第三方截屏代点&lt;br/&gt;&amp;nbsp;&amp;nbsp;- 配套 Xcode Integration Advisor 与 &lt;code&gt;SiriEvaluations&lt;/code&gt; 评测框架&lt;br/&gt;&lt;br/&gt;&lt;b&gt;• 华为（HarmonyOS 6 / 小艺 + HMAF）&lt;/b&gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;- 意图框架（Intents Kit）+ 鸿蒙智能体框架（HMAF）&lt;br/&gt;&amp;nbsp;&amp;nbsp;- HDC 2025–2026 升级小艺开放平台，支持快速上架 Skill 与多智能体协同&lt;br/&gt;&lt;br/&gt;&lt;span style='color:#0369a1;font-weight:bold;'&gt;优势：&lt;/span&gt;确定性高、权限合规、体验快&lt;br/&gt;&lt;span style='color:#be123c;font-weight:bold;'&gt;短板：&lt;/span&gt;冷启动慢，强依赖头部 App 主动改造&lt;/div&gt;" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#3b82f6;strokeWidth=1.6;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="96" width="555" height="284" as="geometry" />
+        </mxCell>
+
+        <!-- Route 2: Dual-Track OS Platform -->
+        <mxCell id="c2" value="&lt;b style='font-size:14px;color:#065f46;'&gt;路线二：OS 双轨协同派（行业最受认可的终局模板）&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11.5px;color:#059669;'&gt;「优先端侧 MCP 契约，未适配 App 用 OS 受控 UI Automation 兜底」&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #a7f3d0;margin:8px 0;'/&gt;&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;&lt;b&gt;• Google Android 16/17 + Gemini&lt;/b&gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;- &lt;b&gt;轨道 A（AppFunctions / Android MCP）&lt;/b&gt;：App 暴露本地 Kotlin 工具函数，&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;受特权 &lt;code&gt;EXECUTE_APP_FUNCTIONS&lt;/code&gt; 管控，经 Connected Console 审核发布&lt;br/&gt;&amp;nbsp;&amp;nbsp;- &lt;b&gt;轨道 B（Intelligent UI Automation）&lt;/b&gt;：2026.02 首发，后台执行+实时视图&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;监控+随时接管，首批落地外卖、商超与网约车场景（Uber/DoorDash）&lt;br/&gt;&lt;br/&gt;&lt;b&gt;• Samsung（Galaxy S26 / One UI 8.5）&lt;/b&gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;- 与 Google 联合首发 AppFunctions（如相册跨应用调用）与 Gemini 后台任务&lt;br/&gt;&lt;br/&gt;&lt;span style='color:#047857;font-weight:bold;'&gt;优势：&lt;/span&gt;兼顾存量零代码覆盖与头部高效结构化执行&lt;br/&gt;&lt;span style='color:#be123c;font-weight:bold;'&gt;短板：&lt;/span&gt;跨应用调用权仍收口于系统级特权助手，第三方 Agent 难以平权&lt;/div&gt;" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#10b981;strokeWidth=1.6;verticalAlign=top;spacingTop=12;spacingRight=14;spacingLeft=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="615" y="96" width="555" height="284" as="geometry" />
+        </mxCell>
+
+        <!-- Route 3: Chinese OEM Hybrid Race -->
+        <mxCell id="c3" value="&lt;b style='font-size:14px;color:#9a3412;'&gt;路线三：国产手机 OEM 混合突围派（抢系统调度权）&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11.5px;color:#ea580c;'&gt;「端云协同 + 系统服务直达 + 有限 GUI 执行 + 对接超级 App 合作通道」&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #fed7aa;margin:8px 0;'/&gt;&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;&lt;b&gt;• 荣耀（MagicOS 10 / 11 · YOYO Next）&lt;/b&gt;：最早跑通高频跨 App 点单，2026 年转向自研闭环与 MCP 生态合作，划清与外部侵入式 GUI 的权限红线&lt;br/&gt;&lt;b&gt;• 小米（澎湃 OS 4 · 超级小爱 2.0）&lt;/b&gt;：主打跨应用、跨车家设备任务执行与专家模式&lt;br/&gt;&lt;b&gt;• OPPO（ColorOS · 超级小布）/ vivo（OriginOS · 蓝心小V / PhoneGPT）&lt;/b&gt;：&lt;br/&gt;&amp;nbsp;&amp;nbsp;- 一键问屏感知 + 意图直达 + 高频合作 App 专项适配，强调隐私沙盒与风控合规&lt;br/&gt;&lt;br/&gt;&lt;span style='color:#c2410c;font-weight:bold;'&gt;现实处境：&lt;/span&gt;不再迷信“纯 GUI 暴力接管一切”，全面转向与超级 App 谈判 A2A / 小程序 / 意图协议&lt;/div&gt;" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f97316;strokeWidth=1.6;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="398" width="555" height="244" as="geometry" />
+        </mxCell>
+
+        <!-- Route 4: Pure GUI & Open-Source / Dev Enclave -->
+        <mxCell id="c4" value="&lt;b style='font-size:14px;color:#6b21a8;'&gt;路线四：模型厂商激进 GUI 派 &amp; 开源 / QA 开发者生态&lt;/b&gt;&lt;br/&gt;&lt;span style='font-size:11.5px;color:#9333ea;'&gt;「消费者端直面风控硬碰硬，开发与自动化测试端率先落地」&lt;/span&gt;&lt;hr style='border:0;border-top:1px solid #e9d5ff;margin:8px 0;'/&gt;&lt;div style='text-align:left;font-size:11.5px;line-height:1.5;color:#1e293b;'&gt;&lt;b&gt;• 豆包手机（字节 Seed 1.8 × 中兴/努比亚）&lt;/b&gt;：以系统权限跑真实 GUI 轨迹，2025.12 引发超级 App 封杀潮，2026.07 过备案、2026.09 放缓节奏，2026.10 仍遇超 150 款 App 拒绝&lt;br/&gt;&lt;b&gt;• 开源端到端 GUI 栈&lt;/b&gt;：智谱 &lt;code&gt;Open-AutoGLM&lt;/code&gt;（26.6k★，支持 ADB/HDC/WDA）、字节 &lt;code&gt;UI-TARS&lt;/code&gt;（39.6k★）、阿里 &lt;code&gt;Mobile-Agent&lt;/code&gt;、&lt;code&gt;minitap/mobile-use&lt;/code&gt;&lt;br/&gt;&lt;b&gt;• 开发/测试侧 Coding-First 飞地&lt;/b&gt;：&lt;code&gt;mobile-mcp&lt;/code&gt;（无障碍树优先）→ 沉淀为 &lt;code&gt;mobilewright&lt;/code&gt; 确定性 CI 用例；&lt;code&gt;Midscene.js&lt;/code&gt; 结合视觉模型与 YAML/JS 脚本&lt;/div&gt;" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#a855f7;strokeWidth=1.6;verticalAlign=top;spacingTop=12;spacingLeft=14;spacingRight=14;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="615" y="398" width="555" height="244" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Timeline Bar: Super-App Game Evolution -->
+        <mxCell id="bot_bg" value="" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#94a3b8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="30" y="662" width="1140" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="bot_title" value="关键分水岭：超级 App 与手机智能体的博弈演进（2025.12 → 2026.11）" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#0f172a;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="48" y="670" width="600" height="24" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t1" value="&lt;b style='color:#be123c;'&gt;2025.12 冲突爆发&lt;/b&gt;&lt;br/&gt;豆包手机工程机获系统权限代操作，引发微信/淘宝/金融 App 密集风控拦截" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fff1f2;strokeColor=#fda4af;fontSize=11;color:#1e293b;align=left;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="48" y="702" width="256" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="&lt;b style='color:#047857;'&gt;2026.02 规则确立&lt;/b&gt;&lt;br/&gt;Google 发布 Android 双轨架构：AppFunctions（端侧 MCP）+ 受控 UI Automation" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#ecfdf5;strokeColor=#6ee7b7;fontSize=11;color:#1e293b;align=left;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="330" y="702" width="256" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="&lt;b style='color:#1d4ed8;'&gt;2026.06 让路不让权&lt;/b&gt;&lt;br/&gt;微信探索与厂商合作 A2A 助手、智能体调小程序（美团/滴滴/携程首批内测）" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#93c5fd;fontSize=11;color:#1e293b;align=left;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="612" y="702" width="256" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" value="&lt;b style='color:#7c2d12;'&gt;2026.09–11 合流分化&lt;/b&gt;&lt;br/&gt;七家厂商过备案、AI OS 密集升级；但无授权纯 GUI 仍被 150+ App 拦截，协议+兜底成共识" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#fdba74;fontSize=11;color:#1e293b;align=left;spacingLeft=8;spacingRight=8;fontFamily=PingFang SC,Microsoft YaHei,Helvetica,Arial;" vertex="1" parent="1">
+          <mxGeometry x="894" y="702" width="258" height="76" as="geometry" />
+        </mxCell>
+
+        <!-- Timeline arrows -->
+        <mxCell id="ta1" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=1.6;" edge="1" parent="1" source="t1" target="t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ta2" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=1.6;" edge="1" parent="1" source="t2" target="t3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ta3" value="" style="endArrow=classic;html=1;strokeColor=#64748b;strokeWidth=1.6;" edge="1" parent="1" source="t3" target="t4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
