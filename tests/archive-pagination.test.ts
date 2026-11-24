@@ -13,7 +13,7 @@ describe("文章列表翻页", () => {
   it("离线时复用已有文章翻到下一页，并保留页面外壳", async () => {
     const doc = await openArchive();
     const background = doc.querySelector("canvas");
-    const cursor = doc.querySelector("#cursor-container");
+    const header = doc.querySelector("header");
     const navigation = prepare(doc, "/blog/page/2/");
 
     await navigation.loader();
@@ -27,7 +27,7 @@ describe("文章列表翻页", () => {
     expect(doc.querySelector("[data-filter-pagination]")?.textContent).toContain("第 2 / 3 页");
     expect(pageLinks(doc)).toEqual(["/blog/", "/blog/page/3/"]);
     expect(doc.querySelector("canvas")).toBe(background);
-    expect(doc.querySelector("#cursor-container")).toBe(cursor);
+    expect(doc.querySelector("header")).toBe(header);
   });
 
   it("从深页直接进入后支持后退到第一页及前进到末页", async () => {
@@ -93,7 +93,7 @@ describe("文章列表翻页", () => {
 async function openArchive(page = 1, base = "/blog/") {
   const title = page === 1 ? "文章列表 - RainPot" : `文章列表 第 ${page} 页 - RainPot`;
   dom = new JSDOM(`<!doctype html><html><head><title>${title}</title></head><body>
-    <div id="cursor-container"></div><canvas></canvas><header>RainPot</header>
+    <canvas></canvas><header>RainPot</header>
     <main id="main-content">
       <input type="search" data-article-filter>
       <b data-filter-count></b><p data-filter-empty hidden></p>

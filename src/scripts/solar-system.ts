@@ -880,15 +880,13 @@ if (root && stage && timeNode) {
   });
   canvasEl.addEventListener("pointermove", (event: PointerEvent) => {
     if (focused) {
-      canvasEl.style.cursor = 'url("/images/cursor-inner.png") 16 16, default';
+      canvasEl.style.cursor = "default";
       return;
     }
     getPointerNDC(event);
     raycaster.setFromCamera(pointer, camera);
     const hit = raycaster.intersectObjects(planets.map((p) => p.mesh), false)[0];
-    canvasEl.style.cursor = hit
-      ? 'url("/images/cursor-inner.png") 16 16, pointer'
-      : 'url("/images/cursor-inner.png") 16 16, grab';
+    canvasEl.style.cursor = hit ? "pointer" : "grab";
   });
 
   // ---------- selective bloom postprocessing ----------

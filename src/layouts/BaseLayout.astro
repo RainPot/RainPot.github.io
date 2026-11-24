@@ -1,7 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import CosmicBackground from "../components/CosmicBackground.astro";
-import CustomCursor from "../components/CustomCursor.astro";
 import Header from "../components/Header.astro";
 // 列表与文章共用关键样式，点击文章后不再等待额外的公式样式预载。
 import "katex/dist/katex.min.css";
@@ -33,7 +32,6 @@ const {
   </head>
   <body>
     <div class="navigation-progress" data-navigation-progress role="progressbar" aria-label="正在打开页面" hidden></div>
-    <CustomCursor />
     <CosmicBackground />
     <div class="page-shell">
       <Header />
