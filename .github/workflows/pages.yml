@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -17,10 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,6 +53,28 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Pages artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 12); do
+            count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?name=github-pages" --jq '.total_count') || count=0
+            echo "Attempt $i: github-pages artifact count = $count"
+            if [ "${count:-0}" -ge 1 ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for github-pages artifact metadata"
+          exit 1
 
       - name: Deploy to GitHub Pages
         id: deployment
