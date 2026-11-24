@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Coding-First vs Small-Model Cost Model">
+    <mxGraphModel dx="1420" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="860" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;b&gt;MobileUse 模型调用成本模型：Coding-First 编译路线 vs 小模型 + Harness 与三层混合路由&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=19;fontColor=#1a202c;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="70" y="16" width="1160" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="成本不只看单次推理单价：需把重复运行次数 K、UI 漂移修复率 α、Token 上下文膨胀与云真机分钟费合并核算" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#4a5568;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="70" y="54" width="1160" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Top Panel: 3 Cost Routes -->
+        <mxCell id="panel_top" value="一、三条路线的全生命周期模型成本对比（以 15 步标准移动端业务流为例）" style="swimlane;startSize=30;rounded=1;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=13;fontColor=#1e293b;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="88" width="1240" height="296" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r_a" value="&lt;b&gt;路线 A：小模型 + 精调 Harness（每次推理）&lt;/b&gt;&#xa;• 代表：7B–32B VLM / Flash + 紧凑动作空间&#xa;• 成本公式：T_small(K) = K × C_small + 重试成本&#xa;• 典型量级：C_small ≈ $0.008–$0.02 / 次&#xa;• 优势：零前置写代码成本，抗页面高频微调&#xa;• 隐痛：随 K 线性增长 + 15 步推理拉长云真机耗时" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#3b82f6;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="panel_top">
+          <mxGeometry x="20" y="44" width="380" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r_b" value="&lt;b&gt;路线 B：大模型 + mobile-mcp 在线裸跑&lt;/b&gt;&#xa;• 代表：Sonnet/Opus/GPT-5.x 每次直接跑 MCP&#xa;• 成本公式：T_mcp(K) = K × C_big（无沉淀）&#xa;• 典型量级：C_big ≈ $0.15–$0.80 / 次&#xa;• 特征：24 工具 Schema + 多轮历史累积膨胀&#xa;• 结论：比路线 A 贵 15–50 倍，高频执行完全不划算" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#ef4444;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="panel_top">
+          <mxGeometry x="430" y="44" width="380" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r_c" value="&lt;b&gt;路线 C：Coding-First 编译（Mobilewright）&lt;/b&gt;&#xa;• 代表：强模型探索生成 → CI 零模型回放 + 按需自愈&#xa;• 成本公式：T_coding(K) = C_author + α · K · C_heal&#xa;• 典型量级：C_author ≈ $0.3–$1.5；CI 模型费 = $0&#xa;• 优势：跑过盈亏点后边际成本趋近 α·C_heal，且快&#xa;• 反例边界：K 太小或页面漂移率 α 过高时反而更贵" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#16a34a;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="panel_top">
+          <mxGeometry x="840" y="44" width="380" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="breakeven" value="&lt;b&gt;盈亏平衡阈值公式：&lt;/b&gt; K* = C_author / (C_small − α · C_heal)    |    典型样例（C_author=$0.60, C_small=$0.015, α=0.01, C_heal=$0.30）⇒  &lt;b&gt;K* ≈ 50 次&lt;/b&gt;&#xa;• 当 α · C_heal ≥ C_small（如每跑 10 次就大改一次 UI，α=0.1）时分母 ≤ 0：Coding-First 永远无法回本，应切回小模型 + Harness！" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;fontSize=11.5;align=left;spacingLeft=14;fontColor=#713f12;" vertex="1" parent="panel_top">
+          <mxGeometry x="20" y="220" width="1200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Panel: Tiered Hybrid Architecture -->
+        <mxCell id="panel_bot" value="二、生产级成本最优解：三层混合路由（不要二选一，按频率 K 与稳定性 α 分层）" style="swimlane;startSize=30;rounded=1;fillColor=#ffffff;strokeColor=#64748b;fontStyle=1;fontSize=13;fontColor=#1e293b;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="424" width="1240" height="396" as="geometry" />
+        </mxCell>
+
+        <mxCell id="router" value="&lt;b&gt;任务分流器&lt;/b&gt;&#xa;按重复频次 K、UI 稳定度 (1−α)&#xa;与界面可树化程度路由" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="panel_bot">
+          <mxGeometry x="24" y="136" width="212" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tier1" value="&lt;b&gt;L1 主干高频回归（占 CI 70%–85% 流量）&lt;/b&gt;   [高 K、低 α、有 AX/TestID]&#xa;强 Coding 模型 + mobilewright-cli 一次性写好 *.spec.ts → CI 全程零 LLM 调用（仅付设备分钟费）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=11.5;align=left;spacingLeft=12;fontColor=#14532d;" vertex="1" parent="panel_bot">
+          <mxGeometry x="348" y="48" width="540" height="72" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tier2" value="&lt;b&gt;L2 运行时轻微漂移 / 突发弹窗自愈（占 10%–20%）&lt;/b&gt;   [Locator 超时触发]&#xa;先派低成本小模型 VLM + Harness 消费失败截图与 AX JSON 关弹窗或产出新 Locator 候选，不直接唤起贵大模型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=11.5;align=left;spacingLeft=12;fontColor=#1e3a8a;" vertex="1" parent="panel_bot">
+          <mxGeometry x="348" y="168" width="540" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tier3" value="&lt;b&gt;L3 一次探索 / 高频活动页 / 纯视觉自绘页（占 5%–10%）&lt;/b&gt;   [低 K 或高 α 或无树]&#xa;直接用小模型 + 精调 Harness 跑完即走（跳过脚本化沉淀，避免支付回不了本的 C_author 与 C_heal）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontSize=11.5;align=left;spacingLeft=12;fontColor=#581c87;" vertex="1" parent="panel_bot">
+          <mxGeometry x="348" y="292" width="540" height="74" as="geometry" />
+        </mxCell>
+
+        <mxCell id="escalate" value="&lt;b&gt;升级通道：强 Coding 模型&lt;/b&gt;&#xa;• L2 连续自愈失败&#xa;• 业务流程结构性改版&#xa;• 需补齐复杂状态断言&#xa;→ 读失败包改代码提 PR&#xa;回写进 L1 资产库" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=11.5;align=left;spacingLeft=10;fontColor=#7c2d12;" vertex="1" parent="panel_bot">
+          <mxGeometry x="1004" y="114" width="214" height="176" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows inside Bottom Panel -->
+        <mxCell id="eb1" value="K ≥ K*" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#14532d;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="panel_bot" source="router" target="tier1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="84" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eb2" value="L1 异常兜底" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2563eb;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#1e3a8a;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="panel_bot" source="router" target="tier2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb3" value="K &lt; K* 或高 α" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9333ea;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#581c87;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="panel_bot" source="router" target="tier3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="329" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="eb4" value="超时触发" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#2563eb;strokeWidth=1.8;labelBackgroundColor=#ffffff;fontSize=10.5;fontColor=#1e3a8a;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="panel_bot" source="tier1" target="tier2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb5" value="小模型难修复" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ea580c;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=10.5;fontColor=#7c2d12;exitX=1;exitY=0.5;entryX=0;entryY=0.52;" edge="1" parent="panel_bot" source="tier2" target="escalate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eb6" value="修绿回写" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#16a34a;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=10.5;fontColor=#14532d;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" parent="panel_bot" source="escalate" target="tier1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1111" y="84" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

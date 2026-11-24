@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="Coding-First Compile Loop">
+    <mxGraphModel dx="1480" dy="860" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="760" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;b&gt;Mobile Next 的 Coding-First 编译链路：从单次探索到零模型 CI 回放&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontColor=#1a202c;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="150" y="16" width="1100" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="把“昂贵的一次性探索推理”编译为“零 Token 的确定性 Mobilewright 测试代码”，并用结构化失败现场支撑后续自愈" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#4a5568;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="150" y="54" width="1100" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 1 -->
+        <mxCell id="s1" value="阶段 1：交互探索（LLM 介入）" style="swimlane;startSize=32;rounded=1;fillColor=#eff6ff;strokeColor=#3b82f6;fontStyle=1;fontSize=13;fontColor=#1e3a8a;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="100" width="272" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_a" value="&lt;b&gt;入口选择（二选一）&lt;/b&gt;&#xa;• mobilewright-cli（省 Token 推荐）&#xa;• mobile-mcp（24 工具接入 IDE）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s1">
+          <mxGeometry x="14" y="46" width="244" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_b" value="&lt;b&gt;文本树优先观测&lt;/b&gt;&#xa;snapshot 落盘 .mobilewright-cli/&#xa;- button &quot;Sign in&quot; [ref=e9]&#xa;仅文本树缺失时才截图（JPEG 1024px）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s1">
+          <mxGeometry x="14" y="130" width="244" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_c" value="&lt;b&gt;逐条回显目标代码&lt;/b&gt;&#xa;### Ran Mobilewright code&#xa;await screen.getByRole(&#xa;  &#39;button&#39;, { name: &#39;Sign in&#39; }&#xa;).tap();" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;fontSize=11;align=left;spacingLeft=8;fontFamily=Courier New;fontColor=#1e3a8a;" vertex="1" parent="s1">
+          <mxGeometry x="14" y="230" width="244" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_cost" value="成本属性：一次性固定投入 C_author" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=11.5;fontStyle=1;fontColor=#78350f;" vertex="1" parent="s1">
+          <mxGeometry x="14" y="340" width="244" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 2 -->
+        <mxCell id="s2" value="阶段 2：代码沉淀与本地修绿" style="swimlane;startSize=32;rounded=1;fillColor=#f0fdf4;strokeColor=#16a34a;fontStyle=1;fontSize=13;fontColor=#14532d;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="386" y="100" width="272" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_a" value="&lt;b&gt;语义 Locator 派生优先级&lt;/b&gt;&#xa;1. getByTestId（key / resourceId）&#xa;2. getByRole（16 个跨平台角色）&#xa;3. getByLabel / getByText&#xa;严禁硬编码像素坐标与固定 sleep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s2">
+          <mxGeometry x="14" y="46" width="244" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_b" value="&lt;b&gt;汇总为 *.spec.ts&lt;/b&gt;&#xa;拼接 Ran Mobilewright code&#xa;补齐业务终态 expect() 重试断言&#xa;（含 WebView 内嵌 Page 断言）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s2">
+          <mxGeometry x="14" y="154" width="244" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_c" value="&lt;b&gt;自跑验证并合入&lt;/b&gt;&#xa;Agent 执行 npx mobilewright test&#xa;读报错 / 调整 Locator 直至全绿&#xa;最终作为普通代码 PR 合入 Git" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=11.5;align=left;spacingLeft=8;fontColor=#14532d;" vertex="1" parent="s2">
+          <mxGeometry x="14" y="254" width="244" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_cost" value="产出物：可审查、可版本化的 TS 测试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;fontSize=11.5;fontStyle=1;fontColor=#14532d;" vertex="1" parent="s2">
+          <mxGeometry x="14" y="340" width="244" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 3 -->
+        <mxCell id="s3" value="阶段 3：CI 确定性回放（无 LLM）" style="swimlane;startSize=32;rounded=1;fillColor=#ecfeff;strokeColor=#0891b2;fontStyle=1;fontSize=13;fontColor=#164e63;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="742" y="100" width="272" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_a" value="&lt;b&gt;Playwright Runner + 设备池&lt;/b&gt;&#xa;DevicePoolHttpServer 协调多 Worker&#xa;自动分配本地模拟器或云真机队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#22d3ee;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s3">
+          <mxGeometry x="14" y="46" width="244" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_b" value="&lt;b&gt;resolveActionable 自动等待&lt;/b&gt;&#xa;5s 超时 / 100ms 轮询拉全量 ViewNode&#xa;存在 → 可见 → 可用 → 50ms bounds 稳定&#xa;支持 RN / Compose 特例与 bounds 包含兜底" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#22d3ee;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s3">
+          <mxGeometry x="14" y="132" width="244" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_c" value="&lt;b&gt;WebView 混合执行&lt;/b&gt;&#xa;注入 Playwright InjectedScript&#xa;DOM 算中心点 → 原生驱动点击输入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;fontSize=11.5;align=left;spacingLeft=8;fontColor=#164e63;" vertex="1" parent="s3">
+          <mxGeometry x="14" y="240" width="244" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_cost" value="单次运行模型成本：$0（只付设备时长）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0e7490;fontSize=11.5;fontStyle=1;fontColor=#164e63;" vertex="1" parent="s3">
+          <mxGeometry x="14" y="340" width="244" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Stage 4 -->
+        <mxCell id="s4" value="阶段 4：失败留证与漂移自愈" style="swimlane;startSize=32;rounded=1;fillColor=#fff7ed;strokeColor=#ea580c;fontStyle=1;fontSize=13;fontColor=#7c2d12;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="1098" y="100" width="272" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_a" value="&lt;b&gt;结构化失败现场自动落盘&lt;/b&gt;&#xa;• retain-on-failure 录像 (MP4)&#xa;• 失败瞬间截图&#xa;• 完整 Accessibility Tree JSON" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fb923c;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s4">
+          <mxGeometry x="14" y="46" width="244" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_b" value="&lt;b&gt;区分真 Bug 与 UI 漂移&lt;/b&gt;&#xa;• 业务断言失败 → 拦截 PR 报缺陷&#xa;• 控件改名/改布局 → 触发自愈分支" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fb923c;fontSize=11.5;align=left;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="s4">
+          <mxGeometry x="14" y="148" width="244" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_c" value="&lt;b&gt;按需召回模型修复&lt;/b&gt;&#xa;仅在变更概率 α 触发时付费 C_heal&#xa;读失败 AX JSON + 截图更新 Locator&#xa;重新跑绿并提交修复 PR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=11.5;align=left;spacingLeft=8;fontColor=#7c2d12;" vertex="1" parent="s4">
+          <mxGeometry x="14" y="242" width="244" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_cost" value="摊销维护费：α × C_heal / 次" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;fontSize=11.5;fontStyle=1;fontColor=#7f1d1d;" vertex="1" parent="s4">
+          <mxGeometry x="14" y="340" width="244" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom note bar -->
+        <mxCell id="note" value="&lt;b&gt;核心工程判断：&lt;/b&gt;Mobile Next 把“探索期”和“执行期”硬切开——探索期允许模型花 Token 摸清页面，但一进入 CI 就把模型请出执行路径。&#xa;这也解释了为什么它同时维护 mobile-mcp / mobilewright-cli 和 mobilewright：前者负责把人类自然语言翻译成动作，后者负责把动作锁死成零 Token 的回归资产。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#64748b;fontSize=12;align=left;spacingLeft=16;fontColor=#1e293b;" vertex="1" parent="1">
+          <mxGeometry x="30" y="564" width="1340" height="68" as="geometry" />
+        </mxCell>
+
+        <!-- Forward arrows between stages -->
+        <mxCell id="e12" value="代码收集" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2563eb;strokeWidth=2.2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#1e3a8a;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e23" value="合入 Git" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2.2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#14532d;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e34" value="CI 失败" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ea580c;strokeWidth=2.2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#7c2d12;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Feedback arrow from Stage 4 back to Stage 2 -->
+        <mxCell id="e42" value="UI 漂移修复 PR（仅在 α 发生时触发，回到确定性测试库）" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#dc2626;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11.5;fontColor=#991b1b;exitX=0.5;exitY=1;entryX=0.5;entryY=1;" edge="1" parent="1" source="s4" target="s2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1234" y="534" />
+              <mxPoint x="522" y="534" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

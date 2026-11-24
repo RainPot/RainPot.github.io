@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="31.0.2">
+  <diagram name="MobileNext Three-Tier Architecture">
+    <mxGraphModel dx="1420" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="900" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;b&gt;Mobile Next 三款开源产品的真实架构分层与依赖拓扑&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontColor=#1a202c;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="140" y="16" width="1000" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="基于 2026-11 源码拆解：mobile-mcp (Apache-2.0) / mobilewright v0.0.72 (Apache-2.0) / mobilecli v1.0.24 (FSL-1.1)" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#4a5568;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="140" y="54" width="1000" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 1: Clients -->
+        <mxCell id="layer1" value="L1 调用方：Coding Agent / 开发者 / CI 流水线" style="swimlane;startSize=30;rounded=1;fillColor=#f8fafc;strokeColor=#94a3b8;fontStyle=1;fontSize=13;fontColor=#1e293b;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="1200" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="c_agent_mcp" value="&lt;b&gt;MCP 客户端 Agent&lt;/b&gt;&#xa;Claude Code / Cursor / Codex / Copilot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#4a77b5;fontSize=12;fontColor=#1e293b;" vertex="1" parent="layer1">
+          <mxGeometry x="30" y="42" width="330" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="c_agent_cli" value="&lt;b&gt;Shell-First Coding Agent&lt;/b&gt;&#xa;通过 Bash + SKILL.md 调用 mobilewright-cli" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#5a944a;fontSize=12;fontColor=#1e293b;" vertex="1" parent="layer1">
+          <mxGeometry x="455" y="42" width="330" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="c_ci" value="&lt;b&gt;确定性测试 / CI Runner&lt;/b&gt;&#xa;npx mobilewright test（零模型调用）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#5a944a;fontSize=12;fontColor=#1e293b;" vertex="1" parent="layer1">
+          <mxGeometry x="840" y="42" width="330" height="48" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2 Left: mobile-mcp -->
+        <mxCell id="box_mcp" value="产品 1：mobile-mcp（TypeScript · Apache-2.0 · 10.8k★）" style="swimlane;startSize=30;rounded=1;fillColor=#eff6ff;strokeColor=#3b82f6;fontStyle=1;fontSize=13;fontColor=#1e3a8a;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="242" width="420" height="248" as="geometry" />
+        </mxCell>
+        <mxCell id="mcp_tools" value="&lt;b&gt;薄 MCP 编排层（24 个工具）&lt;/b&gt;&#xa;stdio / Streamable HTTP · 无隐式当前设备&#xa;mobile_batch_commands（内联回调批处理 + delay）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="box_mcp">
+          <mxGeometry x="18" y="42" width="384" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="mcp_obs" value="&lt;b&gt;省 Token 观测适配&lt;/b&gt;&#xa;format-elements.ts：单行 @ref + 非默认状态裁剪&#xa;截图默认 JPEG q75 / 1024px + 文本坐标换算指令" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#60a5fa;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="box_mcp">
+          <mxGeometry x="18" y="114" width="384" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mcp_bounds" value="&lt;b&gt;明确边界：&lt;/b&gt;无 auto-wait / 无 Locator / 无 WebView DOM&#xa;Legacy 模式（adb / simctl / go-ios / WDA）已退为降级路径" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;fontSize=11;fontColor=#78350f;" vertex="1" parent="box_mcp">
+          <mxGeometry x="18" y="184" width="384" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2 Right: mobilewright -->
+        <mxCell id="box_mw" value="产品 2：mobilewright（TypeScript Monorepo · Apache-2.0 · v0.0.72）" style="swimlane;startSize=30;rounded=1;fillColor=#f0fdf4;strokeColor=#16a34a;fontStyle=1;fontSize=13;fontColor=#14532d;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="546" y="242" width="694" height="248" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_agent_cli" value="&lt;b&gt;@mobilewright/cli&lt;/b&gt;&#xa;Shell 交互 + YAML Snapshot&#xa;每步输出 Ran Mobilewright code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="box_mw">
+          <mxGeometry x="18" y="42" width="208" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_test" value="&lt;b&gt;@mobilewright/test + Runner&lt;/b&gt;&#xa;直接复用 @playwright/test 1.63&#xa;DevicePoolHttpServer + HTML 报告" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="box_mw">
+          <mxGeometry x="242" y="42" width="212" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_codegen" value="&lt;b&gt;@mobilewright/inspector&lt;/b&gt;&#xa;浏览器实时投屏 + Codegen&#xa;TestId &gt; Role &gt; Label &gt; Text" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.5;fontColor=#1e293b;" vertex="1" parent="box_mw">
+          <mxGeometry x="470" y="42" width="206" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_core" value="&lt;b&gt;@mobilewright/core（自研原生引擎 + 借壳 Playwright WebView）&lt;/b&gt;&#xa;Locator AST + 16 角色跨平台归一化（iOS/Android/RN/Compose）· resolveActionable（5s/100ms/50ms稳定窗）&#xa;getByWebView().page()：从 playwright-core 抽取 InjectedScript 注入 WebView（window.__mwInjected）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;fontSize=11.2;fontColor=#14532d;" vertex="1" parent="box_mw">
+          <mxGeometry x="18" y="122" width="658" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="mw_drivers" value="&lt;b&gt;Driver 协议层（@mobilewright/protocol）&lt;/b&gt;：driver-mobilecli（本地 WS） / driver-mobilenext（云真机） / BrowserStack" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4ade80;fontSize=11.2;fontColor=#1e293b;" vertex="1" parent="box_mw">
+          <mxGeometry x="18" y="194" width="658" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 3: mobilecli -->
+        <mxCell id="box_cli" value="产品 3：mobilecli（Go 1.26 · FSL-1.1 两年转 Apache-2.0 · v1.0.24）— 全栈唯一设备运行时底座" style="swimlane;startSize=30;rounded=1;fillColor=#fff7ed;strokeColor=#ea580c;fontStyle=1;fontSize=13;fontColor=#7c2d12;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="550" width="1200" height="296" as="geometry" />
+        </mxCell>
+        <mxCell id="cli_daemon" value="&lt;b&gt;宿主机层：薄 CLI + Per-User Daemon (~/.mobilecli/daemon.sock) + HTTP/WS OpenRPC 1.3.2 Server (:12000)&lt;/b&gt;&#xa;统一 60+ device.* RPC 契约 · 30 分钟空闲自动回收 · 内嵌全部设备端代理二进制（go:embed）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fb923c;fontSize=11.8;fontColor=#1e293b;" vertex="1" parent="box_cli">
+          <mxGeometry x="20" y="42" width="1060" height="54" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cli_android" value="&lt;b&gt;Android 驱动（真机 / 模拟器）&lt;/b&gt;&#xa;• app_process 常驻 mobilecli.dex（避开每次 adb 200ms JVM fork）&#xa;• UiAutomationFactory 反射取无障碍树 + 16ms 多指手势&#xa;• WebView：JVMTI am attach-agent + Chrome CDP&#xa;• 降级路径：uiautomator dump / screencap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="box_cli">
+          <mxGeometry x="20" y="114" width="370" height="122" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cli_ios" value="&lt;b&gt;iOS 驱动（真机 / 模拟器，放弃 WDA）&lt;/b&gt;&#xa;• go-ios userspace TUN（iOS 17+ 免 root）+ 重签安装&#xa;• 自研 Swift devicekit-ios XCTest 常驻代理（派生自 Maestro）&#xa;• WebView：CoreDevice debugproxy machomap 注入无签名 dylib&#xa;• Safari 走 com.apple.webinspector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffedd5;strokeColor=#ea580c;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="box_cli">
+          <mxGeometry x="415" y="114" width="390" height="122" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cli_cloud" value="&lt;b&gt;Mobile Next Cloud（商业化真机池）&lt;/b&gt;&#xa;• Fleet REST API（allocate / 排队 / 上传包）&#xa;• 同构 JSON-RPC over WSS (wss://api.mobilenext.ai/ws)&#xa;• 按设备分钟计费，免本地 Mac / 真机维护&#xa;• FSL 护城河：防止竞品白嫖底层设备运行时" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;fontSize=11.5;align=left;spacingLeft=10;fontColor=#1e293b;" vertex="1" parent="box_cli">
+          <mxGeometry x="830" y="114" width="350" height="122" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cli_footer" value="关键源码发现：mobile-mcp 与 mobilewright 并不共享 Locator / Auto-Wait 引擎；mobile-mcp 仅通过传递依赖借用 mobilecli 二进制，两者在 mobilecli 这一层合流。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;fontSize=11.5;fontStyle=1;fontColor=#713f12;" vertex="1" parent="box_cli">
+          <mxGeometry x="20" y="248" width="1160" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- Edges L1 -> L2 -->
+        <mxCell id="e1" value="MCP JSON-RPC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3b82f6;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#1e3a8a;exitX=0.5;exitY=1;entryX=0.46;entryY=0;" edge="1" parent="1" source="c_agent_mcp" target="box_mcp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="Shell 命令" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#14532d;exitX=0.5;exitY=1;entryX=0.17;entryY=0;" edge="1" parent="1" source="c_agent_cli" target="box_mw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="TS 测试执行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#14532d;exitX=0.5;exitY=1;entryX=0.72;entryY=0;" edge="1" parent="1" source="c_ci" target="box_mw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed edge: mobile-mcp borrows binary via mobilewright -->
+        <mxCell id="e_dep" value="仅借二进制&#xa;(不调 API)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#d97706;strokeWidth=1.8;labelBackgroundColor=#ffffff;fontSize=10.5;fontColor=#92400e;exitX=1;exitY=0.84;entryX=0;entryY=0.84;" edge="1" parent="1" source="box_mcp" target="box_mw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Edges L2 -> L3 -->
+        <mxCell id="e4" value="execFileSync 子进程调用 CLI" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3b82f6;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#1e3a8a;exitX=0.5;exitY=1;entryX=0.18;entryY=0;" edge="1" parent="1" source="box_mcp" target="cli_daemon">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="WS 长连接 JSON-RPC 2.0 (ws://localhost:12000/ws)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;strokeWidth=2;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#14532d;exitX=0.45;exitY=1;entryX=0.76;entryY=0;" edge="1" parent="1" source="mw_drivers" target="cli_daemon">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="WSS / REST" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9333ea;strokeWidth=2;dashed=1;labelBackgroundColor=#ffffff;fontSize=11;fontColor=#6b21a8;exitX=0.92;exitY=1;entryX=0.86;entryY=0;" edge="1" parent="1" source="mw_drivers" target="cli_cloud">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1170" y="520" />
+              <mxPoint x="1170" y="646" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Internal edges inside L3 -->
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ea580c;strokeWidth=1.8;exitX=0.18;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="box_cli" source="cli_daemon" target="cli_android">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ea580c;strokeWidth=1.8;exitX=0.55;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="box_cli" source="cli_daemon" target="cli_ios">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9333ea;strokeWidth=1.8;exitX=0.88;exitY=1;entryX=0.36;entryY=0;" edge="1" parent="box_cli" source="cli_daemon" target="cli_cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
