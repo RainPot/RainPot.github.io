@@ -196,7 +196,7 @@ const ANCHOR = '// packages/playwright-core/src/generated/injectedScriptSource.t
 - 不需要往模型上下文里灌 24 个 MCP 工具的 JSON Schema，只占一个 `Bash(mobilewright-cli:*)` 权限。
 - 每次执行交互命令后，把紧凑 YAML 视图树落盘到 `.mobilewright-cli/`（例如 `- button "Sign in" [ref=e9] [testid="login"]`），**同时直接在终端回显对应的 Mobilewright 确定性代码**（摘自 `packages/cli/skills/mobilewright-cli/SKILL.md:23-35`）：
 
-```markdown
+````text
 ### Ran Mobilewright code
 ```js
 await screen.getByRole('button', { name: 'Sign in' }).tap();
@@ -206,7 +206,7 @@ await screen.getByRole('button', { name: 'Sign in' }).tap();
 - App: com.example.app
 ### Snapshot
 - [Snapshot](.mobilewright-cli/screen-2026-09-14T20-13-21-867Z.yml)
-```
+````
 
 派生逻辑复用 Inspector/Codegen 的同一套优先级（`TestId > Role > Label > Text`），且 `mobilewright-cli expect visible --text "..."` 直接复用核心库的 auto-wait 断言引擎。Agent 探索完一遍业务流，顺手把终端里攒下来的 `Ran Mobilewright code` 拼进 `tests/order.spec.ts`，再自己跑一遍 `npx mobilewright test` 修到全绿，就能提 PR。
 
@@ -235,18 +235,18 @@ await screen.getByRole('button', { name: 'Sign in' }).tap();
 下面以一条典型的 **15 步移动端核心业务流**（例如：启动 → 登录 → 搜索加购 → 结算校验）为例，基于 2026 年主流 API 定价量级与上下文消耗规律做一个透明的工程估算模型（注：以下数值为方便量级对比的工程参数假设，不同厂商定价、Prompt Cache 命中率和自建 GPU 折旧会带来 2–3 倍浮动，重点看结构与拐点）：
 
 - **路线 A：小模型 + 精调 Harness（每次执行都推理）**
-  - 每步输入一张 1024px 压缩截图或裁剪文本树 + 精简动作空间，约 2.5k–4k input tokens + 200 output tokens；15 步累计约 45k–60k input + 3k output。按轻量 API（或自托管 7B/32B GPU 折算）计算，单次成本 $C_{\text{small}} \approx \$0.008\text{--}\$0.02$（取中值 **\$0.015 / 次**）。
+  - 每步输入一张 1024px 压缩截图或裁剪文本树 + 精简动作空间，约 2.5k–4k input tokens + 200 output tokens；15 步累计约 45k–60k input + 3k output。按轻量 API（或自托管 7B/32B GPU 折算）计算，单次成本 $C_{\text{small}}$ 约为 \$0.008–\$0.02（取中值 **\$0.015 / 次**）。
   - 总模型成本随执行次数 $K$ 线性增长（若算上偶发波动重试概率 $p_{\text{flake}}$，还会再叠加一层）：
     $$T_{\text{small}}(K) = K \cdot C_{\text{small}} + K \cdot p_{\text{flake}} \cdot C_{\text{retry}}$$
 
 - **路线 B：强 Coding 大模型 + `mobile-mcp` 在线裸跑（不沉淀代码）**
-  - 系统提示词 + 24 个 MCP 工具 Schema + 15 轮累积对话历史，哪怕吃满 Prompt Cache 折扣，单次仍轻松消耗 150k–350k 等效上下文，单次成本 $C_{\text{big}} \approx \$0.15\text{--}\$0.80$。
+  - 系统提示词 + 24 个 MCP 工具 Schema + 15 轮累积对话历史，哪怕吃满 Prompt Cache 折扣，单次仍轻松消耗 150k–350k 等效上下文，单次成本 $C_{\text{big}}$ 约为 \$0.15–\$0.80。
   - **结论非常干脆**：路线 B 比路线 A 贵 **15 到 50 倍**，在高频执行场景里毫无性价比。如果谁拿着 `mobile-mcp` 配强模型当 CI 用例天天跑，属于把最贵的模型用在了最错的地方。
 
 - **路线 C：Mobile Next Coding-First 编译路线（探索生成 → `mobilewright` 零模型 CI + 漂移自愈）**
   - **一次性前置成本 $C_{\text{author}}$**：用强 Coding 模型配合 `mobilewright-cli` 探索 1 次、生成 `*.spec.ts` 并自跑修绿，按多轮探索 + 调试计，约消耗 **\$0.30–\$1.50**（取中值 **\$0.60 / 条**）。
   - **单次 CI 运行模型成本 = \$0**：上线进 Git 后，每次 PR 触发 `npx mobilewright test` 完全不调任何 LLM。
-  - **UI 漂移维护成本 $\alpha \cdot C_{\text{heal}}$**：假设平均每运行 $\frac{1}{\alpha}$ 次 CI 就会遇到一次破坏 Locator 的 UI 改版，需要召回 Agent 读失败报告（截图 + 完整 AX JSON）修代码并跑绿，单次修复费 $C_{\text{heal}} \approx \$0.20\text{--}\$0.60$（取中值 **\$0.30 / 次**）。
+  - **UI 漂移维护成本 $\alpha \cdot C_{\text{heal}}$**：假设平均每运行 $\frac{1}{\alpha}$ 次 CI 就会遇到一次破坏 Locator 的 UI 改版，需要召回 Agent 读失败报告（截图 + 完整 AX JSON）修代码并跑绿，单次修复费 $C_{\text{heal}}$ 约为 \$0.20–\$0.60（取中值 **\$0.30 / 次**）。
   - 全生命周期总模型成本：
     $$T_{\text{coding}}(K) = C_{\text{author}} + \alpha \cdot K \cdot C_{\text{heal}}$$
 
@@ -256,7 +256,7 @@ await screen.getByRole('button', { name: 'Sign in' }).tap();
 
 $$K^* = \frac{C_{\text{author}}}{C_{\text{small}} - \alpha \cdot C_{\text{heal}}}$$
 
-把不同业务形态带进去，优劣界限立刻清晰（以 $C_{\text{author}} = \$0.60$、$C_{\text{small}} = \$0.015$、$C_{\text{heal}} = \$0.30$ 为基准）：
+把不同业务形态带进去，优劣界限立刻清晰（以 $C_{\text{author}}$ = \$0.60、$C_{\text{small}}$ = \$0.015、$C_{\text{heal}}$ = \$0.30 为基准）：
 
 | 业务场景 | UI 破坏频率 $\alpha$ | 摊销维护费 $\alpha \cdot C_{\text{heal}}$ | 盈亏平衡次数 $K^*$ | 跑 500 次模型总账（路线 A vs 路线 C） | 胜出路线 |
 | --- | --- | --- | --- | --- | --- |
